@@ -1,4 +1,4 @@
 # LabWatch-GUI6
-This is the LabWatch Version with the gauges. 
-Their are still error occuring durring the stream with ThingSpeak.
-The autorun will work but not fullym the live plotting is not working as it should
+This is LabWatch pulling the DHT22 sensor displaying local to Terminal 
+Uploading to Thingspeak every 10s 
+current in the form of error checking and endurance running 
