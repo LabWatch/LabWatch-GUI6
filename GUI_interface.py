@@ -126,7 +126,7 @@ def sensor0( threadName, delay):
                 # Print the values to the serial port
                 temperature_c = dhtDevice0.temperature
                 humidity = dhtDevice0.humidity
-                if (abs(temp_avg - temperature_c ) < 4):
+                if (abs(temp0 - temperature_c ) < 4):
                     fault = bool(0)
                 break            
             except RuntimeError as error:
@@ -161,7 +161,7 @@ def sensor1( threadName, delay):
                 # Print the values to the serial port
                 temperature_c = dhtDevice1.temperature
                 humidity = dhtDevice1.humidity
-                if (abs(temp_avg - temperature_c ) < 4): # if the sensor is within a certain range it will be used again 
+                if (abs(temp1 - temperature_c ) < 4): # if the sensor is within a certain range it will be used again 
                     fault = bool(0)
                 break            
             except RuntimeError as error:
