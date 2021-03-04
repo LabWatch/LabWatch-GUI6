@@ -222,12 +222,12 @@ def avg(threadName, delay):
             humid_avg = 0
 
         
-        # prints to terminal for error checking 
-        print(
-                "Temp_avg:  {:.1f} C    Humidity_avg: {:.1f}%   sensor0: {}   Sensor1: {} ".format(
-                    temp_avg, humid_avg,sensor_fault0,sensor_fault1
-                )
-            ) 
+        # # prints to terminal for error checking 
+        # print(
+        #         "Temp_avg:  {:.1f} C    Humidity_avg: {:.1f}%   sensor0: {}   Sensor1: {} ".format(
+        #             temp_avg, humid_avg,sensor_fault0,sensor_fault1
+        #         )
+        #     ) 
         time.sleep(delay)#sleeps for set delay time 
 
 
@@ -235,10 +235,11 @@ def avg(threadName, delay):
 
 # 
 #-----------------------------------End of sensor Data read and error Check------------------------------------------------------------------------
-#______________________________________________________________________________________________________________
-#_________________________________________________________________________________________________________________
+#________________________________________________________________________________________________________________________________________________
 
-#Thingspeak Function Validation
+#________________________________________________________________________________________________________________________________
+
+#---------------------------------------------Thingspeak Function Validation-------------------------------------------------
 def cloud(threadName, delay):
     global temp_avg
     global humid_avg
@@ -255,28 +256,36 @@ def cloud(threadName, delay):
 
 #-------------------------------------End of Thingspeak Uploading ---------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
-#__________________________________________________________________________________________________________________
-#GUI to local User Code
+
+#_______________________________________________________________________________________________________________________________
+#-----------------------------------GUI to local User Code-----------------------------------------------------------------------
 
 
 def animate(i, xs, xs2, ys, ys2):
+    global temp_avg
+    global humid_avg
+    global line
+    global line2
+    global x_len
+    p1.set_value(float(temp_avg))
+    p2.set_value(float(humid_avg))
+    # Add y to list
+    ys.append(temp_avg)
+    ys2.append(humid_avg)
 
-    while True:
-        p1.set_value(float(temp))
-        p2.set_value(float(hum))
-        # Add y to list
-        ys.append(temp)
-        ys2.append(hum)
+    # Limit y list to set number of items
+    ys = ys[-x_len:]
+    ys2 = ys2[-x_len:]
 
-        # Limit y list to set number of items
-        ys = ys[-x_len:]
-        ys2 = ys2[-x_len:]
+    # Update line with new Y values
+    line.set_ydata(ys)
+    line2.set_ydata(ys2) 
 
-        # Update line with new Y values
-        line.set_ydata(ys)
-        line2.set_ydata(ys2)
-        return line,
-        return line2,
+    if temp_avg<10.0:
+        win.configure(background='#FF0000')
+    else:
+        win.configure(background='#DcDcDc')
+        
 
 
 p1 = gaugelib.DrawGauge2(
@@ -300,23 +309,23 @@ p2.pack()
 p2.place(x=500, y=50)
 
 #--------------------Buttons---------------------------------
-def reportSummary():
+# def reportSummary():
 
-    file = open("/home/pi/data_log.csv", "a")
+#     file = open("/home/pi/data_log.csv", "a")
 
 
-button = Label(win, text="ReportSummary", fg="blue", cursor="hand2",font=('times',12, 'bold' ))
-button.bind("<Button-1>",lambda e: reportSummary('/home/pi/data_log.csv'))
-button.pack()
-button.place(x=90, y=0)
+# button = Label(win, text="ReportSummary", fg="blue", cursor="hand2",font=('times',12, 'bold' ))
+# button.bind("<Button-1>",lambda e: reportSummary('/home/pi/data_log.csv'))
+# button.pack()
+# button.place(x=90, y=0)
 
-def thingSpeak(url):
-    webbrowser.open_new(url)
+# def thingSpeak(url):
+#     webbrowser.open_new(url)
 
-button = Label(win, text="ThingSpeak", fg="blue", cursor="hand2",font=('times',12, 'bold' ))
-button.bind("<Button-1>",lambda e: thingSpeak("https://thingspeak.com/channels/1318645"))
-button.pack()
-button.place(x=0, y=0)
+# button = Label(win, text="ThingSpeak", fg="blue", cursor="hand2",font=('times',12, 'bold' ))
+# button.bind("<Button-1>",lambda e: thingSpeak("https://thingspeak.com/channels/1318645"))
+# button.pack()
+# button.place(x=0, y=0)
 #----------------------------End of buttons--------------------------------------
 
 #---------------------------Clock ----------------------------------------------------------------
@@ -339,7 +348,7 @@ class Clock:
         self.watch.configure(text=self.time2)
         self.mFrame.after(200, self.changeLabel) #it'll call itself continuously
 
-timedisplay = Clock()
+
 #-------------------------------End clock--------------------------------- 
 
 canv = FigureCanvasTkAgg(fig, master = win)
@@ -355,40 +364,29 @@ def exit():                                    #Exit fullscreen
 	win.quit() 
 
 #Call animate() function in interval of 1 second
-ani = animation.FuncAnimation(fig, animate, fargs=(xs, ys,xs2,ys2), interval=1000)
+
 
 #Warnings background color change
-if temp<10.0:
-    
-    win.configure(background='#FF0000')
-
-else:
-    win.configure(background='#DcDcDc')
-    
-win.mainloop()        
 
 
 
-
-
-
-
-
+Clock()
 
 
 #---------------------------------End Of GUI -------------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
+
+
 #__________________________________________________________________________________________________________________
-
-
-
-#_____________________________Creating Threads___________________________________________________________
+#-------------------------------Creating Threads--------------------------------------------------------------------
 # Create two threads as follows
 try:
+    print("test")
     _thread.start_new_thread( sensor0, ("sensor_1", 2, ) )#starts recording sensor on D4
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
     _thread.start_new_thread( cloud,   ("upload"  , 10, ) )
+    ani = animation.FuncAnimation(fig, animate, interval=1000, fargs=(xs, ys,xs2,ys2) )
 except:
     print ("Error: unable to start thread")
 
@@ -398,16 +396,19 @@ except:
 
 
 
+win.mainloop()
 
 
+#______________________________________________________________________________________________
+#-------------------main loop for the programe------------------------------------------------- 
 
-
-#_______________________main loop for the programe____________________________________________ 
 while 1:#True loop to run code forever 
     
     #keeps threads running in background           
     pass 
+    
 #-------------------------End of Main Loop-----------------------------------------------------
 #_______________________________________________________________________________________________
+
 
 #end of code 
