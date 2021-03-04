@@ -126,7 +126,7 @@ def sensor0( threadName, delay):
                 # Print the values to the serial port
                 temperature_c = dhtDevice0.temperature
                 humidity = dhtDevice0.humidity
-                if (abs(temp_avg - temperature_c ) < 4):
+                if (abs(temp0 - temperature_c ) < 4):
                     fault = bool(0)
                 break            
             except RuntimeError as error:
@@ -161,7 +161,7 @@ def sensor1( threadName, delay):
                 # Print the values to the serial port
                 temperature_c = dhtDevice1.temperature
                 humidity = dhtDevice1.humidity
-                if (abs(temp_avg - temperature_c ) < 4): # if the sensor is within a certain range it will be used again 
+                if (abs(temp1 - temperature_c ) < 4): # if the sensor is within a certain range it will be used again 
                     fault = bool(0)
                 break            
             except RuntimeError as error:
@@ -230,10 +230,6 @@ def avg(threadName, delay):
         #     ) 
         time.sleep(delay)#sleeps for set delay time 
 
-
-
-
-# 
 #-----------------------------------End of sensor Data read and error Check------------------------------------------------------------------------
 #________________________________________________________________________________________________________________________________________________
 
@@ -256,7 +252,28 @@ def cloud(threadName, delay):
 
 #-------------------------------------End of Thingspeak Uploading ---------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
+#________________________________________________________________________________________________________________________________
 
+#-------------------------------------Local Logging-------------------------------------------------
+
+#def logging(delay):
+        #file = open("/home/pi/data_log.csv", "a")
+        #if os.stat("/home/pi/data_log.csv").st_size == 0:
+            #file.write("Time,Temperature °C,Humidity\n")
+
+
+        #now = datetime.now()
+        #file.write(str(now)+","+str(temp)+","+str(hum)+"\n")
+        #file.flush()
+
+        #time.sleep(delay)
+
+
+
+
+
+#-------------------------------------End of Local Logging ---------------------------------------------------------------------------
+#____________________________________________________________________________________________________________________
 #_______________________________________________________________________________________________________________________________
 #-----------------------------------GUI to local User Code-----------------------------------------------------------------------
 
