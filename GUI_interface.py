@@ -379,7 +379,7 @@ Clock()
 
 #__________________________________________________________________________________________________________________
 #-------------------------------Creating Threads--------------------------------------------------------------------
-# Create two threads as follows
+# Creates threads and starts all functions as needed
 try:
     print("test")
     _thread.start_new_thread( sensor0, ("sensor_1", 2, ) )#starts recording sensor on D4
@@ -387,6 +387,7 @@ try:
     _thread.start_new_thread( avg,     ("average" , 4, ) )
     _thread.start_new_thread( cloud,   ("upload"  , 10, ) )
     ani = animation.FuncAnimation(fig, animate, interval=1000, fargs=(xs, ys,xs2,ys2) )
+    win.mainloop()
 except:
     print ("Error: unable to start thread")
 
@@ -395,8 +396,6 @@ except:
 
 
 
-
-win.mainloop()
 
 
 #______________________________________________________________________________________________
