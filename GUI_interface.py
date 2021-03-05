@@ -404,7 +404,7 @@ try:
     _thread.start_new_thread( avg,     ("average" , 4, ) )
     _thread.start_new_thread( cloud,   ("upload"  , 10, ) )
     ani = animation.FuncAnimation(fig, animate, interval=1000, fargs=(xs, ys,xs2,ys2) )
-    win.mainloop()
+    
 except:
     print ("Error: unable to start thread")
 
@@ -418,11 +418,8 @@ except:
 #______________________________________________________________________________________________
 #-------------------main loop for the programe------------------------------------------------- 
 
-while 1:#True loop to run code forever 
-    
-    #keeps threads running in background           
-    pass 
-    
+
+win.mainloop()
 #-------------------------End of Main Loop-----------------------------------------------------
 #_______________________________________________________________________________________________
 
