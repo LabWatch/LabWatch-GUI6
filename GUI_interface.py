@@ -31,6 +31,11 @@ import os
 from datetime import datetime 
 import gaugelib
 
+#System Restart 
+import subprocess
+
+
+
 
 #----------------------------------------------------------
 #-----------Sensor Global Variables------------------------
@@ -419,7 +424,14 @@ except:
 #-------------------main loop for the programe------------------------------------------------- 
 
 
-win.mainloop()
+try:
+    win.mainloop()
+except:
+    subprocess.run('/home/LabWatchGUI6/runme.sh', shell=True)
+    quit()
+finally:
+    pass
+
 #-------------------------End of Main Loop-----------------------------------------------------
 #_______________________________________________________________________________________________
 
