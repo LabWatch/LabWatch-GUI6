@@ -27,3 +27,12 @@ runme.sh  #auto restart code which needs to be edited so that it points to the c
   
   line 3: python3 ~/LabWatchGUI6/GUI_interface.py #change path to point at your script 
   
+  
+  
+  
+  
+ To see Git Branch: 
+ 
+ git config --global alias.lgb "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset%n' --abbrev-commit --date=relative --branches"
+
+git lgb
