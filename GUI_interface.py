@@ -212,8 +212,8 @@ def avg(threadName, delay):
             humiddiff = abs(humid0-humid1)
 
             if (tempdiff < 4 and humiddiff < 10) :# they are roughly the same value 
-                temp_avg = (temp0 + temp1) / 2
-                humid_avg = (humid0 + humid1) / 2
+                temp_avg = (temp0 + temp1 + temp_last_avg) / 3
+                humid_avg = (humid0 + humid1 + humid_last_avg) / 3
 
         elif (sensor_fault0 == False and sensor_fault1 == True) :#D4 OK D18 Bad
             temp_avg = (temp0 + temp_last_avg) / 2
@@ -331,23 +331,23 @@ p2.pack()
 p2.place(x=500, y=50)
 
 #--------------------Buttons---------------------------------
-# def reportSummary():
+def reportSummary():
 
-#     file = open("/home/pi/data_log.csv", "a")
+    file = open("/home/pi/data_log.csv", "a")
 
 
-# button = Label(win, text="ReportSummary", fg="blue", cursor="hand2",font=('times',12, 'bold' ))
-# button.bind("<Button-1>",lambda e: reportSummary('/home/pi/data_log.csv'))
-# button.pack()
-# button.place(x=90, y=0)
+button = Label(win, text="ReportSummary", fg="blue", cursor="hand2",font=('times',12, 'bold' ))
+button.bind("<Button-1>",lambda e: reportSummary('/home/pi/data_log.csv'))
+button.pack()
+button.place(x=90, y=0)
 
-# def thingSpeak(url):
-#     webbrowser.open_new(url)
+def thingSpeak(url):
+    webbrowser.open_new(url)
 
-# button = Label(win, text="ThingSpeak", fg="blue", cursor="hand2",font=('times',12, 'bold' ))
-# button.bind("<Button-1>",lambda e: thingSpeak("https://thingspeak.com/channels/1318645"))
-# button.pack()
-# button.place(x=0, y=0)
+button = Label(win, text="ThingSpeak", fg="blue", cursor="hand2",font=('times',12, 'bold' ))
+button.bind("<Button-1>",lambda e: thingSpeak("https://thingspeak.com/channels/1318645"))
+button.pack()
+button.place(x=0, y=0)
 #----------------------------End of buttons--------------------------------------
 
 #---------------------------Clock ----------------------------------------------------------------
@@ -406,8 +406,8 @@ try:
     print("test")
     _thread.start_new_thread( sensor0, ("sensor_1", 2, ) )#starts recording sensor on D4
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
-    _thread.start_new_thread( avg,     ("average" , 4, ) )
-    _thread.start_new_thread( cloud,   ("upload"  , 10, ) )
+    _thread.start_new_thread( avg,     ("average" , 2, ) )
+    _thread.start_new_thread( cloud,   ("upload"  , 60, ) )
     ani = animation.FuncAnimation(fig, animate, interval=1000, fargs=(xs, ys,xs2,ys2) )
     
 except:
