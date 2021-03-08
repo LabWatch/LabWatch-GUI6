@@ -7,6 +7,7 @@ from urllib.request import urlopen
 import _thread
 #import Time 
 import time
+from datetime import datetime
 
 #importing for the AdaFruit Board
 import board
@@ -196,39 +197,39 @@ def cloud(threadName, delay):
 #__________________________________________________________________________________________________________________
 #GUI to local User Code
 
-def cloud(threadName, delay):
+def local(threadName, delay):
     global temp0
     global humid0
-	global temp1
+    global temp1
     global humid1
-	global filetimer
+    global filetimer
     while True:
         try:
-			file = open("/home/pi/data_log.csv", "a")
-			if os.stat("/home/pi/data_log.csv").st_size == 0:
-				file.write("Time,S1TempC,S1Humid,S2TempC,S2umid,\n")
-			
-			file.write(str(now)+","+str(temp0)+","+str(humd0)+str(temp1)+","+str(humd1)+"\n")
-			file.flush()
-			
-			if now.hour > filetimer.hour:
-				file.close()
-				# check if directory exists
-				if not os.path.exists("/home/pi/{}/{}/{}/".format(
-					filetimer.year, filetimer.month, filetimer.day)
-				):
-					# make directory if not exist
-					os.makedirs("/home/pi/{}/{}/{}/".format( 
-						filetimer.year, filetimer.month, filetimer.day)
-					)
-				# move file to according folder
-				os.rename("/home/pi/data_log.csv","/home/pi/{}/{}/{}/{}hr.csv".format(
-						filetimer.year, filetimer.month, filetimer.day, filetimer.hour
-					)
-				)
-				filetimer = datetime.now()
-		except:
-			print("Connection Failed")
+            file = open("/home/pi/data_log.csv", "a")
+            if os.stat("/home/pi/data_log.csv").st_size == 0:
+                file.write("Time,S1TempC,S1Humid,S2TempC,S2umid,\n")
+            
+            file.write(str(now)+","+str(temp0)+","+str(humd0)+str(temp1)+","+str(humd1)+"\n")
+            file.flush()
+            
+            if now.hour > filetimer.hour:
+                file.close()
+                # check if directory exists
+                if not os.path.exists("/home/pi/{}/{}/{}/".format(
+                    filetimer.year, filetimer.month, filetimer.day)
+                ):
+                    # make directory if not exist
+                    os.makedirs("/home/pi/{}/{}/{}/".format( 
+                        filetimer.year, filetimer.month, filetimer.day)
+                    )
+                # move file to according folder
+                os.rename("/home/pi/data_log.csv","/home/pi/{}/{}/{}/{}hr.csv".format(
+                        filetimer.year, filetimer.month, filetimer.day, filetimer.hour
+                    )
+                )
+                filetimer = datetime.now()
+        except:
+            print("Connection Failed")
         time.sleep(delay)
 
 #---------------------------------End Of GUI -------------------------------------------------------------------------------
@@ -244,6 +245,7 @@ try:
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
     _thread.start_new_thread( cloud,   ("upload"  , 10, ) )
+    _thread.start_new_thread( local,   ("logging"  , 10, ) )
 except:
     print ("Error: unable to start thread")
 
