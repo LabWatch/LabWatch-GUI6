@@ -213,12 +213,12 @@ def avg(threadName, delay):
         elif (sensor_fault0 == False and sensor_fault1 == True) :#D4 OK D18 Bad
             temp_avg = (temp0 + temp_last_avg) / 2
             humid_avg = (humid0 + humid_last_avg) / 2
-            messagebox.showerror("SENSOR ERROR", "SENSOR 2 FAULT")
+            messagebox.showerror("SENSOR ERROR", "SENSOR 2 FAULT ON D18")
             
         elif (sensor_fault0 == True and sensor_fault1 == False): #D4 Bad D18 OK
             temp_avg = (temp1 + temp_last_avg) / 2
             humid_avg = (humid1 + humid_last_avg) / 2 
-            messagebox.showerror("SENSOR ERROR", "SENSOR 1 FAULT")
+            messagebox.showerror("SENSOR ERROR", "SENSOR 1 FAULT ON D4")
             
         else: #both Bad set to 0 , 0 
             temp_avg = 0
