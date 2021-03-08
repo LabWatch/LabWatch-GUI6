@@ -30,12 +30,8 @@ import csv
 import os
 from datetime import datetime 
 import gaugelib
-
-#System Restart 
-import subprocess
-
-
-
+from tkinter import messagebox
+from tkinter import filedialog
 
 #----------------------------------------------------------
 #-----------Sensor Global Variables------------------------
@@ -111,7 +107,6 @@ plt.xlabel('Samples')
 plt.ylabel('%')
 plt.grid(True)
 fig.tight_layout()
-
 
 
 #______________________________________________________________________________________________________________________________
@@ -218,14 +213,17 @@ def avg(threadName, delay):
         elif (sensor_fault0 == False and sensor_fault1 == True) :#D4 OK D18 Bad
             temp_avg = (temp0 + temp_last_avg) / 2
             humid_avg = (humid0 + humid_last_avg) / 2
-
+            messagebox.showerror("SENSOR ERROR", "SENSOR 2 FAULT ON D18")
+            
         elif (sensor_fault0 == True and sensor_fault1 == False): #D4 Bad D18 OK
             temp_avg = (temp1 + temp_last_avg) / 2
             humid_avg = (humid1 + humid_last_avg) / 2 
+            messagebox.showerror("SENSOR ERROR", "SENSOR 1 FAULT ON D4")
+            
         else: #both Bad set to 0 , 0 
             temp_avg = 0
             humid_avg = 0
-
+            messagebox.showerror("SENSOR ERROR", "SENSOR 1 AND 2 FAULT")
         
         # # prints to terminal for error checking 
         # print(
@@ -273,10 +271,6 @@ def cloud(threadName, delay):
 
         #time.sleep(delay)
 
-
-
-
-
 #-------------------------------------End of Local Logging ---------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
 #_______________________________________________________________________________________________________________________________
@@ -309,7 +303,6 @@ def animate(i, xs, xs2, ys, ys2):
         win.configure(background='#DcDcDc')
         
 
-
 p1 = gaugelib.DrawGauge2(
     win,
     max_value=70.0,
@@ -319,8 +312,8 @@ p1 = gaugelib.DrawGauge2(
     unit = "Temp. °C",bg_sel = 2)
 p2 = gaugelib.DrawGauge3(
     win,
-    max_value=80.0,
-    min_value=20.0,
+    max_value=70.0,
+    min_value=10.0,
     size=250,
     bg_col='#DCDCDC',
     unit = "Humidity %",bg_sel = 2)
@@ -331,23 +324,20 @@ p2.pack()
 p2.place(x=500, y=50)
 
 #--------------------Buttons---------------------------------
- def reportSummary():
+def Report():
+    return filedialog.askopenfile()
 
-     file = open("/home/pi/data_log.csv", "a")
+def ThingSpeak():
+    webbrowser.open_new("https://thingspeak.com/channels/1318645")
 
+report_button = tk.Button(win, text="Report", command=Report)
+report_button.pack()
+report_button.place(x=100,y=0)
 
- button = Label(win, text="ReportSummary", fg="blue", cursor="hand2",font=('times',12, 'bold' ))
- button.bind("<Button-1>",lambda e: reportSummary('/home/pi/data_log.csv'))
- button.pack()
- button.place(x=90, y=0)
+thingspeak_button = tk.Button(win, text="ThingSpeak", command=ThingSpeak)
+thingspeak_button.pack()
+thingspeak_button.place(x=0,y=0)
 
- def thingSpeak(url):
-     webbrowser.open_new(url)
-
- button = Label(win, text="ThingSpeak", fg="blue", cursor="hand2",font=('times',12, 'bold' ))
- button.bind("<Button-1>",lambda e: thingSpeak("https://thingspeak.com/channels/1318645"))
- button.pack()
- button.place(x=0, y=0)
 #----------------------------End of buttons--------------------------------------
 
 #---------------------------Clock ----------------------------------------------------------------
@@ -370,6 +360,7 @@ class Clock:
         self.watch.configure(text=self.time2)
         self.mFrame.after(200, self.changeLabel) #it'll call itself continuously
 
+Clock()
 
 #-------------------------------End clock--------------------------------- 
 
@@ -385,16 +376,6 @@ win.bind("<Escape>",exit)                      #ESC to exit
 def exit():                                    #Exit fullscreen
 	win.quit() 
 
-#Call animate() function in interval of 1 second
-
-
-#Warnings background color change
-
-
-
-Clock()
-
-
 #---------------------------------End Of GUI -------------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
 
@@ -407,7 +388,7 @@ try:
     _thread.start_new_thread( sensor0, ("sensor_1", 2, ) )#starts recording sensor on D4
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
-    _thread.start_new_thread( cloud,   ("upload"  , 10, ) )
+    _thread.start_new_thread( cloud,   ("upload"  , 30, ) )
     ani = animation.FuncAnimation(fig, animate, interval=1000, fargs=(xs, ys,xs2,ys2) )
     
 except:
@@ -416,22 +397,11 @@ except:
 #-----------------------------End of Starting Threads----------------------------------------------------
 #_________________________________________________________________________________________________________
 
-
-
-
-
 #______________________________________________________________________________________________
 #-------------------main loop for the programe------------------------------------------------- 
 
 
-try:
-    win.mainloop()
-except:
-    subprocess.run('/home/LabWatchGUI6/runme.sh', shell=True)
-    quit()
-finally:
-    pass
-
+win.mainloop()
 #-------------------------End of Main Loop-----------------------------------------------------
 #_______________________________________________________________________________________________
 
