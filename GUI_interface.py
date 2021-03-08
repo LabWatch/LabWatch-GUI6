@@ -64,7 +64,7 @@ humid_avg = 0
 #-----------------------------------------------------------------
 #----------------ThingSpeak Global Variables----------------------
 #ThingSpeak credentrials 
-myAPI = '4M4MSZ8ZYP18AU3E' 
+myAPI = '23WP7T9NERH1SYTG' 
 # URL where we will send the data, Don't change it
 baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI 
 
@@ -331,23 +331,23 @@ p2.pack()
 p2.place(x=500, y=50)
 
 #--------------------Buttons---------------------------------
-# def reportSummary():
+ def reportSummary():
 
-#     file = open("/home/pi/data_log.csv", "a")
+     file = open("/home/pi/data_log.csv", "a")
 
 
-# button = Label(win, text="ReportSummary", fg="blue", cursor="hand2",font=('times',12, 'bold' ))
-# button.bind("<Button-1>",lambda e: reportSummary('/home/pi/data_log.csv'))
-# button.pack()
-# button.place(x=90, y=0)
+ button = Label(win, text="ReportSummary", fg="blue", cursor="hand2",font=('times',12, 'bold' ))
+ button.bind("<Button-1>",lambda e: reportSummary('/home/pi/data_log.csv'))
+ button.pack()
+ button.place(x=90, y=0)
 
-# def thingSpeak(url):
-#     webbrowser.open_new(url)
+ def thingSpeak(url):
+     webbrowser.open_new(url)
 
-# button = Label(win, text="ThingSpeak", fg="blue", cursor="hand2",font=('times',12, 'bold' ))
-# button.bind("<Button-1>",lambda e: thingSpeak("https://thingspeak.com/channels/1318645"))
-# button.pack()
-# button.place(x=0, y=0)
+ button = Label(win, text="ThingSpeak", fg="blue", cursor="hand2",font=('times',12, 'bold' ))
+ button.bind("<Button-1>",lambda e: thingSpeak("https://thingspeak.com/channels/1318645"))
+ button.pack()
+ button.place(x=0, y=0)
 #----------------------------End of buttons--------------------------------------
 
 #---------------------------Clock ----------------------------------------------------------------
