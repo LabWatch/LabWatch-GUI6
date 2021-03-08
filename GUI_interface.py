@@ -13,6 +13,8 @@ import time
 import board
 import adafruit_dht
 
+#System Restart 
+import subprocess
 
 #import for GUI 
 from matplotlib.figure import Figure 
@@ -400,8 +402,13 @@ except:
 #______________________________________________________________________________________________
 #-------------------main loop for the programe------------------------------------------------- 
 
-
-win.mainloop()
+try:
+    win.mainloop()
+except:
+    subprocess.run('~/LabWatchGUI6/runme.sh', shell=True)
+    quit()
+finally:
+    pass
 #-------------------------End of Main Loop-----------------------------------------------------
 #_______________________________________________________________________________________________
 
