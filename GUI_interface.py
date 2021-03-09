@@ -61,6 +61,9 @@ temp_avg = 0
 humid_last_avg = 0
 humid_avg = 0
 
+#timer
+filetimer = datetime.now()
+
 #-----------------------------------------------------------------
 #----------------ThingSpeak Global Variables----------------------
 #ThingSpeak credentrials 
@@ -261,17 +264,41 @@ def cloud(threadName, delay):
 
 #-------------------------------------Local Logging-------------------------------------------------
 
-#def logging(delay):
-        #file = open("/home/pi/data_log.csv", "a")
-        #if os.stat("/home/pi/data_log.csv").st_size == 0:
-            #file.write("Time,Temperature °C,Humidity\n")
+def local(threadName, delay):
+    global temp0
+    global humid0
+    global temp1
+    global humid1
+    global filetimer
+    while True:
+        try:
+            now = datetime.now()
+            file = open("/home/pi/data_log.csv", "a")
+            if os.stat("/home/pi/data_log.csv").st_size == 0:
+                file.write("Time,S1TempC,S1Humid,S2TempC,S2Humid,\n")
 
+            file.write(str(now)+","+str(temp0)+","+str(humid0)+str(temp1)+","+str(humid1)+"\n")
+            file.flush()
 
-        #now = datetime.now()
-        #file.write(str(now)+","+str(temp)+","+str(hum)+"\n")
-        #file.flush()
-
-        #time.sleep(delay)
+            if now.hour > filetimer.hour:
+                file.close()
+                # check if directory exists
+                if not os.path.exists("/home/pi/{}/{}/{}/".format(
+                    filetimer.year, filetimer.month, filetimer.day)
+                ):
+                    # make directory if not exist
+                    os.makedirs("/home/pi/{}/{}/{}/".format(
+                        filetimer.year, filetimer.month, filetimer.day)
+                    )
+                # move file to according folder
+                os.rename("/home/pi/data_log.csv","~/{}/{}/{}/{}hr.csv".format(
+                        filetimer.year, filetimer.month, filetimer.day, filetimer.hour
+                    )
+                )
+                filetimer = datetime.now();
+        except:
+            print("Logging Failed")
+        time.sleep(delay)
 
 
 
@@ -408,6 +435,7 @@ try:
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
     _thread.start_new_thread( cloud,   ("upload"  , 10, ) )
+    _thread.start_new_thread( local,   ("local"  , 10, ) )
     ani = animation.FuncAnimation(fig, animate, interval=1000, fargs=(xs, ys,xs2,ys2) )
     
 except:
