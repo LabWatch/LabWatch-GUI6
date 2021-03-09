@@ -273,15 +273,15 @@ def local(threadName, delay):
     global filetimer
     while True:
         try:
-            now = datetime.now()
+            timenow = datetime.now()
             file = open("/home/pi/data_log.csv", "a")
             if os.stat("/home/pi/data_log.csv").st_size == 0:
                 file.write("Time,S1TempC,S1Humid,S2TempC,S2Humid,\n")
 
-            file.write(str(now)+","+str(temp0)+","+str(humid0)+str(temp1)+","+str(humid1)+"\n")
+            file.write(str(timenow)+","+str(temp0)+","+str(humid0)+str(temp1)+","+str(humid1)+"\n")
             file.flush()
 
-            if now.hour > filetimer.hour:
+            if timenow.hour > filetimer.hour:
                 file.close()
                 # check if directory exists
                 if not os.path.exists("/home/pi/{}/{}/{}/".format(
@@ -292,7 +292,7 @@ def local(threadName, delay):
                         filetimer.year, filetimer.month, filetimer.day)
                     )
                 # move file to according folder
-                os.rename("/home/pi/data_log.csv","~/{}/{}/{}/{}hr.csv".format(
+                os.rename("/home/pi/data_log.csv","/home/pi/{}/{}/{}/{}hr.csv".format(
                         filetimer.year, filetimer.month, filetimer.day, filetimer.hour
                     )
                 )
@@ -436,7 +436,7 @@ try:
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
     _thread.start_new_thread( cloud,   ("upload"  , 10, ) )
-    _thread.start_new_thread( local,   ("local"  , 10, ) )
+    _thread.start_new_thread( local,   ("local"  , 2, ) )
     ani = animation.FuncAnimation(fig, animate, interval=1000, fargs=(xs, ys,xs2,ys2) )
     
 except:
