@@ -81,6 +81,7 @@ win = tk.Tk()
 #Parameters
 x_len = 200         # Number of points to display
 y_range = [10, 40]  # Range of possible Y values to display
+y_rangehumid = [20, 80] # Range of possible Y values to display for HUMIDITY
 
 #Create figure for plotting
 fig = plt.figure()
@@ -103,7 +104,7 @@ plt.grid(True)
 ax2 = fig.add_subplot(1,2,2)
 xs2 = list(range(0, 200))
 ys2 = [0] * x_len
-ax2.set_ylim(y_range)
+ax2.set_ylim(y_rangehumid)
 
 #Create a blank line. We will update the line in animate
 line2, = ax2.plot(xs2, ys2)
