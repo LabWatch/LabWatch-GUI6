@@ -59,6 +59,9 @@ temp_avg = 0
 humid_last_avg = 0
 humid_avg = 0
 
+#file timer
+filetimer = datetime.now()
+
 #-----------------------------------------------------------------
 #----------------ThingSpeak Global Variables----------------------
 #ThingSpeak credentrials 
@@ -76,6 +79,7 @@ win = tk.Tk()
 #Parameters
 x_len = 200         # Number of points to display
 y_range = [10, 40]  # Range of possible Y values to display
+y_rangehumid = [20, 80] # Range of possible Y values to display for HUMIDITY
 
 #Create figure for plotting
 fig = plt.figure()
@@ -98,7 +102,7 @@ plt.grid(True)
 ax2 = fig.add_subplot(1,2,2)
 xs2 = list(range(0, 200))
 ys2 = [0] * x_len
-ax2.set_ylim(y_range)
+ax2.set_ylim(y_rangehumid)
 
 #Create a blank line. We will update the line in animate
 line2, = ax2.plot(xs2, ys2)
@@ -264,17 +268,51 @@ def cloud(threadName, delay):
 
 #-------------------------------------Local Logging-------------------------------------------------
 
-#def logging(delay):
-        #file = open("/home/pi/data_log.csv", "a")
-        #if os.stat("/home/pi/data_log.csv").st_size == 0:
-            #file.write("Time,Temperature °C,Humidity\n")
+def local(threadName, delay):
+    global temp0
+    global humid0
+    global temp1
+    global humid1
+    global filetimer
+    while True:
+        try:
+            timenow = datetime.now()
+            yrnow = filetimer.year
+            monow = filetimer.month
+            daynow = filetimer.day
 
+            file = open("/home/pi/data_log.csv", "a")
+            if os.stat("/home/pi/data_log.csv").st_size == 0:
+                file.write("File date: " + "," + str(yrnow) + "," + str(monow) + "," + str(daynow)+"\n")
+                file.write("Time,S1TempC,S1Humid,S2TempC,S2Humid,\n")
 
-        #now = datetime.now()
-        #file.write(str(now)+","+str(temp)+","+str(hum)+"\n")
-        #file.flush()
+            file.write(str(timenow.strftime("%m/%d/%Y %H:%M:%S"))+","+str(temp0)+","+str(humid0)+","+str(temp1)+","+str(humid1)+"\n")
+            file.flush()
+            file.close()
 
-        #time.sleep(delay)
+            file = open("/home/pi/data_log.csv", "r")
+            data=list(csv.reader(file))
+            infiletimer = int(data[0][3])
+            file.close()
+
+            if timenow.day > infiletimer:
+                # check if directory exists
+                if not os.path.exists("/home/pi/{}/".format(
+                    filetimer.year)
+                ):
+                    # make directory if not exist
+                    os.makedirs("/home/pi/{}/".format(
+                        filetimer.year)
+                    )
+                # move file to according folder
+                os.rename("/home/pi/data_log.csv","/home/pi/{}/.csv".format(
+                        filetimer.year
+                    )
+                )
+                filetimer = datetime.now()
+        except:
+            print("Logging Failed")
+        time.sleep(delay)
 
 #-------------------------------------End of Local Logging ---------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
@@ -393,7 +431,8 @@ try:
     _thread.start_new_thread( sensor0, ("sensor_1", 2, ) )#starts recording sensor on D4
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
-    _thread.start_new_thread( cloud,   ("upload"  , 30, ) )
+    _thread.start_new_thread( cloud,   ("upload"  , 10, ) )
+    _thread.start_new_thread( local,   ("local"  , 300, ) )
     ani = animation.FuncAnimation(fig, animate, interval=1000, fargs=(xs, ys,xs2,ys2) )
     
 except:
