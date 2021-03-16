@@ -14,7 +14,7 @@ import board
 import adafruit_dht
 
 
-#import for GUI 
+#import libraries for GUI 
 from matplotlib.figure import Figure 
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,  
 NavigationToolbar2Tk) 
