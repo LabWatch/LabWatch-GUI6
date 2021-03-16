@@ -279,7 +279,7 @@ def local(threadName, delay):
             if os.stat(path).st_size == 0:
                 file.write("Time,S1TempC,S1Humid,S2TempC,S2Humid,\n")
 
-            file.write(str(timenow.strftime("%m/%d/%Y %H:%M:%S"))+","+str(temp0)+","+str(humid0)+","+str(temp1)+","+str(humid1)+"\n")
+            file.write(str(timenow.strftime("%m/%d/%Y %H:%M"))+","+str(temp0)+","+str(humid0)+","+str(temp1)+","+str(humid1)+"\n")
             file.flush()
             file.close()
         except:
@@ -460,7 +460,6 @@ win.bind('<Escape>',exit_)                      #ESC to exit
 #-------------------------------Creating Threads--------------------------------------------------------------------
 # Creates threads and starts all functions as needed
 try:
-    print("test")
     _thread.start_new_thread( sensor0, ("sensor_1", 2, ) )#starts recording sensor on D4
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
