@@ -299,9 +299,9 @@ def animate(i, xs, xs2, ys, ys2):
     global x_len
     
     #Send variables from temp to StringVar for temperatur.set above in---->Digital readings for GUI
-    temperature.set(str(temp_avg)+"°C")            
+    temperature.set(str(round(temp_avg,1))+"°C")            
     #Send variables from hum to StringVar for temperatur.set above in---->Digital readings for GUI
-    humidity.set(str(humid_avg)+"%" )        
+    humidity.set(str(round(temp_avg,1))+"%" )        
     
     #Live Plotting
     # Add y to list
