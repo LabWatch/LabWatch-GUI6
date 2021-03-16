@@ -13,6 +13,8 @@ import time
 import board
 import adafruit_dht
 
+#System Restart 
+import subprocess
 
 #import for GUI 
 from matplotlib.figure import Figure 
@@ -107,6 +109,9 @@ plt.xlabel('Samples')
 plt.ylabel('%')
 plt.grid(True)
 fig.tight_layout()
+
+
+
 
 
 #______________________________________________________________________________________________________________________________
@@ -207,8 +212,8 @@ def avg(threadName, delay):
             humiddiff = abs(humid0-humid1)
 
             if (tempdiff < 4 and humiddiff < 10) :# they are roughly the same value 
-                temp_avg = (temp0 + temp1) / 2
-                humid_avg = (humid0 + humid1) / 2
+                temp_avg = (temp0 + temp1 + temp_last_avg) / 3
+                humid_avg = (humid0 + humid1 + humid_last_avg) / 3
 
         elif (sensor_fault0 == False and sensor_fault1 == True) :#D4 OK D18 Bad
             temp_avg = (temp0 + temp_last_avg) / 2
@@ -370,12 +375,13 @@ canv.draw()
 get_widz = canv.get_tk_widget()
 get_widz.pack()
 
+
+
+def exit_(event):                                    #Exit fullscreen
+    win.quit() 
+
 win.attributes("-fullscreen",True)             #Fullscreen when executed 
-win.bind("<Escape>",exit)                      #ESC to exit
-
-def exit():                                    #Exit fullscreen
-	win.quit() 
-
+win.bind('<Escape>',exit_)                      #ESC to exit
 #---------------------------------End Of GUI -------------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
 
@@ -384,7 +390,6 @@ def exit():                                    #Exit fullscreen
 #-------------------------------Creating Threads--------------------------------------------------------------------
 # Creates threads and starts all functions as needed
 try:
-    print("test")
     _thread.start_new_thread( sensor0, ("sensor_1", 2, ) )#starts recording sensor on D4
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
@@ -400,8 +405,13 @@ except:
 #______________________________________________________________________________________________
 #-------------------main loop for the programe------------------------------------------------- 
 
-
-win.mainloop()
+try:
+    win.mainloop()
+except:
+    subprocess.run('~/LabWatchGUI6/runme.sh', shell=True)
+    quit()
+finally:
+    pass
 #-------------------------End of Main Loop-----------------------------------------------------
 #_______________________________________________________________________________________________
 
