@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+#-----------Import Libraries------------------------#
+
 #thingspeak imports 
 from urllib.request import urlopen 
 
@@ -8,33 +10,35 @@ import _thread
 
 #import Time 
 import time
+import datetime 
 
-#importing for the AdaFruit Board
+#importing data for the AdaFruit GPIO Board (RPI4)
 import board
 import adafruit_dht
 
-
-#import for GUI 
+#import libraries for GUI 
 from matplotlib.figure import Figure 
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,  
 NavigationToolbar2Tk) 
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+
 from tkinter import *           #Tkinter Library/ install Tkinter - Python 3. sudo apt-get install python3-tk
 import tkinter as tk            #Tkinter Library
-import threading                #For running mulitple threads(task,fucntion calls) 
+from tkinter import messagebox
+from tkinter import filedialog
 import tkinter.font             #Tkinter font library
+
+import threading                #For running mulitple threads(task,fucntion calls) 
 import random
 import webbrowser
 import csv
 import os
-from datetime import datetime 
-import gaugelib
-from tkinter import messagebox
-from tkinter import filedialog
 
-#----------------------------------------------------------
-#-----------Sensor Global Variables------------------------
+
+#-----------End of Import Libraries------------------------#
+
+#-----------Sensor Global Variables------------------------#
 
 #setting up the pin for the DHT22
 dhtDevice0 = adafruit_dht.DHT22(board.D4)
@@ -65,12 +69,11 @@ myAPI = '4M4MSZ8ZYP18AU3E'
 baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI 
 
 #-------------------------------------------------------------------
-#-------------------Tkinter Variables-----------------------------------------
+#-------------------Tkinter Variables + Plot attributes-----------------------------------------
 #Tkinter window
 win = tk.Tk()
 
 #Live update plot of temp and humidity
-
 #Parameters
 x_len = 200         # Number of points to display
 y_range = [10, 40]  # Range of possible Y values to display
@@ -107,7 +110,6 @@ plt.xlabel('Samples')
 plt.ylabel('%')
 plt.grid(True)
 fig.tight_layout()
-
 
 #______________________________________________________________________________________________________________________________
 #------------------Everything Between lines for Sensor read Data and error checking--------------------------------------------- 
@@ -155,6 +157,7 @@ def sensor1( threadName, delay):
     global sensor_fault1
     global temp_avg
     fault = bool(0)
+
     while True: #runs forever 
         for x in range(5):#tries 5 times before thorwing fault for sensor 
             try:
@@ -279,16 +282,16 @@ def cloud(threadName, delay):
 
 #Digital readings for GUI
 temperature = StringVar()                       #is a class that provides helper functions for directly creating and accessing such variables in that interpreter.
-temperature.set("---"+ "°C")	                #Temperature set to store multiple items in a single variable	
+temperature.set("----"+ "°C")	                #Temperature set to store multiple items in a single variable	
 
 humidity = StringVar()
 humidity.set("----"+" %")		                #Humidity set to store multiple items in a single variable	
 
-temperatureLabel = Label(win, fg="black", background="#DcDcDc", textvariable=temperature, font=("Segoe UI", 60,"bold"))
+temperatureLabel = Label(win, fg="black", background="#DcDcDc", textvariable=temperature, font=("Segoe UI", 60,"bold")) #bg color,font and font size
 temperatureLabel.place(x=90, y=110)             #Character "----C" placement and attributes
 
-humidityLabel = Label(win, fg="black", background="#DcDcDc", textvariable=humidity, font=("Segoe UI", 60,"bold"))
-humidityLabel.place(x=490, y=110)              #Character "----%" placement and attributes
+humidityLabel = Label(win, fg="black", background="#DcDcDc", textvariable=humidity, font=("Segoe UI", 60,"bold"))       #bg color,font and font size
+humidityLabel.place(x=485, y=110)              #Character "----%" placement and attributes
 #End of Digital readings for GUI
 
 def animate(i, xs, xs2, ys, ys2):
@@ -358,13 +361,12 @@ class Clock:
 
         self.watch.pack()
         
-        self.changeLabel() #first call it manually
+        self.changeLabel() #first we call it manually
 
     def changeLabel(self): 
         self.time2 = time.strftime('%Y-%m-%d %H:%M:%S:%p:%Z')
         self.watch.configure(text=self.time2)
-        self.mFrame.after(200, self.changeLabel) #it'll call itself continuously
-
+        self.mFrame.after(200, self.changeLabel) #it will call itself continuously
 Clock()
 
 #-------------------------------End clock--------------------------------- 
@@ -372,6 +374,7 @@ Clock()
 canv = FigureCanvasTkAgg(fig, master = win)
 canv._tkcanvas.pack(side=tk.BOTTOM)
 canv.draw()
+
 get_widz = canv.get_tk_widget()
 get_widz.pack()
 
@@ -403,7 +406,7 @@ except:
 #_________________________________________________________________________________________________________
 
 #______________________________________________________________________________________________
-#-------------------main loop for the programe------------------------------------------------- 
+#-------------------main loop for the program------------------------------------------------- 
 
 
 win.mainloop()
