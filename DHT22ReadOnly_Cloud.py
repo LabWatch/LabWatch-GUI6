@@ -5,12 +5,21 @@ from urllib.request import urlopen
 
 #importing threading
 import _thread
+
 #import Time 
 import time
 
 #importing for the AdaFruit Board
 import board
 import adafruit_dht
+
+#System Restart 
+import subprocess
+
+
+import csv
+import os
+from datetime import datetime
 
 #----------------------------------------------------------
 #-----------Sensor Global Variables------------------------
@@ -36,12 +45,17 @@ temp_avg = 0
 humid_last_avg = 0
 humid_avg = 0
 
+
+
 #-----------------------------------------------------------------
 #----------------ThingSpeak Global Variables----------------------
 #ThingSpeak credentrials 
 myAPI = '4M4MSZ8ZYP18AU3E' 
 # URL where we will send the data, Don't change it
 baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI 
+
+
+
 
 
 #______________________________________________________________________________________________________________________________
@@ -61,7 +75,7 @@ def sensor0( threadName, delay):
                 # Print the values to the serial port
                 temperature_c = dhtDevice0.temperature
                 humidity = dhtDevice0.humidity
-                if (abs(temp_avg - temperature_c ) < 4):
+                if (abs(temp0 - temperature_c ) < 4):
                     fault = bool(0)
                 break            
             except RuntimeError as error:
@@ -96,7 +110,7 @@ def sensor1( threadName, delay):
                 # Print the values to the serial port
                 temperature_c = dhtDevice1.temperature
                 humidity = dhtDevice1.humidity
-                if (abs(temp_avg - temperature_c ) < 4): # if the sensor is within a certain range it will be used again 
+                if (abs(temp1 - temperature_c ) < 4): # if the sensor is within a certain range it will be used again 
                     fault = bool(0)
                 break            
             except RuntimeError as error:
@@ -142,38 +156,40 @@ def avg(threadName, delay):
             humiddiff = abs(humid0-humid1)
 
             if (tempdiff < 4 and humiddiff < 10) :# they are roughly the same value 
-                temp_avg = (temp0 + temp1) / 2
-                humid_avg = (humid0 + humid1) / 2
+                temp_avg = (temp0 + temp1 + temp_last_avg) / 3
+                humid_avg = (humid0 + humid1 + humid_last_avg) / 3
 
         elif (sensor_fault0 == False and sensor_fault1 == True) :#D4 OK D18 Bad
             temp_avg = (temp0 + temp_last_avg) / 2
             humid_avg = (humid0 + humid_last_avg) / 2
-
+            messagebox.showerror("SENSOR ERROR", "SENSOR 2 FAULT ON D18")
+            
         elif (sensor_fault0 == True and sensor_fault1 == False): #D4 Bad D18 OK
             temp_avg = (temp1 + temp_last_avg) / 2
             humid_avg = (humid1 + humid_last_avg) / 2 
+            messagebox.showerror("SENSOR ERROR", "SENSOR 1 FAULT ON D4")
+            
         else: #both Bad set to 0 , 0 
             temp_avg = 0
             humid_avg = 0
-
+            messagebox.showerror("SENSOR ERROR", "SENSOR 1 AND 2 FAULT")
         
-        # prints to terminal for error checking 
-        print(
-                "Temp_avg:  {:.1f} C    Humidity_avg: {:.1f}%   sensor0: {}   Sensor1: {} ".format(
-                    temp_avg, humid_avg,sensor_fault0,sensor_fault1
-                )
-            ) 
+        temp_avg = round(temp_avg,1)
+        humid_avg = round(humid_avg,1)
+        # # prints to terminal for error checking 
+        # print(
+        #         "Temp_avg:  {:.1f} C    Humidity_avg: {:.1f}%   sensor0: {}   Sensor1: {} ".format(
+        #             temp_avg, humid_avg,sensor_fault0,sensor_fault1
+        #         )
+        #     ) 
         time.sleep(delay)#sleeps for set delay time 
 
-
-
-
-# 
 #-----------------------------------End of sensor Data read and error Check------------------------------------------------------------------------
-#______________________________________________________________________________________________________________
-#_________________________________________________________________________________________________________________
+#________________________________________________________________________________________________________________________________________________
 
-#Thingspeak Function Validation
+#________________________________________________________________________________________________________________________________
+
+#---------------------------------------------Thingspeak Function Validation-------------------------------------------------
 def cloud(threadName, delay):
     global temp_avg
     global humid_avg
@@ -190,55 +206,72 @@ def cloud(threadName, delay):
 
 #-------------------------------------End of Thingspeak Uploading ---------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
-#__________________________________________________________________________________________________________________
-#GUI to local User Code
+#________________________________________________________________________________________________________________________________
 
+#-------------------------------------Local Logging-------------------------------------------------
 
+def local(threadName, delay):
+    global temp0
+    global humid0
+    global temp1
+    global humid1
+    
+    while True:
+        try:
+            timenow = datetime.now()
+            yrnow = timenow.strftime("%Y")
+            monow = timenow.strftime("%m")
+            daynow = timenow.strftime("%d")
+            path = "/home/pi/LabWatchGUI6/Logging/{}-{}.csv".format(yrnow,monow)
+            file = open(path, "a")
+            if os.stat(path).st_size == 0:
+                file.write("Time,S1TempC,S1Humid,S2TempC,S2Humid,\n")
 
+            file.write(str(timenow.strftime("%m/%d/%Y %H:%M:%S"))+","+str(temp0)+","+str(humid0)+","+str(temp1)+","+str(humid1)+"\n")
+            file.flush()
+            file.close()
+        except:
+            print("Logging Failed")
+        time.sleep(delay)
 
-
-
-
-
-
-
-
-
-
-
-
-#---------------------------------End Of GUI -------------------------------------------------------------------------------
+#-------------------------------------End of Local Logging ---------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
+
+
+
+
+
+
+
+
 #__________________________________________________________________________________________________________________
-
-
-
-#_____________________________Creating Threads___________________________________________________________
-# Create two threads as follows
+#-------------------------------Creating Threads--------------------------------------------------------------------
+# Creates threads and starts all functions as needed
 try:
     _thread.start_new_thread( sensor0, ("sensor_1", 2, ) )#starts recording sensor on D4
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
-    _thread.start_new_thread( cloud,   ("upload"  , 10, ) )
+    _thread.start_new_thread( cloud,   ("upload"  , 300, ) )
+    _thread.start_new_thread( local,   ("local"  , 300, ) )
+    
 except:
     print ("Error: unable to start thread")
 
 #-----------------------------End of Starting Threads----------------------------------------------------
 #_________________________________________________________________________________________________________
 
-
-
-
-
-
-
-
-#_______________________main loop for the programe____________________________________________ 
-while 1:#True loop to run code forever 
-    
-    #keeps threads running in background           
-    pass 
+#______________________________________________________________________________________________
+#-------------------main loop for the programe------------------------------------------------- 
+while True:
+    try:
+        pass
+    except:
+        subprocess.run('~/LabWatchGUI6/runme_DHT.sh', shell=True)
+        quit()
+    finally:
+        pass
 #-------------------------End of Main Loop-----------------------------------------------------
 #_______________________________________________________________________________________________
+
 
 #end of code 
