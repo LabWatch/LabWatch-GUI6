@@ -280,7 +280,7 @@ def local(threadName, delay):
             
             file = open("/home/pi/data_logtest.csv", "r")
             data=list(csv.reader(file))
-            int filetimer = (data[0][3])
+            filetimer = (data[0][3])
 
             file.write(str(timenow)+","+str(temp0)+","+str(humid0)+str(temp1)+","+str(humid1)+"\n")
             file.flush()
