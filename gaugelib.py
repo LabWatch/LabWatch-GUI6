@@ -198,13 +198,13 @@ class DrawGauge3(ini):
                                outline = "orange")
         self.canvas.create_arc(self.size/6, self.size/6, self.size-self.size/6, self.size-self.size/6,
                                width=self.size/10,style="arc",start=60, extent=60,
-                               outline = "light blue")
+                               outline = "#FFD700")
         self.canvas.create_arc(self.size/6, self.size/6, self.size-self.size/6, self.size-self.size/6,
                                width=self.size/10,style="arc",start=120, extent=60,
-                               outline = "blue")
+                               outline = "light blue")
         self.canvas.create_arc(self.size/6, self.size/6, self.size-self.size/6, self.size-self.size/6,
                                width=self.size/10,style="arc",start=180, extent=60,
-                               outline = "green")
+                               outline = "blue")
         self.readout = self.canvas.create_text(self.size/2,4*self.size/5, font=("Segoe UI",int(self.size/18),'bold'),fill="black", text='')
         
     def draw_tick(self,divisions=100):
