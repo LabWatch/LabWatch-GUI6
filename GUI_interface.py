@@ -111,6 +111,9 @@ plt.grid(True)
 fig.tight_layout()
 
 
+
+
+
 #______________________________________________________________________________________________________________________________
 #------------------Everything Between lines for Sensor read Data and error checking--------------------------------------------- 
 
@@ -372,12 +375,13 @@ canv.draw()
 get_widz = canv.get_tk_widget()
 get_widz.pack()
 
+
+
+def exit_(event):                                    #Exit fullscreen
+    win.quit() 
+
 win.attributes("-fullscreen",True)             #Fullscreen when executed 
-win.bind("<Escape>",exit)                      #ESC to exit
-
-def exit():                                    #Exit fullscreen
-	win.quit() 
-
+win.bind('<Escape>',exit_)                      #ESC to exit
 #---------------------------------End Of GUI -------------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
 
@@ -386,7 +390,6 @@ def exit():                                    #Exit fullscreen
 #-------------------------------Creating Threads--------------------------------------------------------------------
 # Creates threads and starts all functions as needed
 try:
-    print("test")
     _thread.start_new_thread( sensor0, ("sensor_1", 2, ) )#starts recording sensor on D4
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
