@@ -225,7 +225,6 @@ def local(threadName, delay):
             path = "/home/pi/LabWatchGUI6/Logging/{}-{}.csv".format(yrnow,monow)
             file = open(path, "a")
             if os.stat(path).st_size == 0:
-                file.write("File date: " + "," + str(yrnow) + "," + str(monow) + "," + str(daynow)+"\n")
                 file.write("Time,S1TempC,S1Humid,S2TempC,S2Humid,\n")
 
             file.write(str(timenow.strftime("%m/%d/%Y %H:%M:%S"))+","+str(temp0)+","+str(humid0)+","+str(temp1)+","+str(humid1)+"\n")
