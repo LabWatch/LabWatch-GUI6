@@ -233,6 +233,8 @@ def avg(threadName, delay):
             humid_avg = 0
             messagebox.showerror("SENSOR ERROR", "SENSOR 1 AND 2 FAULT")
         
+        temp_avg = round(temp_avg,1)
+        humid_avg = round(humid_avg,1)
         # # prints to terminal for error checking 
         # print(
         #         "Temp_avg:  {:.1f} C    Humidity_avg: {:.1f}%   sensor0: {}   Sensor1: {} ".format(
@@ -279,7 +281,7 @@ def local(threadName, delay):
             yrnow = timenow.strftime("%Y")
             monow = timenow.strftime("%m")
             daynow = timenow.strftime("%d")
-            path = "/home/pi/{}-{}.csv".format(yrnow,monow)
+            path = "/home/pi/LabWatchGUI6/Logging/{}-{}.csv".format(yrnow,monow)
             file = open(path, "a")
             if os.stat(path).st_size == 0:
                 file.write("File date: " + "," + str(yrnow) + "," + str(monow) + "," + str(daynow)+"\n")
