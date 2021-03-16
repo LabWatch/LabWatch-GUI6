@@ -329,15 +329,15 @@ def animate(i, xs, xs2, ys, ys2):
     global HLower_yellow 
     
     #Send variables from temp to StringVar for temperatur.set above in---->Digital readings for GUI
-    temperature.set(str(round(temp_avg,1))+"°C")            
+    temperature.set(str(temp_avg)+"°C")            
     #Send variables from hum to StringVar for temperatur.set above in---->Digital readings for GUI
-    humidity.set(str(round(humid_avg,1))+"%" )        
+    humidity.set(str(humid_avg)+"%" )        
 
     #Live Plotting
     #---------------------Temperature Plot ------------------#
     #Append sensor reading data
     xs.append(dt.datetime.now().strftime('%H:%M:%S'))
-    ys.append(round(temp_avg))
+    ys.append(temp_avg)
 
     #axis limits
     xs = xs[-4:]
@@ -358,7 +358,7 @@ def animate(i, xs, xs2, ys, ys2):
     #---------------------Humidity Plot ---------------------#
     #Append sensor reading data
     xs2.append(dt.datetime.now().strftime('%H:%M:%S'))
-    ys2.append(round(humid_avg))
+    ys2.append(humid_avg)
 
     #axis limits
     xs2 = xs2[-4:]
@@ -395,12 +395,8 @@ def animate(i, xs, xs2, ys, ys2):
     temperatureLabel.config(fg = temp_colour)
     humidityLabel.config(fg = humid_colour)
     win.update()
-    #Warning message
-    if temp_avg<10.0:
-        win.configure(background='#FF0000')
-    else:
-        win.configure(background='black')
-fig.tight_layout()
+
+win.configure(background='black')
 
 #--------------------Buttons----------------------------------#
 
