@@ -34,7 +34,13 @@ import gaugelib
 #System Restart 
 import subprocess
 
-
+#read from file
+# f = open('READTEST.txt','r')
+# api =  f.readline()
+# lowgreen =  int(f.readline())
+# highgreen =  int(f.readline())
+# lowwarn =  int(f.readline())
+# highwarn =  int(f.readline())
 
 
 #----------------------------------------------------------
