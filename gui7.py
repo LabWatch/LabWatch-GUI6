@@ -10,7 +10,7 @@ import _thread
 
 #import Time 
 import time
-import datetime 
+import datetime as dt
 
 #importing data for the AdaFruit GPIO Board (RPI4)
 import board
@@ -74,42 +74,20 @@ baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI
 win = tk.Tk()
 
 #Live update plot of temp and humidity
-#Parameters
-x_len = 200         # Number of points to display
-y_range = [10, 40]  # Range of possible Y values to display
 
 #Create figure for plotting
 fig = plt.figure()
-fig.patch.set_facecolor('#DcDcDc')
+fig.patch.set_facecolor('black')
 fig.set_size_inches(8, 2)
+
 ax = fig.add_subplot(1,2,1)
-xs = list(range(0, 200))
-ys = [0] * x_len
-ax.set_ylim(y_range)
-
-#Create a blank line. We will update the line in animate
-line, = ax.plot(xs, ys)
-
-#Add labels
-plt.title('Temperature over Time')
-plt.xlabel('Samples')
-plt.ylabel('Temp °C')
-plt.grid(True)
+xs = []
+ys = [] 
 
 ax2 = fig.add_subplot(1,2,2)
-xs2 = list(range(0, 200))
-ys2 = [0] * x_len
-ax2.set_ylim(y_range)
+xs2 = []
+ys2 = [] 
 
-#Create a blank line. We will update the line in animate
-line2, = ax2.plot(xs2, ys2)
-#Add labels
-#plt.xticks(rotation=45)
-plt.title('Humidity over Time')
-plt.xlabel('Samples')
-plt.ylabel('%')
-plt.grid(True)
-fig.tight_layout()
 
 #______________________________________________________________________________________________________________________________
 #------------------Everything Between lines for Sensor read Data and error checking--------------------------------------------- 
@@ -287,19 +265,17 @@ temperature.set("----"+ "°C")	                #Temperature set to store multipl
 humidity = StringVar()
 humidity.set("----"+" %")		                #Humidity set to store multiple items in a single variable	
 
-temperatureLabel = Label(win, fg="black", background="#DcDcDc", textvariable=temperature, font=("Segoe UI", 60,"bold")) #bg color,font and font size
-temperatureLabel.place(x=90, y=110)             #Character "----C" placement and attributes
+temperatureLabel = Label(win, fg="white", background="black", textvariable=temperature, font=("Segoe UI", 60,"bold")) #bg color,font and font size
+temperatureLabel.place(x=70, y=110)             #Character "----C" placement and attributes
 
-humidityLabel = Label(win, fg="black", background="#DcDcDc", textvariable=humidity, font=("Segoe UI", 60,"bold"))       #bg color,font and font size
+humidityLabel = Label(win, fg="white", background="black", textvariable=humidity, font=("Segoe UI", 60,"bold"))       #bg color,font and font size
 humidityLabel.place(x=485, y=110)              #Character "----%" placement and attributes
 #End of Digital readings for GUI
 
 def animate(i, xs, xs2, ys, ys2):
     global temp_avg
     global humid_avg
-    global line
-    global line2
-    global x_len
+
     
     #Send variables from temp to StringVar for temperatur.set above in---->Digital readings for GUI
     temperature.set(str(round(temp_avg,1))+"°C")            
@@ -307,32 +283,61 @@ def animate(i, xs, xs2, ys, ys2):
     humidity.set(str(round(humid_avg,1))+"%" )        
     
     #Live Plotting
-    # Add y to list
-    ys.append(temp_avg)
-    ys2.append(humid_avg)
-
-    # Limit y list to set number of items
-    ys = ys[-x_len:]
-    ys2 = ys2[-x_len:]
+    #---------------------Temperature Plot ------------------#
+    #Append sensor reading data
+    xs.append(dt.datetime.now().strftime('%H:%M:%S'))
+    ys.append((temp_avg))
+    
+    #axis limits
+    xs = xs[-5:]
+    ys = ys[-5:]
 
     # Update line with new Y values
-    line.set_ydata(ys)
-    line2.set_ydata(ys2) 
+    ax.clear()
+    ax.plot(xs,ys)
+    
+    ax.tick_params(axis='x', colors='white')
+    ax.tick_params(axis='y', colors='white')
+    
+    plt.title('Temperature over Time', color='w')
+    plt.ylabel('Temp C', color='w')
+    plt.grid(True)
+    #--------------------- End ------------------------------#
+    
+    #---------------------Humidity Plot ---------------------#
+    #Append sensor reading data
+    xs2.append(dt.datetime.now().strftime('%H:%M:%S'))
+    ys2.append((humid_avg))
+    
+    #axis limits
+    xs2 = xs2[-5:]
+    ys2 = ys2[-5:]
+    
+    ax2.clear()
+    ax2.plot(xs2,ys2)
 
+    ax2.tick_params(axis='x', colors='white')
+    ax2.tick_params(axis='y', colors='white')
+
+    plt.title('Humidity over Time', color='w')
+    plt.ylabel('%', color='w')
+    plt.grid(True)
+    #--------------------- End ------------------------------#
+    
+    fig.tight_layout()
+    
     #Warning message
     if temp_avg<10.0:
         win.configure(background='#FF0000')
     else:
-        win.configure(background='#DcDcDc')
-        
+        win.configure(background='black')
+    
 
-#--------------------Buttons---------------------------------
+#--------------------Buttons----------------------------------#
 
 def Report():
 
-    return filedialog.askopenfile(parent=win,
-                                    initialdir="",
-                                    title="Select A File",
+    filedialog.askopenfile(parent=win,
                                     filetypes = (("Text files", "*.txt"), ("All files", "*")))
 
 def ThingSpeak():
@@ -357,7 +362,7 @@ class Clock:
         self.mFrame = Frame()
         self.mFrame.pack(expand=YES,fill=X)
         self.mFrame.place(x=560, y=0)
-        self.watch = Label(self.mFrame, text=self.time2, font=('times',14, 'bold' ),background='#DcDcDc', fg="black")
+        self.watch = Label(self.mFrame, text=self.time2, font=('times',14, 'bold' ),background='black', fg="white")
 
         self.watch.pack()
         
@@ -397,7 +402,7 @@ try:
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
     _thread.start_new_thread( cloud,   ("upload"  , 30, ) )
-    ani = animation.FuncAnimation(fig, animate, interval=1000, fargs=(xs, ys,xs2,ys2) )
+    ani = animation.FuncAnimation(fig, animate, interval=2000, fargs=(xs,ys,xs2,ys2) )
     
 except:
     print ("Error: unable to start thread")
