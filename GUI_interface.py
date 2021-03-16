@@ -395,12 +395,8 @@ def animate(i, xs, xs2, ys, ys2):
     temperatureLabel.config(fg = temp_colour)
     humidityLabel.config(fg = humid_colour)
     win.update()
-    #Warning message
-    if temp_avg<10.0:
-        win.configure(background='#FF0000')
-    else:
-        win.configure(background='black')
-fig.tight_layout()
+
+win.configure(background='black')
 
 #--------------------Buttons----------------------------------#
 
