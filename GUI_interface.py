@@ -276,24 +276,29 @@ def local(threadName, delay):
             timenow = datetime.now()
             file = open("/home/pi/data_log.csv", "a")
             if os.stat("/home/pi/data_log.csv").st_size == 0:
-                file.write("Time,S1TempC,S1Humid,S2TempC,S2Humid,\n")
+                file.write("File Date: ," + str(timenow.date) + "\n" + "Time,S1TempC,S1Humid,S2TempC,S2Humid,\n")
+            
+            file = open("/home/pi/data_logtest.csv", "r")
+            data=list(csv.reader(file))
+            filetimer = (data[0][1])
+            print(filetimer.day)
 
             file.write(str(timenow)+","+str(temp0)+","+str(humid0)+str(temp1)+","+str(humid1)+"\n")
             file.flush()
 
-            if timenow.hour > filetimer.hour:
+            if timenow.day > filetimer.day:
                 file.close()
                 # check if directory exists
-                if not os.path.exists("/home/pi/{}/{}/{}/".format(
-                    filetimer.year, filetimer.month, filetimer.day)
+                if not os.path.exists("/home/pi/{}/".format(
+                    filetimer.year)
                 ):
                     # make directory if not exist
-                    os.makedirs("/home/pi/{}/{}/{}/".format(
-                        filetimer.year, filetimer.month, filetimer.day)
+                    os.makedirs("/home/pi/{}/".format(
+                        filetimer.year)
                     )
                 # move file to according folder
-                os.rename("/home/pi/data_log.csv","/home/pi/{}/{}/{}/{}hr.csv".format(
-                        filetimer.year, filetimer.month, filetimer.day, filetimer.hour
+                os.rename("/home/pi/data_log.csv","/home/pi/{}/.csv".format(
+                        filetimer.year
                     )
                 )
                 filetimer = datetime.now();
@@ -436,7 +441,7 @@ try:
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
     _thread.start_new_thread( cloud,   ("upload"  , 10, ) )
-    _thread.start_new_thread( local,   ("local"  , 2, ) )
+    _thread.start_new_thread( local,   ("local"  , 300, ) )
     ani = animation.FuncAnimation(fig, animate, interval=1000, fargs=(xs, ys,xs2,ys2) )
     
 except:
