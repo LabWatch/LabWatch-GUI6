@@ -324,8 +324,13 @@ p2.pack()
 p2.place(x=500, y=50)
 
 #--------------------Buttons---------------------------------
-def Report():
-    return filedialog.askopenfile()
+
+#def Report():
+
+#    return filedialog.askopenfile(parent=win1,
+#                                    initialdir="",
+#                                    title="Select A File",
+#                                    filetypes = (("Text files", "*.txt"), ("All files", "*")))
 
 def ThingSpeak():
     webbrowser.open_new("https://thingspeak.com/channels/1318645")
