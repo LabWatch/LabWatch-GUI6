@@ -61,7 +61,7 @@ temp_avg = 0
 humid_last_avg = 0
 humid_avg = 0
 
-#timer
+#file timer
 filetimer = datetime.now()
 
 #-----------------------------------------------------------------
@@ -274,19 +274,25 @@ def local(threadName, delay):
     while True:
         try:
             timenow = datetime.now()
+            yrnow = filetimer.year
+            monow = filetimer.month
+            daynow = filetimer.day
+
             file = open("/home/pi/data_log.csv", "a")
             if os.stat("/home/pi/data_log.csv").st_size == 0:
-                file.write("File Date: ," + str(timenow.year) + "," + str(timenow.month) + "," + str(timenow.day) + "\n" + "Time,S1TempC,S1Humid,S2TempC,S2Humid,\n")
-            
-            file = open("/home/pi/data_logtest.csv", "r")
-            data=list(csv.reader(file))
-            filetimer = (data[0][3])
+                file.write("File date: " + "," + str(yrnow) + "," + str(monow) + "," + str(daynow)+"\n")
+                file.write("Time,S1TempC,S1Humid,S2TempC,S2Humid,\n")
 
-            file.write(str(timenow)+","+str(temp0)+","+str(humid0)+str(temp1)+","+str(humid1)+"\n")
+            file.write(str(timenow.strftime("%H:%M:%S"))+","+str(temp0)+","+str(humid0)+str(temp1)+","+str(humid1)+"\n")
             file.flush()
+            file.close()
 
-            if timenow.day > filetimer:
-                file.close()
+            file = open("/home/pi/data_log.csv", "r")
+            data=list(csv.reader(file))
+            infiletimer = int(data[0][3])
+            file.close()
+
+            if timenow.day > infiletimer:
                 # check if directory exists
                 if not os.path.exists("/home/pi/{}/".format(
                     filetimer.year)
@@ -300,7 +306,7 @@ def local(threadName, delay):
                         filetimer.year
                     )
                 )
-                filetimer = datetime.now();
+                filetimer = datetime.now()
         except:
             print("Logging Failed")
         time.sleep(delay)
