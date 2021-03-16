@@ -11,10 +11,14 @@ import _thread
 #import Time 
 import time
 import datetime as dt
+from datetime import datetime 
 
 #importing data for the AdaFruit GPIO Board (RPI4)
 import board
 import adafruit_dht
+
+#System Restart 
+import subprocess
 
 #import libraries for GUI 
 from matplotlib.figure import Figure 
@@ -61,6 +65,7 @@ temp_avg = 0
 humid_last_avg = 0
 humid_avg = 0
 
+
 #-----------------------------------------------------------------
 #----------------ThingSpeak Global Variables----------------------
 #ThingSpeak credentrials 
@@ -88,6 +93,21 @@ ax2 = fig.add_subplot(1,2,2)
 xs2 = []
 ys2 = [] 
 
+#upper lower bounds for ranges 
+TUpper_green = 22 #for temp ranges 
+TLower_green = 19
+
+TUpper_yellow = 25 
+TLower_yellow = 17
+
+HUpper_green = 42 #for humid ranges 
+HLower_green = 36
+
+HUpper_yellow = 46 
+HLower_yellow = 32
+
+temp_colour = "#000000"
+humid_colour = "#000000"
 
 #______________________________________________________________________________________________________________________________
 #------------------Everything Between lines for Sensor read Data and error checking--------------------------------------------- 
@@ -188,8 +208,8 @@ def avg(threadName, delay):
             humiddiff = abs(humid0-humid1)
 
             if (tempdiff < 4 and humiddiff < 10) :# they are roughly the same value 
-                temp_avg = (temp0 + temp1) / 2
-                humid_avg = (humid0 + humid1) / 2
+                temp_avg = (temp0 + temp1 + temp_last_avg) / 3
+                humid_avg = (humid0 + humid1 + humid_last_avg) / 3
 
         elif (sensor_fault0 == False and sensor_fault1 == True) :#D4 OK D18 Bad
             temp_avg = (temp0 + temp_last_avg) / 2
@@ -205,7 +225,9 @@ def avg(threadName, delay):
             temp_avg = 0
             humid_avg = 0
             messagebox.showerror("SENSOR ERROR", "SENSOR 1 AND 2 FAULT")
-        
+
+        temp_avg = round(temp_avg,1)
+        humid_avg = round(humid_avg,1)
         # # prints to terminal for error checking 
         # print(
         #         "Temp_avg:  {:.1f} C    Humidity_avg: {:.1f}%   sensor0: {}   Sensor1: {} ".format(
@@ -240,17 +262,31 @@ def cloud(threadName, delay):
 
 #-------------------------------------Local Logging-------------------------------------------------
 
-#def logging(delay):
-        #file = open("/home/pi/data_log.csv", "a")
-        #if os.stat("/home/pi/data_log.csv").st_size == 0:
-            #file.write("Time,Temperature °C,Humidity\n")
+def local(threadName, delay):
+    global temp0
+    global humid0
+    global temp1
+    global humid1
+    
+    while True:
+        try:
+            timenow = datetime.now()
+            yrnow = timenow.strftime("%Y")
+            monow = timenow.strftime("%m")
+            daynow = timenow.strftime("%d")
+            path = "/home/pi/LabWatchGUI6/Logging/{}-{}.csv".format(yrnow,monow)
+            file = open(path, "a")
+            if os.stat(path).st_size == 0:
+                file.write("Time,S1TempC,S1Humid,S2TempC,S2Humid,\n")
+
+            file.write(str(timenow.strftime("%m/%d/%Y %H:%M"))+","+str(temp0)+","+str(humid0)+","+str(temp1)+","+str(humid1)+"\n")
+            file.flush()
+            file.close()
+        except:
+            print("Logging Failed")
+        time.sleep(delay)
 
 
-        #now = datetime.now()
-        #file.write(str(now)+","+str(temp)+","+str(hum)+"\n")
-        #file.flush()
-
-        #time.sleep(delay)
 
 #-------------------------------------End of Local Logging ---------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
@@ -265,17 +301,27 @@ temperature.set("----"+ "°C")	                #Temperature set to store multipl
 humidity = StringVar()
 humidity.set("----"+" %")		                #Humidity set to store multiple items in a single variable	
 
-temperatureLabel = Label(win, fg="white", background="black", textvariable=temperature, font=("Segoe UI", 60,"bold")) #bg color,font and font size
+temperatureLabel = Label(win, fg=temp_colour, background="black", textvariable=temperature, font=("Segoe UI", 60,"bold")) #bg color,font and font size
 temperatureLabel.place(x=70, y=110)             #Character "----C" placement and attributes
 
-humidityLabel = Label(win, fg="white", background="black", textvariable=humidity, font=("Segoe UI", 60,"bold"))       #bg color,font and font size
+humidityLabel = Label(win, fg=humid_colour, background="black", textvariable=humidity, font=("Segoe UI", 60,"bold"))       #bg color,font and font size
 humidityLabel.place(x=485, y=110)              #Character "----%" placement and attributes
 #End of Digital readings for GUI
 
 def animate(i, xs, xs2, ys, ys2):
     global temp_avg
     global humid_avg
+    global TUpper_green  #for temp ranges 
+    global TLower_green 
 
+    global TUpper_yellow  
+    global TLower_yellow 
+
+    global HUpper_green  #for humid ranges 
+    global HLower_green 
+
+    global HUpper_yellow  
+    global HLower_yellow 
     
     #Send variables from temp to StringVar for temperatur.set above in---->Digital readings for GUI
     temperature.set(str(round(temp_avg,1))+"°C")            
@@ -326,6 +372,24 @@ def animate(i, xs, xs2, ys, ys2):
     
     fig.tight_layout()
     
+    
+    if TLower_green <= temp_avg <= TUpper_green : 
+        temp_colour = "#12c702"
+    elif  TLower_yellow <= temp_avg <= TUpper_yellow :
+        temp_colour = "#ffcc00"
+    else: 
+        temp_colour = "#ff0000"
+
+    if HLower_green <= humid_avg <= HUpper_green : 
+        humid_colour = "#12c702"
+    elif  HLower_yellow <= humid_avg <= HUpper_yellow :
+        humid_colour = "#ffcc00"
+    else: 
+        humid_colour = "#ff0000"
+
+    temperatureLabel.config(fg = temp_colour)
+    humidityLabel.config(fg = humid_colour)
+    win.update()
     #Warning message
     if temp_avg<10.0:
         win.configure(background='#FF0000')
@@ -383,12 +447,11 @@ canv.draw()
 get_widz = canv.get_tk_widget()
 get_widz.pack()
 
+def exit_(event):                                    #Exit fullscreen
+    win.quit() 
+
 win.attributes("-fullscreen",True)             #Fullscreen when executed 
-win.bind("<Escape>",exit)                      #ESC to exit
-
-def exit():                                    #Exit fullscreen
-	win.quit() 
-
+win.bind('<Escape>',exit_)                      #ESC to exit
 #---------------------------------End Of GUI -------------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
 
@@ -397,24 +460,33 @@ def exit():                                    #Exit fullscreen
 #-------------------------------Creating Threads--------------------------------------------------------------------
 # Creates threads and starts all functions as needed
 try:
-    print("test")
     _thread.start_new_thread( sensor0, ("sensor_1", 2, ) )#starts recording sensor on D4
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
-    _thread.start_new_thread( cloud,   ("upload"  , 30, ) )
+    _thread.start_new_thread( cloud,   ("upload"  , 300, ) )
+    _thread.start_new_thread( local,   ("local"   , 300, ) )
     ani = animation.FuncAnimation(fig, animate, interval=2000, fargs=(xs,ys,xs2,ys2) )
     
 except:
     print ("Error: unable to start thread")
 
+
+
 #-----------------------------End of Starting Threads----------------------------------------------------
 #_________________________________________________________________________________________________________
 
 #______________________________________________________________________________________________
-#-------------------main loop for the program------------------------------------------------- 
+#-------------------main loop for the programe------------------------------------------------- 
 
 
-win.mainloop()
+
+try:
+    win.mainloop()
+except:
+    subprocess.run('~/LabWatchGUI6/runme.sh', shell=True)
+    quit()
+finally:
+    pass
 #-------------------------End of Main Loop-----------------------------------------------------
 #_______________________________________________________________________________________________
 
