@@ -78,15 +78,21 @@ win = tk.Tk()
 #Create figure for plotting
 fig = plt.figure()
 fig.patch.set_facecolor('black')
-fig.set_size_inches(8, 2)
+fig.set_size_inches(8, 1.8)
 
 ax = fig.add_subplot(1,2,1)
 xs = []
-ys = [] 
+ys = []
+
+ax.tick_params(axis='x', colors='white')
+ax.tick_params(axis='y', colors='white')
 
 ax2 = fig.add_subplot(1,2,2)
 xs2 = []
 ys2 = [] 
+
+ax2.tick_params(axis='x', colors='white')
+ax2.tick_params(axis='y', colors='white')
 
 
 #______________________________________________________________________________________________________________________________
@@ -233,7 +239,6 @@ def cloud(threadName, delay):
             print("Connection Failed")
         time.sleep(delay)
 
-
 #-------------------------------------End of Thingspeak Uploading ---------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
 #________________________________________________________________________________________________________________________________
@@ -266,72 +271,69 @@ humidity = StringVar()
 humidity.set("----"+" %")		                #Humidity set to store multiple items in a single variable	
 
 temperatureLabel = Label(win, fg="white", background="black", textvariable=temperature, font=("Segoe UI", 60,"bold")) #bg color,font and font size
-temperatureLabel.place(x=70, y=110)             #Character "----C" placement and attributes
+temperatureLabel.place(x=70, y=130)             #Character "----C" placement and attributes
 
 humidityLabel = Label(win, fg="white", background="black", textvariable=humidity, font=("Segoe UI", 60,"bold"))       #bg color,font and font size
-humidityLabel.place(x=485, y=110)              #Character "----%" placement and attributes
+humidityLabel.place(x=485, y=130)              #Character "----%" placement and attributes
 #End of Digital readings for GUI
 
 def animate(i, xs, xs2, ys, ys2):
     global temp_avg
     global humid_avg
 
-    
     #Send variables from temp to StringVar for temperatur.set above in---->Digital readings for GUI
     temperature.set(str(round(temp_avg,1))+"°C")            
     #Send variables from hum to StringVar for temperatur.set above in---->Digital readings for GUI
     humidity.set(str(round(humid_avg,1))+"%" )        
-    
+
     #Live Plotting
     #---------------------Temperature Plot ------------------#
     #Append sensor reading data
     xs.append(dt.datetime.now().strftime('%H:%M:%S'))
-    ys.append((temp_avg))
-    
-    #axis limits
-    xs = xs[-5:]
-    ys = ys[-5:]
+    ys.append(round(temp_avg))
 
-    # Update line with new Y values
+    #axis limits
+    xs = xs[-4:]
+    ys = ys[-4:]
+    
+    #Plot graph and clear (update new reading)
     ax.clear()
+
+    #Plot Labels
+    ax.set_title('Temperature over Time', color='w')
+    ax.set_xlabel('Time',color ='w')
+    ax.set_ylabel('Temp °C', color='w')
+    
     ax.plot(xs,ys)
-    
-    ax.tick_params(axis='x', colors='white')
-    ax.tick_params(axis='y', colors='white')
-    
-    plt.title('Temperature over Time', color='w')
-    plt.ylabel('Temp C', color='w')
-    plt.grid(True)
+    ax.grid(True)
     #--------------------- End ------------------------------#
-    
+
     #---------------------Humidity Plot ---------------------#
     #Append sensor reading data
     xs2.append(dt.datetime.now().strftime('%H:%M:%S'))
-    ys2.append((humid_avg))
-    
+    ys2.append(round(humid_avg))
+
     #axis limits
-    xs2 = xs2[-5:]
-    ys2 = ys2[-5:]
+    xs2 = xs2[-4:]
+    ys2 = ys2[-4:]
     
+    #Plot graph clear and label (update new reading)
     ax2.clear()
-    ax2.plot(xs2,ys2)
-
-    ax2.tick_params(axis='x', colors='white')
-    ax2.tick_params(axis='y', colors='white')
-
-    plt.title('Humidity over Time', color='w')
-    plt.ylabel('%', color='w')
-    plt.grid(True)
-    #--------------------- End ------------------------------#
+    #Plot Labels
+    ax2.set_title('Humidity over time', color='w')
+    ax2.set_xlabel('Time',color ='w')
+    ax2.set_ylabel('Hum %', color='w')
     
-    fig.tight_layout()
+    ax2.plot(xs2,ys2)
+    ax2.grid(True)
+    #--------------------- End ------------------------------#
     
     #Warning message
     if temp_avg<10.0:
         win.configure(background='#FF0000')
     else:
         win.configure(background='black')
-    
+fig.tight_layout()
 
 #--------------------Buttons----------------------------------#
 
