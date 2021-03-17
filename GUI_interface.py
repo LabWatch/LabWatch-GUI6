@@ -69,7 +69,7 @@ humid_avg = 0
 #-----------------------------------------------------------------
 #----------------ThingSpeak Global Variables----------------------
 #ThingSpeak credentrials 
-myAPI = '4M4MSZ8ZYP18AU3E' 
+myAPI = 'RXXLLQDW8BV1S7WW' 
 # URL where we will send the data, Don't change it
 baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI 
 
@@ -83,7 +83,7 @@ win = tk.Tk()
 #Create figure for plotting
 fig = plt.figure()
 fig.patch.set_facecolor('black')
-fig.set_size_inches(8, 1.8)
+fig.set_size_inches(8, 2)
 
 ax = fig.add_subplot(1,2,1)
 xs = []
@@ -291,15 +291,14 @@ def local(threadName, delay):
             print("Logging Failed")
         time.sleep(delay)
 
-
-
 #-------------------------------------End of Local Logging ---------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
 #_______________________________________________________________________________________________________________________________
 #-----------------------------------GUI to local User Code-----------------------------------------------------------------------
 
 
-#Digital readings for GUI
+#------------------------p-----Digital readings for GUI----------------------------------------------------#
+
 temperature = StringVar()                       #is a class that provides helper functions for directly creating and accessing such variables in that interpreter.
 temperature.set("----"+ "°C")	                #Temperature set to store multiple items in a single variable	
 
@@ -311,8 +310,9 @@ temperatureLabel.place(x=70, y=130)             #Character "----C" placement and
 
 humidityLabel = Label(win, fg=humid_colour, background="black", textvariable=humidity, font=("Segoe UI", 60,"bold"))       #bg color,font and font size
 humidityLabel.place(x=485, y=130)              #Character "----%" placement and attributes
-#End of Digital readings for GUI
+#----------------------------------------End-----------------------------------------------------------# 
 
+#-------------------------------------------Animate function ------------------------------------------#
 def animate(i, xs, xs2, ys, ys2):
     global temp_avg
     global humid_avg
@@ -377,7 +377,7 @@ def animate(i, xs, xs2, ys, ys2):
     
     fig.tight_layout()
     
-    
+    #------------------Digital readings colors---------------#
     if TLower_green <= temp_avg <= TUpper_green : 
         temp_colour = "#12c702"
     elif  TLower_yellow <= temp_avg <= TUpper_yellow :
@@ -395,10 +395,10 @@ def animate(i, xs, xs2, ys, ys2):
     temperatureLabel.config(fg = temp_colour)
     humidityLabel.config(fg = humid_colour)
     win.update()
+#--------------------------------End-------------------------------------------------#
 
-win.configure(background='black')
 
-#--------------------Buttons----------------------------------#
+#--------------------------------Buttons---------------------------------------------------------#
 
 def Report():
 
@@ -406,7 +406,7 @@ def Report():
                                     filetypes = (("Text files", "*.txt"), ("All files", "*")))
 
 def ThingSpeak():
-    webbrowser.open_new("https://thingspeak.com/channels/1318645")
+    webbrowser.open_new("https://thingspeak.com/channels/1311268")
 
 report_button = tk.Button(win, text="Report", command=Report)
 report_button.pack()
@@ -416,9 +416,9 @@ thingspeak_button = tk.Button(win, text="ThingSpeak", command=ThingSpeak)
 thingspeak_button.pack()
 thingspeak_button.place(x=0,y=0)
 
-#----------------------------End of buttons--------------------------------------
+#----------------------------End--------------------------------------#
 
-#---------------------------Clock ----------------------------------------------------------------
+#----------------------------------Clock-----------------------------------------------------------------#
 class Clock:
     def __init__(self):
         self.time1 = ''
@@ -439,7 +439,7 @@ class Clock:
         self.mFrame.after(200, self.changeLabel) #it will call itself continuously
 Clock()
 
-#-------------------------------End clock--------------------------------- 
+#-------------------------------End clock---------------------------------# 
 
 canv = FigureCanvasTkAgg(fig, master = win)
 canv._tkcanvas.pack(side=tk.BOTTOM)
@@ -453,7 +453,8 @@ def exit_(event):                                    #Exit fullscreen
 
 win.attributes("-fullscreen",True)             #Fullscreen when executed 
 win.bind('<Escape>',exit_)                      #ESC to exit
-#---------------------------------End Of GUI -------------------------------------------------------------------------------
+
+#---------------------------------End Of GUI ------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
 
 
@@ -466,12 +467,11 @@ try:
     _thread.start_new_thread( avg,     ("average" , 4, ) )
     _thread.start_new_thread( cloud,   ("upload"  , 300, ) )
     _thread.start_new_thread( local,   ("local"   , 300, ) )
+
     ani = animation.FuncAnimation(fig, animate, interval=2000, fargs=(xs,ys,xs2,ys2) )
-    
+
 except:
     print ("Error: unable to start thread")
-
-
 
 #-----------------------------End of Starting Threads----------------------------------------------------
 #_________________________________________________________________________________________________________
@@ -479,7 +479,8 @@ except:
 #______________________________________________________________________________________________
 #-------------------main loop for the programe------------------------------------------------- 
 
-
+#Tkinter window backgorund color
+win.configure(background='black')
 
 try:
     win.mainloop()
