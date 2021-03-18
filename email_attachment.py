@@ -9,19 +9,31 @@ from email.mime.image import MIMEImage
 from email.mime.text import MIMEText
 import os
 
+from datetime import date
+from dateutil.relativedelta import relativedelta
+
 
 #setups email information 
 #account email is coming from 
 emailfrom = "dickandspence@gmail.com"
 #account email is being sent too 
 emailto = "saltydick61@gmail.com"
-
-#file to send
-fileToSend = "/home/saltyd/LabWatchGUI6/Logging/2021-03.csv"
-
 #senders account info usr & PW 
 username = "dickandspence@gmail.com"
 password = "latvain123"
+
+
+
+#finds last months file to send
+date_file = date.today() + relativedelta(months=-1)
+y_file = date_file.strftime("%Y")
+m_file = date_file.strftime("%m")
+print (y_file +"-"+m_file)
+#file to send
+
+#fileToSend = "/home/saltyd/LabWatchGUI6/Logging/2021-03.csv"
+fileToSend = "/home/saltyd/LabWatchGUI6/Logging/{}-{}.csv".format(y_file,m_file)
+
 
 msg = MIMEMultipart()
 msg["From"] = emailfrom
@@ -29,7 +41,11 @@ msg["To"] = emailto
 msg["Subject"] = "help I cannot send an attachment to save my life"
 msg.preamble = "help I cannot send an attachment to save my life"
 
-ctype, encoding = mimetypes.guess_type(fileToSend)
+try:
+    ctype, encoding = mimetypes.guess_type(fileToSend)
+except:
+    print("no file found")
+
 if ctype is None or encoding is not None:
     ctype = "application/octet-stream"
 
