@@ -35,9 +35,13 @@ import gaugelib
 from tkinter import messagebox
 from tkinter import filedialog
 #import for email
-import smtplib, ssl
-from email.mime.text import MIMEText # New line
-from email.utils import formataddr  # New line
+import smtplib
+import ssl
+from email.mime.text import MIMEText
+from email.utils import formataddr
+from email.mime.multipart import MIMEMultipart  # New line
+from email.mime.base import MIMEBase  # New line
+from email import encoders  # New line
 
 #----------------------------------------------------------
 #-----------Sensor Global Variables------------------------
@@ -342,13 +346,33 @@ def email(threadName, delay):
             email_body = '''
                 Hi the lab room temp is unusual 
             '''
-
+            filename = '/home/pi/Desktop/LabWatchGUI6-Master/test.pdf'
             print("Sending the email...")
             # Configurating user's info
-            msg = MIMEText(email_body, 'plain')
+            msg = MIMEMultipart()
             msg['To'] = formataddr((receiver_name, receiver_email))
             msg['From'] = formataddr((sender_name, sender_email))
             msg['Subject'] = 'Hello, my friend ' + receiver_name
+            msg.attach(MIMEText(email_body, 'plain')
+            try:
+                    # Open PDF file in binary mode
+                    with open(filename, "rb") as attachment:
+                                    part = MIMEBase("application", "octet-stream")
+                                    part.set_payload(attachment.read())
+
+                    # Encode file in ASCII characters to send by email
+                    encoders.encode_base64(part)
+
+                    # Add header as key/value pair to attachment part
+                    part.add_header(
+                            "Content-Disposition",
+                            f"attachment; filename= {filename}",
+                    )
+
+                    msg.attach(part)
+            except Exception as e:
+                    print(f'Oh no! We didn't found the attachment!n{e}')
+                    break                       
             try:
                     # Creating a SMTP session | use 587 with TLS, 465 SSL and 25
                     server = smtplib.SMTP('smtp.gmail.com', 587)
@@ -365,6 +389,7 @@ def email(threadName, delay):
             finally:
                     print('Closing the server...')
                     server.quit()
+            time.sleep(delay)
 #_______________________________________________________________________________________________________________________________
 #-----------------------------------GUI to local User Code-----------------------------------------------------------------------
 
