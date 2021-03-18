@@ -337,7 +337,7 @@ def email(threadName, delay):
     global lowerlimit
     while True:
         if(temp_avg>upperlimit or temp_avg<upperlimit):
-            sender_email = 'laose152@gmail.com' #dump email, gmail only and remember to turn on less secure app access on setting
+            sender_email = 'laose152@gmail.com' #dump email, if using gmail remember to turn on less secure app access on setting; other email remember to change the line 378
             sender_name = 'LAB WATCH'
             password = 'Xx1387011247'
             receiver_email = 'laose152@gmail.com'
@@ -375,7 +375,7 @@ def email(threadName, delay):
                     break                       
             try:
                     # Creating a SMTP session | use 587 with TLS, 465 SSL and 25
-                    server = smtplib.SMTP('smtp.gmail.com', 587)
+                    server = smtplib.SMTP('smtp.gmail.com', 587) #depend on the eail change smtp.gmail.com to smtp.xxxxx.com; outlook email : smtp.office365.com
                     # Encrypts the email
                     context = ssl.create_default_context()
                     server.starttls(context=context)
