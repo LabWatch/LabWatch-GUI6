@@ -69,7 +69,7 @@ humid_avg = 0
 #-----------------------------------------------------------------
 #----------------ThingSpeak Global Variables----------------------
 #ThingSpeak credentrials 
-myAPI = 'RXXLLQDW8BV1S7WW' 
+myAPI = '4M4MSZ8ZYP18AU3E' 
 # URL where we will send the data, Don't change it
 baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI 
 
@@ -406,7 +406,7 @@ def Report():
                                     filetypes = (("Text files", "*.txt"), ("All files", "*")))
 
 def ThingSpeak():
-    webbrowser.open_new("https://thingspeak.com/channels/1311268")
+    webbrowser.open_new("https://thingspeak.com/channels/1318645")
 
 report_button = tk.Button(win, text="Report", command=Report)
 report_button.pack()
