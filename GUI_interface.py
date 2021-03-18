@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+#-----------Import Libraries------------------------#
+
 #thingspeak imports 
 from urllib.request import urlopen 
 
@@ -8,28 +10,35 @@ import _thread
 
 #import Time 
 import time
+import datetime as dt
+from datetime import datetime 
 
-#importing for the AdaFruit Board
+#importing data for the AdaFruit GPIO Board (RPI4)
 import board
 import adafruit_dht
 
 #System Restart 
 import subprocess
 
-#import for GUI 
+#import libraries for GUI 
 from matplotlib.figure import Figure 
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,  
 NavigationToolbar2Tk) 
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+
 from tkinter import *           #Tkinter Library/ install Tkinter - Python 3. sudo apt-get install python3-tk
 import tkinter as tk            #Tkinter Library
-import threading                #For running mulitple threads(task,fucntion calls) 
+from tkinter import messagebox
+from tkinter import filedialog
 import tkinter.font             #Tkinter font library
+
+import threading                #For running mulitple threads(task,fucntion calls) 
 import random
 import webbrowser
 import csv
 import os
+<<<<<<< HEAD
 from datetime import datetime 
 import gaugelib
 <<<<<<< HEAD
@@ -49,9 +58,13 @@ import subprocess
 from tkinter import messagebox
 from tkinter import filedialog
 >>>>>>> eb3e9e8d562370c3f0266ede3f8cfb15e2172c4a
+=======
+>>>>>>> ebb74bea37019e181cd3e49382837d7798a00a51
 
-#----------------------------------------------------------
-#-----------Sensor Global Variables------------------------
+
+#-----------End of Import Libraries------------------------#
+
+#-----------Sensor Global Variables------------------------#
 
 #setting up the pin for the DHT22
 dhtDevice0 = adafruit_dht.DHT22(board.D4)
@@ -74,8 +87,6 @@ temp_avg = 0
 humid_last_avg = 0
 humid_avg = 0
 
-#file timer
-filetimer = datetime.now()
 
 #-----------------------------------------------------------------
 #----------------ThingSpeak Global Variables----------------------
@@ -85,53 +96,46 @@ myAPI = '4M4MSZ8ZYP18AU3E'
 baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI 
 
 #-------------------------------------------------------------------
-#-------------------Tkinter Variables-----------------------------------------
+#-------------------Tkinter Variables + Plot attributes-----------------------------------------
 #Tkinter window
 win = tk.Tk()
 
 #Live update plot of temp and humidity
 
-#Parameters
-x_len = 200         # Number of points to display
-y_range = [10, 40]  # Range of possible Y values to display
-y_rangehumid = [20, 80] # Range of possible Y values to display for HUMIDITY
-
 #Create figure for plotting
 fig = plt.figure()
-fig.patch.set_facecolor('#DcDcDc')
-fig.set_size_inches(8, 2)
+fig.patch.set_facecolor('black')
+fig.set_size_inches(8, 1.8)
+
 ax = fig.add_subplot(1,2,1)
-xs = list(range(0, 200))
-ys = [0] * x_len
-ax.set_ylim(y_range)
+xs = []
+ys = []
 
-#Create a blank line. We will update the line in animate
-line, = ax.plot(xs, ys)
-
-#Add labels
-plt.title('Temperature over Time')
-plt.xlabel('Samples')
-plt.ylabel('Temp °C')
-plt.grid(True)
+ax.tick_params(axis='x', colors='white')
+ax.tick_params(axis='y', colors='white')
 
 ax2 = fig.add_subplot(1,2,2)
-xs2 = list(range(0, 200))
-ys2 = [0] * x_len
-ax2.set_ylim(y_rangehumid)
+xs2 = []
+ys2 = [] 
 
-#Create a blank line. We will update the line in animate
-line2, = ax2.plot(xs2, ys2)
-#Add labels
-#plt.xticks(rotation=45)
-plt.title('Humidity over Time')
-plt.xlabel('Samples')
-plt.ylabel('%')
-plt.grid(True)
-fig.tight_layout()
+ax2.tick_params(axis='x', colors='white')
+ax2.tick_params(axis='y', colors='white')
 
+#upper lower bounds for ranges 
+TUpper_green = 22 #for temp ranges 
+TLower_green = 19
 
+TUpper_yellow = 25 
+TLower_yellow = 17
 
+HUpper_green = 42 #for humid ranges 
+HLower_green = 36
 
+HUpper_yellow = 46 
+HLower_yellow = 32
+
+temp_colour = "#000000"
+humid_colour = "#000000"
 
 #______________________________________________________________________________________________________________________________
 #------------------Everything Between lines for Sensor read Data and error checking--------------------------------------------- 
@@ -179,6 +183,7 @@ def sensor1( threadName, delay):
     global sensor_fault1
     global temp_avg
     fault = bool(0)
+
     while True: #runs forever 
         for x in range(5):#tries 5 times before thorwing fault for sensor 
             try:
@@ -248,7 +253,9 @@ def avg(threadName, delay):
             temp_avg = 0
             humid_avg = 0
             messagebox.showerror("SENSOR ERROR", "SENSOR 1 AND 2 FAULT")
-        
+
+        temp_avg = round(temp_avg,1)
+        humid_avg = round(humid_avg,1)
         # # prints to terminal for error checking 
         # print(
         #         "Temp_avg:  {:.1f} C    Humidity_avg: {:.1f}%   sensor0: {}   Sensor1: {} ".format(
@@ -276,7 +283,6 @@ def cloud(threadName, delay):
             print("Connection Failed")
         time.sleep(delay)
 
-
 #-------------------------------------End of Thingspeak Uploading ---------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
 #________________________________________________________________________________________________________________________________
@@ -288,46 +294,26 @@ def local(threadName, delay):
     global humid0
     global temp1
     global humid1
-    global filetimer
+    
     while True:
         try:
             timenow = datetime.now()
-            yrnow = filetimer.year
-            monow = filetimer.month
-            daynow = filetimer.day
-
-            file = open("/home/pi/data_log.csv", "a")
-            if os.stat("/home/pi/data_log.csv").st_size == 0:
-                file.write("File date: " + "," + str(yrnow) + "," + str(monow) + "," + str(daynow)+"\n")
+            yrnow = timenow.strftime("%Y")
+            monow = timenow.strftime("%m")
+            daynow = timenow.strftime("%d")
+            path = "/home/pi/LabWatchGUI6/Logging/{}-{}.csv".format(yrnow,monow)
+            file = open(path, "a")
+            if os.stat(path).st_size == 0:
                 file.write("Time,S1TempC,S1Humid,S2TempC,S2Humid,\n")
 
-            file.write(str(timenow.strftime("%m/%d/%Y %H:%M:%S"))+","+str(temp0)+","+str(humid0)+","+str(temp1)+","+str(humid1)+"\n")
+            file.write(str(timenow.strftime("%m/%d/%Y %H:%M"))+","+str(temp0)+","+str(humid0)+","+str(temp1)+","+str(humid1)+"\n")
             file.flush()
             file.close()
-
-            file = open("/home/pi/data_log.csv", "r")
-            data=list(csv.reader(file))
-            infiletimer = int(data[0][3])
-            file.close()
-
-            if timenow.day > infiletimer:
-                # check if directory exists
-                if not os.path.exists("/home/pi/{}/".format(
-                    filetimer.year)
-                ):
-                    # make directory if not exist
-                    os.makedirs("/home/pi/{}/".format(
-                        filetimer.year)
-                    )
-                # move file to according folder
-                os.rename("/home/pi/data_log.csv","/home/pi/{}/.csv".format(
-                        filetimer.year
-                    )
-                )
-                filetimer = datetime.now()
         except:
             print("Logging Failed")
         time.sleep(delay)
+
+
 
 #-------------------------------------End of Local Logging ---------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
@@ -335,55 +321,111 @@ def local(threadName, delay):
 #-----------------------------------GUI to local User Code-----------------------------------------------------------------------
 
 
+#Digital readings for GUI
+temperature = StringVar()                       #is a class that provides helper functions for directly creating and accessing such variables in that interpreter.
+temperature.set("----"+ "°C")	                #Temperature set to store multiple items in a single variable	
+
+humidity = StringVar()
+humidity.set("----"+" %")		                #Humidity set to store multiple items in a single variable	
+
+temperatureLabel = Label(win, fg=temp_colour, background="black", textvariable=temperature, font=("Segoe UI", 60,"bold")) #bg color,font and font size
+temperatureLabel.place(x=70, y=130)             #Character "----C" placement and attributes
+
+humidityLabel = Label(win, fg=humid_colour, background="black", textvariable=humidity, font=("Segoe UI", 60,"bold"))       #bg color,font and font size
+humidityLabel.place(x=485, y=130)              #Character "----%" placement and attributes
+#End of Digital readings for GUI
+
 def animate(i, xs, xs2, ys, ys2):
     global temp_avg
     global humid_avg
-    global line
-    global line2
-    global x_len
-    p1.set_value(float(temp_avg))
-    p2.set_value(float(humid_avg))
-    # Add y to list
+    global TUpper_green  #for temp ranges 
+    global TLower_green 
+
+    global TUpper_yellow  
+    global TLower_yellow 
+
+    global HUpper_green  #for humid ranges 
+    global HLower_green 
+
+    global HUpper_yellow  
+    global HLower_yellow 
+    
+    #Send variables from temp to StringVar for temperatur.set above in---->Digital readings for GUI
+    temperature.set(str(temp_avg)+"°C")            
+    #Send variables from hum to StringVar for temperatur.set above in---->Digital readings for GUI
+    humidity.set(str(humid_avg)+"%" )        
+
+    #Live Plotting
+    #---------------------Temperature Plot ------------------#
+    #Append sensor reading data
+    xs.append(dt.datetime.now().strftime('%H:%M:%S'))
     ys.append(temp_avg)
+
+    #axis limits
+    xs = xs[-4:]
+    ys = ys[-4:]
+    
+    #Plot graph and clear (update new reading)
+    ax.clear()
+
+    #Plot Labels
+    ax.set_title('Temperature over Time', color='w')
+    ax.set_xlabel('Time',color ='w')
+    ax.set_ylabel('Temp °C', color='w')
+    
+    ax.plot(xs,ys)
+    ax.grid(True)
+    #--------------------- End ------------------------------#
+
+    #---------------------Humidity Plot ---------------------#
+    #Append sensor reading data
+    xs2.append(dt.datetime.now().strftime('%H:%M:%S'))
     ys2.append(humid_avg)
 
-    # Limit y list to set number of items
-    ys = ys[-x_len:]
-    ys2 = ys2[-x_len:]
+    #axis limits
+    xs2 = xs2[-4:]
+    ys2 = ys2[-4:]
+    
+    #Plot graph clear and label (update new reading)
+    ax2.clear()
+    #Plot Labels
+    ax2.set_title('Humidity over time', color='w')
+    ax2.set_xlabel('Time',color ='w')
+    ax2.set_ylabel('Hum %', color='w')
+    
+    ax2.plot(xs2,ys2)
+    ax2.grid(True)
+    #--------------------- End ------------------------------#
+    
+    fig.tight_layout()
+    
+    
+    if TLower_green <= temp_avg <= TUpper_green : 
+        temp_colour = "#12c702"
+    elif  TLower_yellow <= temp_avg <= TUpper_yellow :
+        temp_colour = "#ffcc00"
+    else: 
+        temp_colour = "#ff0000"
 
-    # Update line with new Y values
-    line.set_ydata(ys)
-    line2.set_ydata(ys2) 
+    if HLower_green <= humid_avg <= HUpper_green : 
+        humid_colour = "#12c702"
+    elif  HLower_yellow <= humid_avg <= HUpper_yellow :
+        humid_colour = "#ffcc00"
+    else: 
+        humid_colour = "#ff0000"
 
-    if temp_avg<10.0:
-        win.configure(background='#FF0000')
-    else:
-        win.configure(background='#DcDcDc')
-        
+    temperatureLabel.config(fg = temp_colour)
+    humidityLabel.config(fg = humid_colour)
+    win.update()
 
-p1 = gaugelib.DrawGauge2(
-    win,
-    max_value=70.0,
-    min_value=-30.0,
-    size=250,
-    bg_col='#DCDCDC',
-    unit = "Temp. °C",bg_sel = 2)
-p2 = gaugelib.DrawGauge3(
-    win,
-    max_value=70.0,
-    min_value=10.0,
-    size=250,
-    bg_col='#DCDCDC',
-    unit = "Humidity %",bg_sel = 2)
+win.configure(background='black')
 
-p1.pack()
-p1.place(x=100, y=50)
-p2.pack()
-p2.place(x=500, y=50)
+#--------------------Buttons----------------------------------#
 
-#--------------------Buttons---------------------------------
 def Report():
-    return filedialog.askopenfile()
+
+    filedialog.askopenfile(parent=win,
+                                    filetypes = (("Text files", "*.txt"), ("All files", "*")))
 
 def ThingSpeak():
     webbrowser.open_new("https://thingspeak.com/channels/1318645")
@@ -407,17 +449,16 @@ class Clock:
         self.mFrame = Frame()
         self.mFrame.pack(expand=YES,fill=X)
         self.mFrame.place(x=560, y=0)
-        self.watch = Label(self.mFrame, text=self.time2, font=('times',14, 'bold' ),background='#DcDcDc', fg="black")
+        self.watch = Label(self.mFrame, text=self.time2, font=('times',14, 'bold' ),background='black', fg="white")
 
         self.watch.pack()
         
-        self.changeLabel() #first call it manually
+        self.changeLabel() #first we call it manually
 
     def changeLabel(self): 
         self.time2 = time.strftime('%Y-%m-%d %H:%M:%S:%p:%Z')
         self.watch.configure(text=self.time2)
-        self.mFrame.after(200, self.changeLabel) #it'll call itself continuously
-
+        self.mFrame.after(200, self.changeLabel) #it will call itself continuously
 Clock()
 
 #-------------------------------End clock--------------------------------- 
@@ -425,10 +466,9 @@ Clock()
 canv = FigureCanvasTkAgg(fig, master = win)
 canv._tkcanvas.pack(side=tk.BOTTOM)
 canv.draw()
+
 get_widz = canv.get_tk_widget()
 get_widz.pack()
-
-
 
 def exit_(event):                                    #Exit fullscreen
     win.quit() 
@@ -446,18 +486,22 @@ try:
     _thread.start_new_thread( sensor0, ("sensor_1", 2, ) )#starts recording sensor on D4
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
-    _thread.start_new_thread( cloud,   ("upload"  , 10, ) )
-    _thread.start_new_thread( local,   ("local"  , 300, ) )
-    ani = animation.FuncAnimation(fig, animate, interval=1000, fargs=(xs, ys,xs2,ys2) )
+    _thread.start_new_thread( cloud,   ("upload"  , 300, ) )
+    _thread.start_new_thread( local,   ("local"   , 300, ) )
+    ani = animation.FuncAnimation(fig, animate, interval=2000, fargs=(xs,ys,xs2,ys2) )
     
 except:
     print ("Error: unable to start thread")
+
+
 
 #-----------------------------End of Starting Threads----------------------------------------------------
 #_________________________________________________________________________________________________________
 
 #______________________________________________________________________________________________
 #-------------------main loop for the programe------------------------------------------------- 
+
+
 
 try:
     win.mainloop()
