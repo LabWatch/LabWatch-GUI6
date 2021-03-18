@@ -337,7 +337,7 @@ def email(threadName, delay):
     global lowerlimit
     while True:
         if(temp_avg>upperlimit or temp_avg<upperlimit):
-            sender_email = 'laose152@gmail.com'
+            sender_email = 'laose152@gmail.com' #dump email, gmail only and remember to turn on less secure app access on setting
             sender_name = 'LAB WATCH'
             password = 'Xx1387011247'
             receiver_email = 'laose152@gmail.com'
@@ -346,7 +346,7 @@ def email(threadName, delay):
             email_body = '''
                 Hi the lab room temp is unusual 
             '''
-            filename = '/home/pi/Desktop/LabWatchGUI6-Master/test.pdf'
+            filename = '/home/pi/Desktop/LabWatchGUI6-Master/test.pdf' # for testing change it to the path of the file u want to send
             print("Sending the email...")
             # Configurating user's info
             msg = MIMEMultipart()
