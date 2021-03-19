@@ -9,67 +9,105 @@ from email.mime.image import MIMEImage
 from email.mime.text import MIMEText
 import os
 
-from datetime import date
-from dateutil.relativedelta import relativedelta
+
+
+
+
 
 
 #setups email information 
-#account email is coming from 
-emailfrom = "dickandspence@gmail.com"
-#account email is being sent too 
-emailto = "saltydick61@gmail.com"
 #senders account info usr & PW 
-username = "dickandspence@gmail.com"
+emailfrom = "dickandspence@gmail.com"
 password = "latvain123"
 
 
+# from datetime import date
+# from dateutil.relativedelta import relativedelta
 
 #finds last months file to send
-date_file = date.today() + relativedelta(months=-1)
-y_file = date_file.strftime("%Y")
-m_file = date_file.strftime("%m")
-print (y_file +"-"+m_file)
-#file to send
+#date_file = date.today() + relativedelta(months=0)
 
-#fileToSend = "/home/saltyd/LabWatchGUI6/Logging/2021-03.csv"
-fileToSend = "/home/saltyd/LabWatchGUI6/Logging/{}-{}.csv".format(y_file,m_file)
+def sendfile(send_to,date_file):
+    global emailfrom
+    global password
+    
+    status =""
 
+    y_file = date_file.strftime("%Y")
+    m_file = date_file.strftime("%m")
+    fileToSend = "/home/saltyd/LabWatchGUI6/Logging/{}-{}.csv".format(y_file,m_file)
+    try:
+        #Starts to build email
+        msg = MIMEMultipart()
+        msg["From"] = emailfrom
+        msg["To"] = send_to
+        msg["Subject"] = "Month Report for {}-{}".format(y_file,m_file)
+        msg.preamble = "Sending CSV file for the Month of {}-{} sensor data".format(y_file,m_file)
+        ctype, encoding = mimetypes.guess_type(fileToSend)
+    except:
+        print("no file found")
 
-msg = MIMEMultipart()
-msg["From"] = emailfrom
-msg["To"] = emailto
-msg["Subject"] = "help I cannot send an attachment to save my life"
-msg.preamble = "help I cannot send an attachment to save my life"
+    if ctype is None or encoding is not None:
+        ctype = "application/octet-stream"
+    maintype, subtype = ctype.split("/", 1)
+    
+    try:
+        fp = open(fileToSend, "rb")
+        attachment = MIMEBase(maintype, subtype)
+        attachment.set_payload(fp.read())
+        fp.close()
+        encoders.encode_base64(attachment)
+        attachment.add_header("Content-Disposition", "attachment", filename=os.path.basename(fileToSend))
+        
+        msg.attach(attachment)
+        try:
+            # Creating a SMTP session | use 587 with TLS, 465 SSL and 25
+            server = smtplib.SMTP("smtp.gmail.com:587")
+            # Encrypts the email
+            server.starttls()
+            # We log in into our Google account
+            server.login(emailfrom,password)
+            # Sending email from sender, to receiver with the email body
+            server.sendmail(emailfrom, send_to, msg.as_string())
+            status = "Email sent!"
+        except Exception as e:
+            status = "failed to send following error: {e}"
+            print(f'Oh no! Something bad happened!n {e}')
+        finally:
+            
+            server.quit()
+    except Exception as e:
+        status = "failed to send following error: {e}"
+    return status 
 
-try:
-    ctype, encoding = mimetypes.guess_type(fileToSend)
-except:
-    print("no file found")
+def sendwarning(send_to,temp,humid):
+    global emailfrom
+    global password
+    
+    status =""
 
-if ctype is None or encoding is not None:
-    ctype = "application/octet-stream"
+    
+    try:
+        email_body = "Lab temp is out of range current temp is {} and himid is {} ".format(temp,humid)
+        # Configurating user's info
+        #Starts to build email
+        msg = MIMEText(email_body, 'plain')
+        msg["From"] = emailfrom
+        msg["To"] = send_to
+        msg["Subject"] = "Lab Out of Range Warning"
+        msg.preamble = "Warning alarm out of range"
 
-maintype, subtype = ctype.split("/", 1)
-
-fp = open(fileToSend, "rb")
-attachment = MIMEBase(maintype, subtype)
-attachment.set_payload(fp.read())
-fp.close()
-encoders.encode_base64(attachment)
-attachment.add_header("Content-Disposition", "attachment", filename=os.path.basename(fileToSend))
-msg.attach(attachment)
-try:
-    # Creating a SMTP session | use 587 with TLS, 465 SSL and 25
-    server = smtplib.SMTP("smtp.gmail.com:587")
-    # Encrypts the email
-    server.starttls()
-    # We log in into our Google account
-    server.login(username,password)
-    # Sending email from sender, to receiver with the email body
-    server.sendmail(emailfrom, emailto, msg.as_string())
-    print('Email sent!')
-except Exception as e:
-        print(f'Oh no! Something bad happened!n {e}')
-finally:
-        print('Closing the server...')
+        # Creating a SMTP session | use 587 with TLS, 465 SSL and 25
+        server = smtplib.SMTP("smtp.gmail.com:587")
+        # Encrypts the email
+        server.starttls()
+        # We log in into our Google account
+        server.login(emailfrom,password)
+        # Sending email from sender, to receiver with the email body
+        server.sendmail(emailfrom, emailto, msg.as_string())
+        status = "warning sent"
+    except Exception as e:
+        status = "failed to send following error: {e}"
+    finally:
         server.quit()
+    return status 
