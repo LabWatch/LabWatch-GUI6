@@ -406,7 +406,27 @@ def Report():
                                     filetypes = (("Text files", "*.txt"), ("All files", "*")))
 
 def ThingSpeak():
-    webbrowser.open_new("https://thingspeak.com/channels/1318645")
+    webbrowser.open_new("https://thingspeak.com/channels/1302824/private_show")
+
+def settings():
+    # Toplevel object which will  
+    # be treated as a new window 
+    sus = Toplevel() 
+  
+    # sets the title of the 
+    # Toplevel widget 
+    sus.title("New Window") 
+  
+    # sets the geometry of toplevel 
+    sus.geometry("1000x1000") 
+  
+    # A Label widget to show in toplevel 
+    Label(sus,text ="This is a new window").pack()
+    up_button1 = tk.Button(sus, text = "↑",command=sus.destroy).place(in_=sus,x=250,y=300)
+    down_button1 = tk.Button(sus, text = "↓",command=sus.destroy).place(in_=sus,x=250,y=350)
+    up_button2 = tk.Button(sus, text = "↑",command=sus.destroy).place(in_=sus,x=750,y=300)
+    down_button2 = tk.Button(sus, text = "↓",command=sus.destroy).place(in_=sus,x=750,y=350)
+        
 
 report_button = tk.Button(win, text="Report", command=Report)
 report_button.pack()
