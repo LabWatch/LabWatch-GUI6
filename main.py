@@ -1,5 +1,5 @@
 #importing all functions
-from email_attachment import sendfile, sendwarning
+from email_sending import sendfile, sendwarning
 import settings
 import Sensor_Read
 import thingspeak
