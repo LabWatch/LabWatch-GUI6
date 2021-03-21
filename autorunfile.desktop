@@ -1,0 +1,4 @@
+[Desktop Entry]
+Type=Application
+Name=   GUI_interface
+Exec= python3 /home/pi/LabWatchGUI6/GUI_interface.py

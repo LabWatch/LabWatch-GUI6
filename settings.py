@@ -13,6 +13,7 @@ def init():
     global temp_bounds
     global humid_bounds
     #thingspeak keys
+    
     api = '4M4MSZ8ZYP18AU3E' 
     link = "https://thingspeak.com/channels/1318645"
 
@@ -27,6 +28,8 @@ def init():
 
     #setting up limits 
     temp_bounds = [17,19,22,25]
-    humid_bouds = [32,36,42,46]
+    humid_bounds = [32,36,42,46]
+    
+    
 
     
