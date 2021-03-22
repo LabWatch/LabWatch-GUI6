@@ -104,9 +104,10 @@ def sendwarning(send_to,temp,humid):
         # We log in into our Google account
         server.login(emailfrom,password)
         # Sending email from sender, to receiver with the email body
-        server.sendmail(emailfrom, emailto, msg.as_string())
+        server.sendmail(emailfrom, send_to, msg.as_string())
         status = "warning sent"
     except Exception as e:
+        print(e)
         status = "failed to send following error: {e}"
     finally:
         server.quit()
