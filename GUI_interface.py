@@ -40,6 +40,13 @@ import csv
 import os
 
 
+#email Sending 
+import email_sending 
+from dateutil.relativedelta import relativedelta
+
+sendto = "saltydick61@gmail.com"
+email_delay = date.today()
+
 #-----------End of Import Libraries------------------------#
 
 #-----------Sensor Global Variables------------------------#
@@ -161,6 +168,10 @@ def sensor1( threadName, delay):
     global sensor_fault1
     global temp_avg
     fault = bool(0)
+    global TUpper_yellow
+    global TLower_yellow
+    global HUpper_yellow
+    global HLower_yellow
 
     while True: #runs forever 
         for x in range(5):#tries 5 times before thorwing fault for sensor 
@@ -202,7 +213,9 @@ def avg(threadName, delay):
     global humid1
     global sensor_fault0
     global sensor_fault1
-    
+    global sendto
+    email_delay = date.today()
+
     while True: #runs the avg loop forever 
         
         temp_last_avg = temp_avg #stores current avgerage as last avg 
@@ -234,6 +247,13 @@ def avg(threadName, delay):
 
         temp_avg = round(temp_avg,1)
         humid_avg = round(humid_avg,1)
+        
+
+        if(TUpper_yellow < temp_avg or TLower_yellow > temp_avg or HUpper_yellow < humid_avg or HLower_yellow > humid_avg)
+            if((date.today()-email_delay).strftime("%M") => 5)
+            email_sending.sendwarning(sendto, temp_avg, humid_avg)
+            email_delay = date.today()
+        
         # # prints to terminal for error checking 
         # print(
         #         "Temp_avg:  {:.1f} C    Humidity_avg: {:.1f}%   sensor0: {}   Sensor1: {} ".format(
@@ -252,6 +272,11 @@ def cloud(threadName, delay):
     global temp_avg
     global humid_avg
     global baseURL
+    global temp0
+    global humid0
+    global temp1
+    global humid1
+
     while True:
 
         try:
@@ -259,21 +284,12 @@ def cloud(threadName, delay):
             conn.close()
         except:
             print("Connection Failed")
-        time.sleep(delay)
-
 #-------------------------------------End of Thingspeak Uploading ---------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
 #________________________________________________________________________________________________________________________________
 
 #-------------------------------------Local Logging-------------------------------------------------
 
-def local(threadName, delay):
-    global temp0
-    global humid0
-    global temp1
-    global humid1
-    
-    while True:
         try:
             timenow = datetime.now()
             yrnow = timenow.strftime("%Y")
@@ -290,7 +306,6 @@ def local(threadName, delay):
         except:
             print("Logging Failed")
         time.sleep(delay)
-
 #-------------------------------------End of Local Logging ---------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
 #_______________________________________________________________________________________________________________________________
@@ -466,7 +481,6 @@ try:
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
     _thread.start_new_thread( cloud,   ("upload"  , 300, ) )
-    _thread.start_new_thread( local,   ("local"   , 300, ) )
 
     ani = animation.FuncAnimation(fig, animate, interval=2000, fargs=(xs,ys,xs2,ys2) )
 
