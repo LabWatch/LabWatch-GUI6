@@ -39,14 +39,12 @@ import webbrowser
 import csv
 import os
 
-
-#email Sending 
-import email_sending 
+#email sending 
+import email_sending
+from datetime import date
 from dateutil.relativedelta import relativedelta
 
-sendto = "saltydick61@gmail.com"
-email_delay = date.today()
-
+sendto="saltydick61@gmail.com"
 #-----------End of Import Libraries------------------------#
 
 #-----------Sensor Global Variables------------------------#
@@ -90,7 +88,7 @@ win = tk.Tk()
 #Create figure for plotting
 fig = plt.figure()
 fig.patch.set_facecolor('black')
-fig.set_size_inches(8, 2)
+fig.set_size_inches(8, 1.8)
 
 ax = fig.add_subplot(1,2,1)
 xs = []
@@ -168,10 +166,6 @@ def sensor1( threadName, delay):
     global sensor_fault1
     global temp_avg
     fault = bool(0)
-    global TUpper_yellow
-    global TLower_yellow
-    global HUpper_yellow
-    global HLower_yellow
 
     while True: #runs forever 
         for x in range(5):#tries 5 times before thorwing fault for sensor 
@@ -213,9 +207,7 @@ def avg(threadName, delay):
     global humid1
     global sensor_fault0
     global sensor_fault1
-    global sendto
-    email_delay = date.today()
-
+    
     while True: #runs the avg loop forever 
         
         temp_last_avg = temp_avg #stores current avgerage as last avg 
@@ -247,13 +239,6 @@ def avg(threadName, delay):
 
         temp_avg = round(temp_avg,1)
         humid_avg = round(humid_avg,1)
-        
-
-        if(TUpper_yellow < temp_avg or TLower_yellow > temp_avg or HUpper_yellow < humid_avg or HLower_yellow > humid_avg)
-            if((date.today()-email_delay).strftime("%M") => 5)
-            email_sending.sendwarning(sendto, temp_avg, humid_avg)
-            email_delay = date.today()
-        
         # # prints to terminal for error checking 
         # print(
         #         "Temp_avg:  {:.1f} C    Humidity_avg: {:.1f}%   sensor0: {}   Sensor1: {} ".format(
@@ -272,11 +257,6 @@ def cloud(threadName, delay):
     global temp_avg
     global humid_avg
     global baseURL
-    global temp0
-    global humid0
-    global temp1
-    global humid1
-
     while True:
 
         try:
@@ -284,12 +264,64 @@ def cloud(threadName, delay):
             conn.close()
         except:
             print("Connection Failed")
+        time.sleep(delay)
+
+
+
+
 #-------------------------------------End of Thingspeak Uploading ---------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
 #________________________________________________________________________________________________________________________________
 
+#---------------------------------------------Emailing-------------------------------------------------
+
+
+def email(threadName, delay):
+    global temp_avg
+    global humid_avg
+    global TUpper_yellow
+    global TLower_yellow
+    global HUpper_yellow
+    global HLower_yellow
+    global sendto
+    lastrun = date.today()
+    while True: 
+        now = date.today()
+        date_diff = now - lastrun 
+        total_time = date_diff.total_seconds()
+        if(TUpper_yellow < temp_avg or TLower_yellow > temp_avg or HUpper_yellow < humid_avg or HLower_yellow > humid_avg ):
+            if (total_time > 300):
+                print(email_sending.sendwarning(sendto, temp_avg, humid_avg))
+                lastrun = date.today()
+        
+        date_time = now.strftime("%d, %H:%M")
+
+        if(date_time =="01, 04:00"):
+            date_file = date.today() + relativedelta(months=-1)
+            sent = True
+            while sent:
+                sent = email_sending(sendto,date_file)
+        
+        time.sleep(delay)
+
+
+
+
+
+#-------------------------------------End of Emailing ---------------------------------------------------------------------------
+#____________________________________________________________________________________________________________________
+
+#________________________________________________________________________________________________________________________________
+
 #-------------------------------------Local Logging-------------------------------------------------
 
+def local(threadName, delay):
+    global temp0
+    global humid0
+    global temp1
+    global humid1
+    
+    while True:
         try:
             timenow = datetime.now()
             yrnow = timenow.strftime("%Y")
@@ -306,14 +338,16 @@ def cloud(threadName, delay):
         except:
             print("Logging Failed")
         time.sleep(delay)
+
+
+
 #-------------------------------------End of Local Logging ---------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
 #_______________________________________________________________________________________________________________________________
 #-----------------------------------GUI to local User Code-----------------------------------------------------------------------
 
 
-#------------------------p-----Digital readings for GUI----------------------------------------------------#
-
+#Digital readings for GUI
 temperature = StringVar()                       #is a class that provides helper functions for directly creating and accessing such variables in that interpreter.
 temperature.set("----"+ "°C")	                #Temperature set to store multiple items in a single variable	
 
@@ -325,9 +359,8 @@ temperatureLabel.place(x=70, y=130)             #Character "----C" placement and
 
 humidityLabel = Label(win, fg=humid_colour, background="black", textvariable=humidity, font=("Segoe UI", 60,"bold"))       #bg color,font and font size
 humidityLabel.place(x=485, y=130)              #Character "----%" placement and attributes
-#----------------------------------------End-----------------------------------------------------------# 
+#End of Digital readings for GUI
 
-#-------------------------------------------Animate function ------------------------------------------#
 def animate(i, xs, xs2, ys, ys2):
     global temp_avg
     global humid_avg
@@ -392,7 +425,7 @@ def animate(i, xs, xs2, ys, ys2):
     
     fig.tight_layout()
     
-    #------------------Digital readings colors---------------#
+    
     if TLower_green <= temp_avg <= TUpper_green : 
         temp_colour = "#12c702"
     elif  TLower_yellow <= temp_avg <= TUpper_yellow :
@@ -410,10 +443,10 @@ def animate(i, xs, xs2, ys, ys2):
     temperatureLabel.config(fg = temp_colour)
     humidityLabel.config(fg = humid_colour)
     win.update()
-#--------------------------------End-------------------------------------------------#
 
+win.configure(background='black')
 
-#--------------------------------Buttons---------------------------------------------------------#
+#--------------------Buttons----------------------------------#
 
 def Report():
 
@@ -431,9 +464,9 @@ thingspeak_button = tk.Button(win, text="ThingSpeak", command=ThingSpeak)
 thingspeak_button.pack()
 thingspeak_button.place(x=0,y=0)
 
-#----------------------------End--------------------------------------#
+#----------------------------End of buttons--------------------------------------
 
-#----------------------------------Clock-----------------------------------------------------------------#
+#---------------------------Clock ----------------------------------------------------------------
 class Clock:
     def __init__(self):
         self.time1 = ''
@@ -454,7 +487,7 @@ class Clock:
         self.mFrame.after(200, self.changeLabel) #it will call itself continuously
 Clock()
 
-#-------------------------------End clock---------------------------------# 
+#-------------------------------End clock--------------------------------- 
 
 canv = FigureCanvasTkAgg(fig, master = win)
 canv._tkcanvas.pack(side=tk.BOTTOM)
@@ -468,8 +501,7 @@ def exit_(event):                                    #Exit fullscreen
 
 win.attributes("-fullscreen",True)             #Fullscreen when executed 
 win.bind('<Escape>',exit_)                      #ESC to exit
-
-#---------------------------------End Of GUI ------------------------------------------------------------------------
+#---------------------------------End Of GUI -------------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
 
 
@@ -481,11 +513,14 @@ try:
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
     _thread.start_new_thread( cloud,   ("upload"  , 300, ) )
-
+    _thread.start_new_thread( local,   ("local"   , 300, ) )
+    _thread.start_new_thread( email,   ("Warning"   , 300, ) )
     ani = animation.FuncAnimation(fig, animate, interval=2000, fargs=(xs,ys,xs2,ys2) )
-
+    
 except:
     print ("Error: unable to start thread")
+
+
 
 #-----------------------------End of Starting Threads----------------------------------------------------
 #_________________________________________________________________________________________________________
@@ -493,8 +528,7 @@ except:
 #______________________________________________________________________________________________
 #-------------------main loop for the programe------------------------------------------------- 
 
-#Tkinter window backgorund color
-win.configure(background='black')
+
 
 try:
     win.mainloop()
@@ -508,3 +542,4 @@ finally:
 
 
 #end of code 
+
