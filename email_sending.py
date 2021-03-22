@@ -22,7 +22,7 @@ password = "latvain123"
 
 
 # from datetime import date
-# from dateutil.relativedelta import relativedelta
+from dateutil.relativedelta import relativedelta
 
 #finds last months file to send
 #date_file = date.today() + relativedelta(months=0)
@@ -31,7 +31,7 @@ def sendfile(send_to,date_file):
     global emailfrom
     global password
     
-    status =""
+    status =True
 
     y_file = date_file.strftime("%Y")
     m_file = date_file.strftime("%m")
@@ -69,15 +69,15 @@ def sendfile(send_to,date_file):
             server.login(emailfrom,password)
             # Sending email from sender, to receiver with the email body
             server.sendmail(emailfrom, send_to, msg.as_string())
-            status = "Email sent!"
+            status = False
         except Exception as e:
-            status = "failed to send following error: {e}"
+            status = True
             print(f'Oh no! Something bad happened!n {e}')
         finally:
             
             server.quit()
     except Exception as e:
-        status = "failed to send following error: {e}"
+        status = True
     return status 
 
 def sendwarning(send_to,temp,humid):
