@@ -408,7 +408,7 @@ def Report():
 def ThingSpeak():
     webbrowser.open_new("https://thingspeak.com/channels/1302824/private_show")
 
-def settings():
+def settings1():
     # Toplevel object which will  
     # be treated as a new window 
     sus = Toplevel() 
@@ -435,6 +435,10 @@ report_button.place(x=100,y=0)
 thingspeak_button = tk.Button(win, text="ThingSpeak", command=ThingSpeak)
 thingspeak_button.pack()
 thingspeak_button.place(x=0,y=0)
+
+b = tk.Button(win, text="Adjustments", command=settings)
+b.pack()
+b.place(x=200,y=0)
 
 #----------------------------End of buttons--------------------------------------
 
