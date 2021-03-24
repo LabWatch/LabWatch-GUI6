@@ -24,15 +24,16 @@ def retrieve_file_paths(dirName):
 # Declare the main function
 def zipping():
 # Assign the name of the directory to zip
-  dir_name = 'zip2'
+  dir_name = 'Logging'
    
   # Call the function to retrieve all files and folders of the assigned directory
   filePaths = retrieve_file_paths(dir_name)
    
-  # printing the list of all files to be zipped
-  print('The following list of files will be zipped:')
-  for fileName in filePaths:
-    print(fileName)
+  if os.path.exists('Logging.zip'):
+    os.remove('Logging.zip')
+    print('delete complete')
+  else:
+    print("Can not delete the file as it doesn't exists")
      
   # writing files to a zipfile
   zip_file = zipfile.ZipFile(dir_name+'.zip', 'w')
