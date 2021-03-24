@@ -426,56 +426,56 @@ def settings1():
     sus.title("Tempature Range Adjustments Window") 
     
     # sets the geometry of toplevel 
-    sus.geometry("1000x1000") 
+    sus.geometry("800x800") 
 
-    Label(sus,text ='Tempature Range Settings').place(in_=sus,x=400,y=50)
+    Label(sus,text ='Tempature Range Settings').place(in_=sus,x=350,y=100)
     
     def TUGU():
         global tempTUG
         tempTUG = tempTUG + 1
-        NUG = Label(sus,text =tempTUG).place(in_=sus,x=650,y=450)
+        NUG = Label(sus,text =tempTUG).place(in_=sus,x=550,y=250)
         return tempTUG
 
     def TUGD():
         global tempTUG
         tempTUG = tempTUG - 1
-        NUG = Label(sus,text =tempTUG).place(in_=sus,x=650,y=450)
+        NUG = Label(sus,text =tempTUG).place(in_=sus,x=550,y=250)
         return tempTUG
 
     def TLGU():
         global tempTLG
         tempTLG = tempTLG + 1
-        NLG = Label(sus,text =tempTLG).place(in_=sus,x=350,y=450)
+        NLG = Label(sus,text =tempTLG).place(in_=sus,x=275,y=250)
         return tempTLG
 
     def TLGD():
         global tempTLG
         tempTLG = tempTLG - 1
-        NLG = Label(sus,text =tempTLG).place(in_=sus,x=350,y=450)
+        NLG = Label(sus,text =tempTLG).place(in_=sus,x=275,y=250)
         return tempTLG
 
     def TUYU():
         global tempTUY
         tempTUY = tempTUY + 1
-        NUY = Label(sus,text =tempTUY).place(in_=sus,x=850,y=450)
+        NUY = Label(sus,text =tempTUY).place(in_=sus,x=750,y=250)
         return tempTUY
 
     def TUYD():
         global tempTUY
         tempTUY = tempTUY - 1
-        NUY = Label(sus,text =tempTUY).place(in_=sus,x=850,y=450)
+        NUY = Label(sus,text =tempTUY).place(in_=sus,x=750,y=250)
         return tempTUY
 
     def TLYU():
         global tempTLY
         tempTLY = tempTLY + 1
-        NLY = Label(sus,text =tempTLY).place(in_=sus,x=100,y=450)
+        NLY = Label(sus,text =tempTLY).place(in_=sus,x=50,y=250)
         return tempTLY
 
     def TLYD():
         global tempTLY
         tempTLY = tempTLY - 1
-        NLY = Label(sus,text =tempTLY).place(in_=sus,x=100,y=450)
+        NLY = Label(sus,text =tempTLY).place(in_=sus,x=50,y=250)
         return tempTLY
 
     def SaveHum():
@@ -493,49 +493,33 @@ def settings1():
         TLower_yellow = tempTLY
         sus.destroy()
 
-    def nonSaveHum():
-        global tempTUG
-        global tempTLG
-        global tempTUY
-        global tempTLY
-        global TUpper_green
-        global TLower_green
-        global TUpper_yellow
-        global TLower_yellow
-        tempTUG = TUpper_green
-        tempTLG = TLower_green
-        tempTUY = TUpper_yellow
-        tempTLY = TLower_yellow
-        sus.destroy()
-
     # A Label widget to show in toplevel 
 
-    Label(sus,text ="Set Upper Limit").place(in_=sus,x=550,y=400)
-    NUG = Label(sus,text =tempTUG).place(in_=sus,x=650,y=450)
+    Label(sus,text ="Set Upper Limit").place(in_=sus,x=500,y=200)
+    NUG = Label(sus,text =tempTUG).place(in_=sus,x=550,y=250)
 
-    Label(sus,text ="Lower Limit").place(in_=sus,x=275,y=400)
-    NLG = Label(sus,text =tempTLG).place(in_=sus,x=350,y=450)
+    Label(sus,text ="Set Lower Limit").place(in_=sus,x=225,y=200)
+    NLG = Label(sus,text =tempTLG).place(in_=sus,x=275,y=250)
 
-    Label(sus,text ="Upper Yellow Limit").place(in_=sus,x=775,y=400)
-    NUY = Label(sus,text =tempTUY).place(in_=sus,x=850,y=450)
+    Label(sus,text ="Set Upper Limit").place(in_=sus,x=690,y=200)
+    NUY = Label(sus,text =tempTUY).place(in_=sus,x=750,y=250)
 
-    Label(sus,text ="Lower Yellow Limit").place(in_=sus,x=0,y=400)
-    NLY = Label(sus,text =tempTLY).place(in_=sus,x=100,y=450)
+    Label(sus,text ="Set Lower Limit").place(in_=sus,x=0,y=200)
+    NLY = Label(sus,text =tempTLY).place(in_=sus,x=50,y=250)
     
-    up_button1 = tk.Button(sus,bg = 'yellow', text = "↑",command=TLYU).place(in_=sus,x=92,y=300)
-    down_button1 = tk.Button(sus,bg = 'yellow', text = "↓",command=TLYD).place(in_=sus,x=92,y=350)
+    up_button1 = tk.Button(sus,bg = 'yellow', text = "↑",command=TLYU).place(in_=sus,x=42,y=300)
+    down_button1 = tk.Button(sus,bg = 'yellow', text = "↓",command=TLYD).place(in_=sus,x=42,y=350)
 
-    up_button2 = tk.Button(sus,bg = 'green', text = "↑",command=TLGU).place(in_=sus,x=342,y=300)
-    down_button2 = tk.Button(sus,bg = 'green', text = "↓",command=TLGD).place(in_=sus,x=342,y=350)
+    up_button2 = tk.Button(sus,bg = 'green', text = "↑",command=TLGU).place(in_=sus,x=268,y=300)
+    down_button2 = tk.Button(sus,bg = 'green', text = "↓",command=TLGD).place(in_=sus,x=268,y=350)
 
-    up_button1 = tk.Button(sus,bg = 'green', text = "↑",command=TUGU).place(in_=sus,x=642,y=300)
-    down_button1 = tk.Button(sus,bg = 'green', text = "↓",command=TUGD).place(in_=sus,x=642,y=350)
+    up_button1 = tk.Button(sus,bg = 'green', text = "↑",command=TUGU).place(in_=sus,x=542,y=300)
+    down_button1 = tk.Button(sus,bg = 'green', text = "↓",command=TUGD).place(in_=sus,x=542,y=350)
 
-    up_button2 = tk.Button(sus,bg = 'yellow', text = "↑",command=TUYU).place(in_=sus,x=842,y=300)
-    down_button2 = tk.Button(sus,bg = 'yellow', text = "↓",command=TUYD).place(in_=sus,x=842,y=350)
+    up_button2 = tk.Button(sus,bg = 'yellow', text = "↑",command=TUYU).place(in_=sus,x=742,y=300)
+    down_button2 = tk.Button(sus,bg = 'yellow', text = "↓",command=TUYD).place(in_=sus,x=742,y=350)
 
-    save = tk.Button(sus, text = "Save and Exit",command=SaveHum).place(in_=sus,x=500,y=700)
-    Exit = tk.Button(sus, text = "Exit Withoug Saving",command=nonSaveHum).place(in_=sus,x=500,y=750)
+    save = tk.Button(sus, text = "Exit",command=SaveHum).place(in_=sus,x=400,y=130)
 
 global tempHUG
 global tempHLG
