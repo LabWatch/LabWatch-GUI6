@@ -34,6 +34,10 @@ def zipping():
     print('delete complete')
   else:
     print("Can not delete the file as it doesn't exists")
+    
+  print('The following list of files will be zipped:')
+  for fileName in filePaths:
+    print(fileName)
      
   # writing files to a zipfile
   zip_file = zipfile.ZipFile(dir_name+'.zip', 'w')
