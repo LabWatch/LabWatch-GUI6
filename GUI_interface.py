@@ -217,20 +217,20 @@ def avg(threadName, delay):
                 temp_avg = (temp0 + temp1 + temp_last_avg) / 3
                 humid_avg = (humid0 + humid1 + humid_last_avg) / 3
 
-        # # elif (sensor_fault0 == False and sensor_fault1 == True) :#D4 OK D18 Bad
-        # #     temp_avg = (temp0 + temp_last_avg) / 2
-        # #     humid_avg = (humid0 + humid_last_avg) / 2
-        # #     messagebox.showerror("SENSOR ERROR", "SENSOR 2 FAULT ON D18")
+        elif (sensor_fault0 == False and sensor_fault1 == True) :#D4 OK D18 Bad
+            temp_avg = (temp0 + temp_last_avg) / 2
+            humid_avg = (humid0 + humid_last_avg) / 2
+            messagebox.showerror("SENSOR ERROR", "SENSOR 2 FAULT ON D18")
             
-        # elif (sensor_fault0 == True and sensor_fault1 == False): #D4 Bad D18 OK
-        #     temp_avg = (temp1 + temp_last_avg) / 2
-        #     humid_avg = (humid1 + humid_last_avg) / 2 
-        #     messagebox.showerror("SENSOR ERROR", "SENSOR 1 FAULT ON D4")
+        elif (sensor_fault0 == True and sensor_fault1 == False): #D4 Bad D18 OK
+            temp_avg = (temp1 + temp_last_avg) / 2
+            humid_avg = (humid1 + humid_last_avg) / 2 
+            messagebox.showerror("SENSOR ERROR", "SENSOR 1 FAULT ON D4")
             
-        # else: #both Bad set to 0 , 0 
-        #     temp_avg = 0
-        #     humid_avg = 0
-        #     messagebox.showerror("SENSOR ERROR", "SENSOR 1 AND 2 FAULT")
+        else: #both Bad set to 0 , 0 
+            temp_avg = 0
+            humid_avg = 0
+            messagebox.showerror("SENSOR ERROR", "SENSOR 1 AND 2 FAULT")
 
         temp_avg = round(temp_avg,1)
         humid_avg = round(humid_avg,1)
@@ -509,28 +509,17 @@ def settings1():
         sus.destroy()
 
     # A Label widget to show in toplevel 
-    Label(sus,text ="Current Upper Green Zone Limit").place(in_=sus,x=550,y=200)
-    Label(sus,text =TUpper_green).place(in_=sus,x=650,y=250)
 
-    Label(sus,text ="Current Lower Green Zone Limit").place(in_=sus,x=275,y=200)
-    Label(sus,text =TLower_green).place(in_=sus,x=350,y=250)
-
-    Label(sus,text ="Current Upper Yellow Zone Limit").place(in_=sus,x=775,y=200)
-    Label(sus,text =TUpper_yellow).place(in_=sus,x=850,y=250)
-
-    Label(sus,text ="Current Lower Yellow Zone Limit").place(in_=sus,x=0,y=200)
-    Label(sus,text =TLower_yellow).place(in_=sus,x=100,y=250)
-
-    Label(sus,text ="New Upper Green Zone Limit").place(in_=sus,x=550,y=400)
+    Label(sus,text ="Set Upper Limit").place(in_=sus,x=550,y=400)
     NUG = Label(sus,text =tempTUG).place(in_=sus,x=650,y=450)
 
-    Label(sus,text ="New Lower Green Zone Limit").place(in_=sus,x=275,y=400)
+    Label(sus,text ="Lower Limit").place(in_=sus,x=275,y=400)
     NLG = Label(sus,text =tempTLG).place(in_=sus,x=350,y=450)
 
-    Label(sus,text ="New Upper Yellow Zone Limit").place(in_=sus,x=775,y=400)
+    Label(sus,text ="Upper Yellow Limit").place(in_=sus,x=775,y=400)
     NUY = Label(sus,text =tempTUY).place(in_=sus,x=850,y=450)
 
-    Label(sus,text ="New Lower Yellow Zone Limit").place(in_=sus,x=0,y=400)
+    Label(sus,text ="Lower Yellow Limit").place(in_=sus,x=0,y=400)
     NLY = Label(sus,text =tempTLY).place(in_=sus,x=100,y=450)
     
     up_button1 = tk.Button(sus,bg = 'yellow', text = "↑",command=TLYU).place(in_=sus,x=92,y=300)
@@ -568,56 +557,56 @@ def settings2():
     sus.title("Humidity Range Adjustments Window") 
     
     # sets the geometry of toplevel 
-    sus.geometry("1000x1000") 
+    sus.geometry("800x800") 
 
-    Label(sus,text ='Humidity Range Settings').place(in_=sus,x=400,y=50)
+    Label(sus,text ='Humidity Range Settings').place(in_=sus,x=350,y=100)
     
     def HUGU():
         global tempHUG
         tempHUG = tempHUG + 1
-        NUG = Label(sus,text =tempHUG).place(in_=sus,x=650,y=450)
+        NUG = Label(sus,text =tempHUG).place(in_=sus,x=550,y=250)
         return tempHUG
 
     def HUGD():
         global tempHUG
         tempHUG = tempHUG - 1
-        NUG = Label(sus,text =tempHUG).place(in_=sus,x=650,y=450)
+        NUG = Label(sus,text =tempHUG).place(in_=sus,x=550,y=250)
         return tempHUG
 
     def HLGU():
         global tempHLG
         tempHLG = tempHLG + 1
-        NLG = Label(sus,text =tempHLG).place(in_=sus,x=350,y=450)
+        NLG = Label(sus,text =tempHLG).place(in_=sus,x=275,y=250)
         return tempHLG
 
     def HLGD():
         global tempHLG
         tempHLG = tempHLG - 1
-        NLG = Label(sus,text =tempHLG).place(in_=sus,x=350,y=450)
+        NLG = Label(sus,text =tempHLG).place(in_=sus,x=275,y=250)
         return tempHLG
 
     def HUYU():
         global tempHUY
         tempHUY = tempHUY + 1
-        NUY = Label(sus,text =tempHUY).place(in_=sus,x=850,y=450)
+        NUY = Label(sus,text =tempHUY).place(in_=sus,x=750,y=250)
         return tempHUY
 
     def HUYD():
         global tempHUY
         tempHUY = tempHUY - 1
-        NUY = Label(sus,text =tempHUY).place(in_=sus,x=850,y=450)
+        NUY = Label(sus,text =tempHUY).place(in_=sus,x=750,y=250)
         return tempHUY
 
     def HLYU():
         global tempHLY
         tempHLY = tempHLY + 1
-        NLY = Label(sus,text =tempHLY).place(in_=sus,x=100,y=450)
+        NLY = Label(sus,text =tempHLY).place(in_=sus,x=50,y=250)
         return tempHLY
 
     def HLYD():
         global tempHLY
         tempHLY = tempHLY - 1
-        NLY = Label(sus,text =tempHLY).place(in_=sus,x=100,y=450)
+        NLY = Label(sus,text =tempHLY).place(in_=sus,x=50,y=250)
         return tempHLY
 
     def SaveHum():
@@ -635,60 +624,33 @@ def settings2():
         HLower_yellow = tempHLY
         sus.destroy()
 
-    def nonSaveHum():
-        global tempHUG
-        global tempHLG
-        global tempHUY
-        global tempHLY
-        global HUpper_green
-        global HLower_green
-        global HUpper_yellow
-        global HLower_yellow
-        tempHUG = HUpper_green
-        tempHLG = HLower_green
-        tempHUY = HUpper_yellow
-        tempHLY = HLower_yellow
-        sus.destroy()
 
-    # A Label widget to show in toplevel 
-    Label(sus,text ="Current Upper Green Zone Limit").place(in_=sus,x=550,y=200)
-    Label(sus,text =HUpper_green).place(in_=sus,x=650,y=250)
+    Label(sus,text ="Set Upper Limit").place(in_=sus,x=500,y=200)
+    NUG = Label(sus,text =tempHUG).place(in_=sus,x=550,y=250)
 
-    Label(sus,text ="Current Lower Green Zone Limit").place(in_=sus,x=275,y=200)
-    Label(sus,text =HLower_green).place(in_=sus,x=350,y=250)
+    Label(sus,text ="Set Lower Limit").place(in_=sus,x=225,y=200)
+    NLG = Label(sus,text =tempHLG).place(in_=sus,x=275,y=250)
 
-    Label(sus,text ="Current Upper Yellow Zone Limit").place(in_=sus,x=775,y=200)
-    Label(sus,text =HUpper_yellow).place(in_=sus,x=850,y=250)
+    Label(sus,text ="Set Upper Limit").place(in_=sus,x=690,y=200)
+    NUY = Label(sus,text =tempHUY).place(in_=sus,x=750,y=250)
 
-    Label(sus,text ="Current Lower Yellow Zone Limit").place(in_=sus,x=0,y=200)
-    Label(sus,text =HLower_yellow).place(in_=sus,x=100,y=250)
-
-    Label(sus,text ="New Upper Green Zone Limit").place(in_=sus,x=550,y=400)
-    NUG = Label(sus,text =tempHUG).place(in_=sus,x=650,y=450)
-
-    Label(sus,text ="New Lower Green Zone Limit").place(in_=sus,x=275,y=400)
-    NLG = Label(sus,text =tempHLG).place(in_=sus,x=350,y=450)
-
-    Label(sus,text ="New Upper Yellow Zone Limit").place(in_=sus,x=775,y=400)
-    NUY = Label(sus,text =tempHUY).place(in_=sus,x=850,y=450)
-
-    Label(sus,text ="New Lower Yellow Zone Limit").place(in_=sus,x=0,y=400)
-    NLY = Label(sus,text =tempHLY).place(in_=sus,x=100,y=450)
+    Label(sus,text ="Set Lower Limit").place(in_=sus,x=0,y=200)
+    NLY = Label(sus,text =tempHLY).place(in_=sus,x=50,y=250)
     
-    up_button1 = tk.Button(sus,bg = 'yellow', text = "↑",command=HLYU).place(in_=sus,x=92,y=300)
-    down_button1 = tk.Button(sus,bg = 'yellow', text = "↓",command=HLYD).place(in_=sus,x=92,y=350)
+    up_button1 = tk.Button(sus,bg = 'yellow', text = "↑",command=HLYU).place(in_=sus,x=42,y=300)
+    down_button1 = tk.Button(sus,bg = 'yellow', text = "↓",command=HLYD).place(in_=sus,x=42,y=350)
 
-    up_button2 = tk.Button(sus,bg = 'green', text = "↑",command=HLGU).place(in_=sus,x=342,y=300)
-    down_button2 = tk.Button(sus,bg = 'green', text = "↓",command=HLGD).place(in_=sus,x=342,y=350)
+    up_button2 = tk.Button(sus,bg = 'green', text = "↑",command=HLGU).place(in_=sus,x=268,y=300)
+    down_button2 = tk.Button(sus,bg = 'green', text = "↓",command=HLGD).place(in_=sus,x=268,y=350)
 
-    up_button1 = tk.Button(sus,bg = 'green', text = "↑",command=HUGU).place(in_=sus,x=642,y=300)
-    down_button1 = tk.Button(sus,bg = 'green', text = "↓",command=HUGD).place(in_=sus,x=642,y=350)
+    up_button1 = tk.Button(sus,bg = 'green', text = "↑",command=HUGU).place(in_=sus,x=542,y=300)
+    down_button1 = tk.Button(sus,bg = 'green', text = "↓",command=HUGD).place(in_=sus,x=542,y=350)
 
-    up_button2 = tk.Button(sus,bg = 'yellow', text = "↑",command=HUYU).place(in_=sus,x=842,y=300)
-    down_button2 = tk.Button(sus,bg = 'yellow', text = "↓",command=HUYD).place(in_=sus,x=842,y=350)
+    up_button2 = tk.Button(sus,bg = 'yellow', text = "↑",command=HUYU).place(in_=sus,x=742,y=300)
+    down_button2 = tk.Button(sus,bg = 'yellow', text = "↓",command=HUYD).place(in_=sus,x=742,y=350)
 
-    save = tk.Button(sus, text = "Save and Exit",command=SaveHum).place(in_=sus,x=500,y=700)
-    Exit = tk.Button(sus, text = "Exit Withoug Saving",command=nonSaveHum).place(in_=sus,x=500,y=750)
+    save = tk.Button(sus, text = "Exit",command=SaveHum).place(in_=sus,x=400,y=130)
+    # Exit = tk.Button(sus, text = "Exit Withoug Saving",command=nonSaveHum).place(in_=sus,x=500,y=750)
 
 report_button = tk.Button(win, text="Report", command=Report)
 report_button.pack()
@@ -752,7 +714,7 @@ win.bind('<Escape>',exit_)                      #ESC to exit
 # Creates threads and starts all functions as needed
 try:
     _thread.start_new_thread( sensor0, ("sensor_1", 2, ) )#starts recording sensor on D4
-    _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
+    # _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
     _thread.start_new_thread( cloud,   ("upload"  , 300, ) )
     _thread.start_new_thread( local,   ("local"   , 300, ) )
