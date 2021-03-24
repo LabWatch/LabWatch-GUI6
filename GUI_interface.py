@@ -43,7 +43,7 @@ import os
 import email_sending
 from datetime import date
 from dateutil.relativedelta import relativedelta
-
+import zip1
 sendto="saltydick61@gmail.com"
 #-----------End of Import Libraries------------------------#
 
@@ -451,6 +451,10 @@ def animate(i, xs, xs2, ys, ys2):
 win.configure(background='black')
 
 #--------------------Buttons----------------------------------#
+def SendReport():
+    global sendto
+    path = zip1.zipping()
+    email_sending.sendall(sendto,path)
 
 def Report():
 
@@ -467,6 +471,10 @@ report_button.place(x=100,y=0)
 thingspeak_button = tk.Button(win, text="ThingSpeak", command=ThingSpeak)
 thingspeak_button.pack()
 thingspeak_button.place(x=0,y=0)
+
+sendall_button = tk.Button(win, text="Send all report", command=SendReport)
+sendall_button.pack()
+sendall_button.place(x=300,y=0)
 
 #----------------------------End of buttons--------------------------------------
 

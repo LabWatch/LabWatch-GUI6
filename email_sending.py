@@ -1,4 +1,4 @@
-import smtplib
+import smtplib, ssl
 import mimetypes
 from email.mime.multipart import MIMEMultipart
 from email import encoders
@@ -7,6 +7,8 @@ from email.mime.audio import MIMEAudio
 from email.mime.base import MIMEBase
 from email.mime.image import MIMEImage
 from email.mime.text import MIMEText
+
+from email.utils import formataddr
 import os
 
 
@@ -111,4 +113,52 @@ def sendwarning(send_to,temp,humid):
         status = "failed to send following error: {e}"
     finally:
         server.quit()
+    # return status
+
+def sendall(send_to,filename):
+    global emailfrom
+    global password
+    
+    
+    try:
+        #Starts to build email
+        msg = MIMEMultipart()
+        msg["From"] = emailfrom
+        msg["To"] = send_to
+        msg["Subject"] = "Complete Report Summary"
+        msg.preamble = "Sending zip of all Log files"
+        ctype, encoding = mimetypes.guess_type(filename)
+    except:
+        print("no file found")
+
+    if ctype is None or encoding is not None:
+        ctype = "application/octet-stream"
+    maintype, subtype = ctype.split("/", 1)
+    
+    try:
+        fp = open(filename, "rb")
+        attachment = MIMEBase(maintype, subtype)
+        attachment.set_payload(fp.read())
+        fp.close()
+        encoders.encode_base64(attachment)
+        attachment.add_header("Content-Disposition", "attachment", filename=os.path.basename(filename))
+        msg.attach(attachment)
+        try:
+            # Creating a SMTP session | use 587 with TLS, 465 SSL and 25
+            server = smtplib.SMTP("smtp.gmail.com:587")
+            # Encrypts the email
+            server.starttls()
+            # We log in into our Google account
+            server.login(emailfrom,password)
+            # Sending email from sender, to receiver with the email body
+            server.sendmail(emailfrom, send_to, msg.as_string())
+            status = False
+        except Exception as e:
+            status = True
+            # print(f'Oh no! Something bad happened!n {e}')
+        finally:
+            
+            server.quit()
+    except Exception as e:
+        status = True
     
