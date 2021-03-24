@@ -275,8 +275,7 @@ def cloud(threadName, delay):
 
 #---------------------------------------------Emailing-------------------------------------------------
 
-
-def email(threadName, delay):
+def email(threadName,delay):
     global temp_avg
     global humid_avg
     global TUpper_yellow
@@ -284,26 +283,31 @@ def email(threadName, delay):
     global HUpper_yellow
     global HLower_yellow
     global sendto
-    lastrun = date.today()
+    lastrun = datetime.datetime.now()
+    
     while True: 
-        now = date.today()
-        date_diff = now - lastrun 
+        
+        
+        now = datetime.datetime.now()
+        date_diff = now - lastrun   
         total_time = date_diff.total_seconds()
+        
         if(TUpper_yellow < temp_avg or TLower_yellow > temp_avg or HUpper_yellow < humid_avg or HLower_yellow > humid_avg ):
-            if (total_time > 300):
-                print(email_sending.sendwarning(sendto, temp_avg, humid_avg))
-                lastrun = date.today()
+            if (total_time > 3600):
+                email_sending.sendwarning(sendto, temp_avg, humid_avg)
+                lastrun = datetime.datetime.now()
         
         date_time = now.strftime("%d, %H:%M")
-
         if(date_time =="01, 04:00"):
-            date_file = date.today() + relativedelta(months=-1)
+            date_file = date.today() + relativedelta(months=0)
             sent = True
+            x = 0
             while sent:
-                sent = email_sending(sendto,date_file)
-        
+                sent = email_sending.sendfile(sendto,date_file)
+                if x>6:
+                    sent = False
+                x= x+1    
         time.sleep(delay)
-
 
 
 
@@ -514,7 +518,7 @@ try:
     _thread.start_new_thread( avg,     ("average" , 4, ) )
     _thread.start_new_thread( cloud,   ("upload"  , 300, ) )
     _thread.start_new_thread( local,   ("local"   , 300, ) )
-    _thread.start_new_thread( email,   ("Warning"   , 300, ) )
+    _thread.start_new_thread( email,   ("Warning"   , 59, ) )
     ani = animation.FuncAnimation(fig, animate, interval=2000, fargs=(xs,ys,xs2,ys2) )
     
 except:
