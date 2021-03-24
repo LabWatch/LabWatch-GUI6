@@ -702,7 +702,7 @@ thingspeak_button.place(x=0,y=0)
 
 sendall_button = tk.Button(win, text="Send all report", command=SendReport)
 sendall_button.pack()
-sendall_button.place(x=300,y=0)
+sendall_button.place(x=500,y=0)
 
 
 b1 = tk.Button(win, text="Tempature Range Adjustments", command=settings1)
