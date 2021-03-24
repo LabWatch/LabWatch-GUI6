@@ -217,20 +217,20 @@ def avg(threadName, delay):
                 temp_avg = (temp0 + temp1 + temp_last_avg) / 3
                 humid_avg = (humid0 + humid1 + humid_last_avg) / 3
 
-        elif (sensor_fault0 == False and sensor_fault1 == True) :#D4 OK D18 Bad
-            temp_avg = (temp0 + temp_last_avg) / 2
-            humid_avg = (humid0 + humid_last_avg) / 2
-            messagebox.showerror("SENSOR ERROR", "SENSOR 2 FAULT ON D18")
+        # # elif (sensor_fault0 == False and sensor_fault1 == True) :#D4 OK D18 Bad
+        # #     temp_avg = (temp0 + temp_last_avg) / 2
+        # #     humid_avg = (humid0 + humid_last_avg) / 2
+        # #     messagebox.showerror("SENSOR ERROR", "SENSOR 2 FAULT ON D18")
             
-        elif (sensor_fault0 == True and sensor_fault1 == False): #D4 Bad D18 OK
-            temp_avg = (temp1 + temp_last_avg) / 2
-            humid_avg = (humid1 + humid_last_avg) / 2 
-            messagebox.showerror("SENSOR ERROR", "SENSOR 1 FAULT ON D4")
+        # elif (sensor_fault0 == True and sensor_fault1 == False): #D4 Bad D18 OK
+        #     temp_avg = (temp1 + temp_last_avg) / 2
+        #     humid_avg = (humid1 + humid_last_avg) / 2 
+        #     messagebox.showerror("SENSOR ERROR", "SENSOR 1 FAULT ON D4")
             
-        else: #both Bad set to 0 , 0 
-            temp_avg = 0
-            humid_avg = 0
-            messagebox.showerror("SENSOR ERROR", "SENSOR 1 AND 2 FAULT")
+        # else: #both Bad set to 0 , 0 
+        #     temp_avg = 0
+        #     humid_avg = 0
+        #     messagebox.showerror("SENSOR ERROR", "SENSOR 1 AND 2 FAULT")
 
         temp_avg = round(temp_avg,1)
         humid_avg = round(humid_avg,1)
@@ -408,25 +408,287 @@ def Report():
 def ThingSpeak():
     webbrowser.open_new("https://thingspeak.com/channels/1302824/private_show")
 
+global tempTLG
+global tempTUY
+global tempTLY
+tempTUG = TUpper_green
+tempTLG = TLower_green
+tempTUY = TUpper_yellow
+tempTLY = TLower_yellow
+
 def settings1():
     # Toplevel object which will  
     # be treated as a new window 
     sus = Toplevel() 
-  
+    
     # sets the title of the 
     # Toplevel widget 
-    sus.title("New Window") 
-  
+    sus.title("Tempature Range Adjustments Window") 
+    
     # sets the geometry of toplevel 
     sus.geometry("1000x1000") 
-  
+
+    Label(sus,text ='Tempature Range Settings').place(in_=sus,x=400,y=50)
+    
+    def TUGU():
+        global tempTUG
+        tempTUG = tempTUG + 1
+        NUG = Label(sus,text =tempTUG).place(in_=sus,x=650,y=450)
+        return tempTUG
+
+    def TUGD():
+        global tempTUG
+        tempTUG = tempTUG - 1
+        NUG = Label(sus,text =tempTUG).place(in_=sus,x=650,y=450)
+        return tempTUG
+
+    def TLGU():
+        global tempTLG
+        tempTLG = tempTLG + 1
+        NLG = Label(sus,text =tempTLG).place(in_=sus,x=350,y=450)
+        return tempTLG
+
+    def TLGD():
+        global tempTLG
+        tempTLG = tempTLG - 1
+        NLG = Label(sus,text =tempTLG).place(in_=sus,x=350,y=450)
+        return tempTLG
+
+    def TUYU():
+        global tempTUY
+        tempTUY = tempTUY + 1
+        NUY = Label(sus,text =tempTUY).place(in_=sus,x=850,y=450)
+        return tempTUY
+
+    def TUYD():
+        global tempTUY
+        tempTUY = tempTUY - 1
+        NUY = Label(sus,text =tempTUY).place(in_=sus,x=850,y=450)
+        return tempTUY
+
+    def TLYU():
+        global tempTLY
+        tempTLY = tempTLY + 1
+        NLY = Label(sus,text =tempTLY).place(in_=sus,x=100,y=450)
+        return tempTLY
+
+    def TLYD():
+        global tempTLY
+        tempTLY = tempTLY - 1
+        NLY = Label(sus,text =tempTLY).place(in_=sus,x=100,y=450)
+        return tempTLY
+
+    def SaveHum():
+        global tempTUG
+        global tempTLG
+        global tempTUY
+        global tempTLY
+        global TUpper_green
+        global TLower_green
+        global TUpper_yellow
+        global TLower_yellow
+        TUpper_green = tempTUG
+        TLower_green = tempTLG
+        TUpper_yellow = tempTUY
+        TLower_yellow = tempTLY
+        sus.destroy()
+
+    def nonSaveHum():
+        global tempTUG
+        global tempTLG
+        global tempTUY
+        global tempTLY
+        global TUpper_green
+        global TLower_green
+        global TUpper_yellow
+        global TLower_yellow
+        tempTUG = TUpper_green
+        tempTLG = TLower_green
+        tempTUY = TUpper_yellow
+        tempTLY = TLower_yellow
+        sus.destroy()
+
     # A Label widget to show in toplevel 
-    Label(sus,text ="This is a new window").pack()
-    up_button1 = tk.Button(sus, text = "↑",command=sus.destroy).place(in_=sus,x=250,y=300)
-    down_button1 = tk.Button(sus, text = "↓",command=sus.destroy).place(in_=sus,x=250,y=350)
-    up_button2 = tk.Button(sus, text = "↑",command=sus.destroy).place(in_=sus,x=750,y=300)
-    down_button2 = tk.Button(sus, text = "↓",command=sus.destroy).place(in_=sus,x=750,y=350)
-        
+    Label(sus,text ="Current Upper Green Zone Limit").place(in_=sus,x=550,y=200)
+    Label(sus,text =TUpper_green).place(in_=sus,x=650,y=250)
+
+    Label(sus,text ="Current Lower Green Zone Limit").place(in_=sus,x=275,y=200)
+    Label(sus,text =TLower_green).place(in_=sus,x=350,y=250)
+
+    Label(sus,text ="Current Upper Yellow Zone Limit").place(in_=sus,x=775,y=200)
+    Label(sus,text =TUpper_yellow).place(in_=sus,x=850,y=250)
+
+    Label(sus,text ="Current Lower Yellow Zone Limit").place(in_=sus,x=0,y=200)
+    Label(sus,text =TLower_yellow).place(in_=sus,x=100,y=250)
+
+    Label(sus,text ="New Upper Green Zone Limit").place(in_=sus,x=550,y=400)
+    NUG = Label(sus,text =tempTUG).place(in_=sus,x=650,y=450)
+
+    Label(sus,text ="New Lower Green Zone Limit").place(in_=sus,x=275,y=400)
+    NLG = Label(sus,text =tempTLG).place(in_=sus,x=350,y=450)
+
+    Label(sus,text ="New Upper Yellow Zone Limit").place(in_=sus,x=775,y=400)
+    NUY = Label(sus,text =tempTUY).place(in_=sus,x=850,y=450)
+
+    Label(sus,text ="New Lower Yellow Zone Limit").place(in_=sus,x=0,y=400)
+    NLY = Label(sus,text =tempTLY).place(in_=sus,x=100,y=450)
+    
+    up_button1 = tk.Button(sus,bg = 'yellow', text = "↑",command=TLYU).place(in_=sus,x=92,y=300)
+    down_button1 = tk.Button(sus,bg = 'yellow', text = "↓",command=TLYD).place(in_=sus,x=92,y=350)
+
+    up_button2 = tk.Button(sus,bg = 'green', text = "↑",command=TLGU).place(in_=sus,x=342,y=300)
+    down_button2 = tk.Button(sus,bg = 'green', text = "↓",command=TLGD).place(in_=sus,x=342,y=350)
+
+    up_button1 = tk.Button(sus,bg = 'green', text = "↑",command=TUGU).place(in_=sus,x=642,y=300)
+    down_button1 = tk.Button(sus,bg = 'green', text = "↓",command=TUGD).place(in_=sus,x=642,y=350)
+
+    up_button2 = tk.Button(sus,bg = 'yellow', text = "↑",command=TUYU).place(in_=sus,x=842,y=300)
+    down_button2 = tk.Button(sus,bg = 'yellow', text = "↓",command=TUYD).place(in_=sus,x=842,y=350)
+
+    save = tk.Button(sus, text = "Save and Exit",command=SaveHum).place(in_=sus,x=500,y=700)
+    Exit = tk.Button(sus, text = "Exit Withoug Saving",command=nonSaveHum).place(in_=sus,x=500,y=750)
+
+global tempHUG
+global tempHLG
+global tempHUY
+global tempHLY
+
+tempHUG = HUpper_green
+tempHLG = HLower_green
+tempHUY = HUpper_yellow
+tempHLY = HLower_yellow
+
+def settings2():
+    # Toplevel object which will  
+    # be treated as a new window 
+    sus = Toplevel() 
+    
+    # sets the title of the 
+    # Toplevel widget 
+    sus.title("Humidity Range Adjustments Window") 
+    
+    # sets the geometry of toplevel 
+    sus.geometry("1000x1000") 
+
+    Label(sus,text ='Humidity Range Settings').place(in_=sus,x=400,y=50)
+    
+    def HUGU():
+        global tempHUG
+        tempHUG = tempHUG + 1
+        NUG = Label(sus,text =tempHUG).place(in_=sus,x=650,y=450)
+        return tempHUG
+
+    def HUGD():
+        global tempHUG
+        tempHUG = tempHUG - 1
+        NUG = Label(sus,text =tempHUG).place(in_=sus,x=650,y=450)
+        return tempHUG
+
+    def HLGU():
+        global tempHLG
+        tempHLG = tempHLG + 1
+        NLG = Label(sus,text =tempHLG).place(in_=sus,x=350,y=450)
+        return tempHLG
+
+    def HLGD():
+        global tempHLG
+        tempHLG = tempHLG - 1
+        NLG = Label(sus,text =tempHLG).place(in_=sus,x=350,y=450)
+        return tempHLG
+
+    def HUYU():
+        global tempHUY
+        tempHUY = tempHUY + 1
+        NUY = Label(sus,text =tempHUY).place(in_=sus,x=850,y=450)
+        return tempHUY
+
+    def HUYD():
+        global tempHUY
+        tempHUY = tempHUY - 1
+        NUY = Label(sus,text =tempHUY).place(in_=sus,x=850,y=450)
+        return tempHUY
+
+    def HLYU():
+        global tempHLY
+        tempHLY = tempHLY + 1
+        NLY = Label(sus,text =tempHLY).place(in_=sus,x=100,y=450)
+        return tempHLY
+
+    def HLYD():
+        global tempHLY
+        tempHLY = tempHLY - 1
+        NLY = Label(sus,text =tempHLY).place(in_=sus,x=100,y=450)
+        return tempHLY
+
+    def SaveHum():
+        global tempHUG
+        global tempHLG
+        global tempHUY
+        global tempHLY
+        global HUpper_green
+        global HLower_green
+        global HUpper_yellow
+        global HLower_yellow
+        HUpper_green = tempHUG
+        HLower_green = tempHLG
+        HUpper_yellow = tempHUY
+        HLower_yellow = tempHLY
+        sus.destroy()
+
+    def nonSaveHum():
+        global tempHUG
+        global tempHLG
+        global tempHUY
+        global tempHLY
+        global HUpper_green
+        global HLower_green
+        global HUpper_yellow
+        global HLower_yellow
+        tempHUG = HUpper_green
+        tempHLG = HLower_green
+        tempHUY = HUpper_yellow
+        tempHLY = HLower_yellow
+        sus.destroy()
+
+    # A Label widget to show in toplevel 
+    Label(sus,text ="Current Upper Green Zone Limit").place(in_=sus,x=550,y=200)
+    Label(sus,text =HUpper_green).place(in_=sus,x=650,y=250)
+
+    Label(sus,text ="Current Lower Green Zone Limit").place(in_=sus,x=275,y=200)
+    Label(sus,text =HLower_green).place(in_=sus,x=350,y=250)
+
+    Label(sus,text ="Current Upper Yellow Zone Limit").place(in_=sus,x=775,y=200)
+    Label(sus,text =HUpper_yellow).place(in_=sus,x=850,y=250)
+
+    Label(sus,text ="Current Lower Yellow Zone Limit").place(in_=sus,x=0,y=200)
+    Label(sus,text =HLower_yellow).place(in_=sus,x=100,y=250)
+
+    Label(sus,text ="New Upper Green Zone Limit").place(in_=sus,x=550,y=400)
+    NUG = Label(sus,text =tempHUG).place(in_=sus,x=650,y=450)
+
+    Label(sus,text ="New Lower Green Zone Limit").place(in_=sus,x=275,y=400)
+    NLG = Label(sus,text =tempHLG).place(in_=sus,x=350,y=450)
+
+    Label(sus,text ="New Upper Yellow Zone Limit").place(in_=sus,x=775,y=400)
+    NUY = Label(sus,text =tempHUY).place(in_=sus,x=850,y=450)
+
+    Label(sus,text ="New Lower Yellow Zone Limit").place(in_=sus,x=0,y=400)
+    NLY = Label(sus,text =tempHLY).place(in_=sus,x=100,y=450)
+    
+    up_button1 = tk.Button(sus,bg = 'yellow', text = "↑",command=HLYU).place(in_=sus,x=92,y=300)
+    down_button1 = tk.Button(sus,bg = 'yellow', text = "↓",command=HLYD).place(in_=sus,x=92,y=350)
+
+    up_button2 = tk.Button(sus,bg = 'green', text = "↑",command=HLGU).place(in_=sus,x=342,y=300)
+    down_button2 = tk.Button(sus,bg = 'green', text = "↓",command=HLGD).place(in_=sus,x=342,y=350)
+
+    up_button1 = tk.Button(sus,bg = 'green', text = "↑",command=HUGU).place(in_=sus,x=642,y=300)
+    down_button1 = tk.Button(sus,bg = 'green', text = "↓",command=HUGD).place(in_=sus,x=642,y=350)
+
+    up_button2 = tk.Button(sus,bg = 'yellow', text = "↑",command=HUYU).place(in_=sus,x=842,y=300)
+    down_button2 = tk.Button(sus,bg = 'yellow', text = "↓",command=HUYD).place(in_=sus,x=842,y=350)
+
+    save = tk.Button(sus, text = "Save and Exit",command=SaveHum).place(in_=sus,x=500,y=700)
+    Exit = tk.Button(sus, text = "Exit Withoug Saving",command=nonSaveHum).place(in_=sus,x=500,y=750)
 
 report_button = tk.Button(win, text="Report", command=Report)
 report_button.pack()
@@ -436,9 +698,13 @@ thingspeak_button = tk.Button(win, text="ThingSpeak", command=ThingSpeak)
 thingspeak_button.pack()
 thingspeak_button.place(x=0,y=0)
 
-b = tk.Button(win, text="Adjustments", command=settings)
-b.pack()
-b.place(x=200,y=0)
+b1 = tk.Button(win, text="Tempature Range Adjustments", command=settings1)
+b1.pack()
+b1.place(x=200,y=0)
+
+b1 = tk.Button(win, text="Humidity Range Adjustments", command=settings2)
+b1.pack()
+b1.place(x=200,y=50)
 
 #----------------------------End of buttons--------------------------------------
 
