@@ -72,13 +72,13 @@ def sendfile(send_to,date_file):
             status = False
         except Exception as e:
             status = True
-            print(f'Oh no! Something bad happened!n {e}')
+            # print(f'Oh no! Something bad happened!n {e}')
         finally:
             
             server.quit()
     except Exception as e:
         status = True
-    return status 
+    
 
 def sendwarning(send_to,temp,humid):
     global emailfrom
@@ -111,4 +111,4 @@ def sendwarning(send_to,temp,humid):
         status = "failed to send following error: {e}"
     finally:
         server.quit()
-    return status 
+    
