@@ -74,10 +74,10 @@ humid_avg = 0
 #-----------------------------------------------------------------
 #----------------ThingSpeak Global Variables----------------------
 #ThingSpeak credentrials 
-myAPI = '23WP7T9NERH1SYTG' 
+myAPI = 'DLSQ0NFWVP2CQU4N' 
 # URL where we will send the data, Don't change it
 baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI 
-link = "https://thingspeak.com/channels/1302824"
+link = "https://thingspeak.com/channels/1318645"
 #-------------------------------------------------------------------
 #-------------------Tkinter Variables + Plot attributes-----------------------------------------
 #Tkinter window

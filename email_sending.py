@@ -19,8 +19,8 @@ import os
 
 #setups email information 
 #senders account info usr & PW 
-emailfrom = "dickandspence@gmail.com"
-password = "latvain123"
+emailfrom = "labwatchmonitoring@gmail.com"
+password = "Pw$uck3214"
 
 
 # from datetime import date
