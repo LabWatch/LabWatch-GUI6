@@ -330,15 +330,15 @@ def local(threadName, delay):
     
     while True:
         try:
-            print(os.getcwd())
+            # print(os.getcwd())
             cwd = os.getcwd()
             timenow = datetime.now()
             yrnow = timenow.strftime("%Y")
             monow = timenow.strftime("%m")
             daynow = timenow.strftime("%d")
-            # path = cwd+ "/Logging/{}-{}.csv".format(yrnow,monow)
-            path = "/home/pi/LabWatchGUI6/Logging/{}-{}.csv".format(yrnow,monow)
-            print(path)
+            path = cwd+ "/Logging/{}-{}.csv".format(yrnow,monow)
+            # path = "/home/pi/LabWatchGUI6/Logging/{}-{}.csv".format(yrnow,monow)
+            # print(path)
             file = open(path, "a")
             file = open(path, "a")
             if os.stat(path).st_size == 0:
@@ -792,6 +792,7 @@ win.bind('<Escape>',exit_)                      #ESC to exit
 #-------------------------------Creating Threads--------------------------------------------------------------------
 # Creates threads and starts all functions as needed
 try:
+    os.chdir('/home/pi/LabWatchGUI6')
     _thread.start_new_thread( sensor0, ("sensor_1", 2, ) )#starts recording sensor on D4
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
