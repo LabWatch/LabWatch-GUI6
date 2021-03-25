@@ -132,7 +132,7 @@ def sensor0( threadName, delay):
     global temp_avg
     fault = bool(0)
     while True:
-        for x in range(5):
+        for x in range(10):
             try:
                 # Print the values to the serial port
                 temperature_c = dhtDevice0.temperature
@@ -147,7 +147,7 @@ def sensor0( threadName, delay):
             except Exception as error:
                 dhtDevice0.exit()
                 raise error
-            if (x > 3):
+            if (x > 8):
                 fault = bool(1)
                 temperature_c = 0
                 humidity = 0 
@@ -168,7 +168,7 @@ def sensor1( threadName, delay):
     fault = bool(0)
 
     while True: #runs forever 
-        for x in range(5):#tries 5 times before thorwing fault for sensor 
+        for x in range(10):#tries 5 times before thorwing fault for sensor 
             try:
                 # Print the values to the serial port
                 temperature_c = dhtDevice1.temperature
@@ -183,7 +183,7 @@ def sensor1( threadName, delay):
             except Exception as error:
                 dhtDevice1.exit()
                 raise error
-            if (x > 3):
+            if (x > 8):
                 fault = bool(1)
                 temperature_c = 0
                 humidity = 0 
