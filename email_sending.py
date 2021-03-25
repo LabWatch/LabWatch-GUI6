@@ -37,7 +37,9 @@ def sendfile(send_to,date_file):
 
     y_file = date_file.strftime("%Y")
     m_file = date_file.strftime("%m")
-    fileToSend = "/home/saltyd/LabWatchGUI6/Logging/{}-{}.csv".format(y_file,m_file)
+    cwd = os.getcwd()
+    fileToSend = cwd + "/Logging/{}-{}.csv".format(y_file,m_file)
+    # print(fileToSend)
     try:
         #Starts to build email
         msg = MIMEMultipart()
@@ -60,7 +62,6 @@ def sendfile(send_to,date_file):
         fp.close()
         encoders.encode_base64(attachment)
         attachment.add_header("Content-Disposition", "attachment", filename=os.path.basename(fileToSend))
-        
         msg.attach(attachment)
         try:
             # Creating a SMTP session | use 587 with TLS, 465 SSL and 25
@@ -74,13 +75,14 @@ def sendfile(send_to,date_file):
             status = False
         except Exception as e:
             status = True
-            # print(f'Oh no! Something bad happened!n {e}')
+            print(f'Oh no! Something bad happened!n {e}')
         finally:
             
             server.quit()
     except Exception as e:
+        print(f'Oh no! Something bad happened!n {e}')
         status = True
-    
+    return status
 
 def sendwarning(send_to,temp,humid):
     global emailfrom
