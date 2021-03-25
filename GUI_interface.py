@@ -41,9 +41,9 @@ import os
 
 #email sending 
 import email_sending
-# from datetime import date
 from dateutil.relativedelta import relativedelta
 import zip1
+
 sendto="saltydick61@gmail.com"
 #-----------End of Import Libraries------------------------#
 
@@ -77,7 +77,7 @@ humid_avg = 0
 myAPI = '23WP7T9NERH1SYTG' 
 # URL where we will send the data, Don't change it
 baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI 
-
+link = "https://thingspeak.com/channels/1302824"
 #-------------------------------------------------------------------
 #-------------------Tkinter Variables + Plot attributes-----------------------------------------
 #Tkinter window
@@ -291,22 +291,25 @@ def email(threadName,delay):
         now = datetime.now()
         date_diff = now - lastrun   
         total_time = date_diff.total_seconds()
-        print(total_time)
+        # print(total_time)
         if(TUpper_yellow < temp_avg or TLower_yellow > temp_avg or HUpper_yellow < humid_avg or HLower_yellow > humid_avg ):
             if (total_time > 3600): #3600 hour
                 email_sending.sendwarning(sendto, temp_avg, humid_avg)
                 lastrun = datetime.now()
         
         date_time = now.strftime("%d, %H:%M")
-        if(date_time =="01, 04:00"):
-            date_file = date.today() + relativedelta(months=0)
+        # print(date_time)
+        if(date_time == "01, 04:00"):
+            date_file = datetime.today() + relativedelta(months=-1)
+            # print(date_file)
             sent = True
             x = 0
             while sent:
                 sent = email_sending.sendfile(sendto,date_file)
                 if x>6:
                     sent = False
-                x= x+1    
+                x= x+1   
+            time.sleep(120)
         time.sleep(delay)
 
 
@@ -344,7 +347,8 @@ def local(threadName, delay):
             file.flush()
             file.close()
         except Exception as e:
-            print(f'Error: {e}')
+            pass
+            # print(f'Error: {e}')
         time.sleep(delay)
 
 
@@ -466,7 +470,8 @@ def Report():
                                     filetypes = (("Text files", "*.txt"), ("All files", "*")))
 
 def ThingSpeak():
-    webbrowser.open_new("https://thingspeak.com/channels/1302824/private_show")
+    global link
+    webbrowser.open_new(link)
 
 global tempTLG
 global tempTUY
@@ -791,7 +796,7 @@ try:
     _thread.start_new_thread( avg,     ("average" , 4, ) )
     _thread.start_new_thread( cloud,   ("upload"  , 300, ) )
     _thread.start_new_thread( local,   ("local"   , 300, ) )
-    _thread.start_new_thread( email,   ("Warning" , 59, ) )
+    _thread.start_new_thread( email,   ("Warning" , 45, ) )
     ani = animation.FuncAnimation(fig, animate, interval=2000, fargs=(xs,ys,xs2,ys2) )
     
 except:
