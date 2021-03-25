@@ -330,14 +330,15 @@ def local(threadName, delay):
     
     while True:
         try:
-            # print(os.getcwd())
+            print(os.getcwd())
             cwd = os.getcwd()
             timenow = datetime.now()
             yrnow = timenow.strftime("%Y")
             monow = timenow.strftime("%m")
             daynow = timenow.strftime("%d")
-            path = cwd+ "/Logging/{}-{}.csv".format(yrnow,monow)
-            # print(path)
+            # path = cwd+ "/Logging/{}-{}.csv".format(yrnow,monow)
+            path = "/home/pi/LabWatchGUI6/Logging/{}-{}.csv".format(yrnow,monow)
+            print(path)
             file = open(path, "a")
             file = open(path, "a")
             if os.stat(path).st_size == 0:
