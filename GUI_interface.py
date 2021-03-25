@@ -39,7 +39,12 @@ import webbrowser
 import csv
 import os
 
+#email sending 
+import email_sending
+from dateutil.relativedelta import relativedelta
+import zip1
 
+sendto="saltydick61@gmail.com"
 #-----------End of Import Libraries------------------------#
 
 #-----------Sensor Global Variables------------------------#
@@ -69,10 +74,10 @@ humid_avg = 0
 #-----------------------------------------------------------------
 #----------------ThingSpeak Global Variables----------------------
 #ThingSpeak credentrials 
-myAPI = '4M4MSZ8ZYP18AU3E' 
+myAPI = 'DLSQ0NFWVP2CQU4N' 
 # URL where we will send the data, Don't change it
 baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI 
-
+link = "https://thingspeak.com/channels/1318645"
 #-------------------------------------------------------------------
 #-------------------Tkinter Variables + Plot attributes-----------------------------------------
 #Tkinter window
@@ -127,7 +132,7 @@ def sensor0( threadName, delay):
     global temp_avg
     fault = bool(0)
     while True:
-        for x in range(5):
+        for x in range(10):
             try:
                 # Print the values to the serial port
                 temperature_c = dhtDevice0.temperature
@@ -142,7 +147,7 @@ def sensor0( threadName, delay):
             except Exception as error:
                 dhtDevice0.exit()
                 raise error
-            if (x > 3):
+            if (x > 8):
                 fault = bool(1)
                 temperature_c = 0
                 humidity = 0 
@@ -163,7 +168,7 @@ def sensor1( threadName, delay):
     fault = bool(0)
 
     while True: #runs forever 
-        for x in range(5):#tries 5 times before thorwing fault for sensor 
+        for x in range(10):#tries 5 times before thorwing fault for sensor 
             try:
                 # Print the values to the serial port
                 temperature_c = dhtDevice1.temperature
@@ -178,7 +183,7 @@ def sensor1( threadName, delay):
             except Exception as error:
                 dhtDevice1.exit()
                 raise error
-            if (x > 3):
+            if (x > 8):
                 fault = bool(1)
                 temperature_c = 0
                 humidity = 0 
@@ -261,8 +266,58 @@ def cloud(threadName, delay):
             print("Connection Failed")
         time.sleep(delay)
 
+
+
+
 #-------------------------------------End of Thingspeak Uploading ---------------------------------------------------------------------------
 #____________________________________________________________________________________________________________________
+#________________________________________________________________________________________________________________________________
+
+#---------------------------------------------Emailing-------------------------------------------------
+
+def email(threadName,delay):
+    global temp_avg
+    global humid_avg
+    global TUpper_yellow
+    global TLower_yellow
+    global HUpper_yellow
+    global HLower_yellow
+    global sendto
+    lastrun = datetime.now()
+    
+    while True: 
+        
+        
+        now = datetime.now()
+        date_diff = now - lastrun   
+        total_time = date_diff.total_seconds()
+        # print(total_time)
+        if(TUpper_yellow < temp_avg or TLower_yellow > temp_avg or HUpper_yellow < humid_avg or HLower_yellow > humid_avg ):
+            if (total_time > 3600): #3600 hour
+                email_sending.sendwarning(sendto, temp_avg, humid_avg)
+                lastrun = datetime.now()
+        
+        date_time = now.strftime("%d, %H:%M")
+        # print(date_time)
+        if(date_time == "01, 04:00"):
+            date_file = datetime.today() + relativedelta(months=-1)
+            # print(date_file)
+            sent = True
+            x = 0
+            while sent:
+                sent = email_sending.sendfile(sendto,date_file)
+                if x>6:
+                    sent = False
+                x= x+1   
+            time.sleep(120)
+        time.sleep(delay)
+
+
+
+
+#-------------------------------------End of Emailing ---------------------------------------------------------------------------
+#____________________________________________________________________________________________________________________
+
 #________________________________________________________________________________________________________________________________
 
 #-------------------------------------Local Logging-------------------------------------------------
@@ -275,11 +330,16 @@ def local(threadName, delay):
     
     while True:
         try:
+            # print(os.getcwd())
+            cwd = os.getcwd()
             timenow = datetime.now()
             yrnow = timenow.strftime("%Y")
             monow = timenow.strftime("%m")
             daynow = timenow.strftime("%d")
-            path = "/home/pi/LabWatchGUI6/Logging/{}-{}.csv".format(yrnow,monow)
+            path = cwd+ "/Logging/{}-{}.csv".format(yrnow,monow)
+            # path = "/home/pi/LabWatchGUI6/Logging/{}-{}.csv".format(yrnow,monow)
+            # print(path)
+            file = open(path, "a")
             file = open(path, "a")
             if os.stat(path).st_size == 0:
                 file.write("Time,S1TempC,S1Humid,S2TempC,S2Humid,\n")
@@ -287,8 +347,9 @@ def local(threadName, delay):
             file.write(str(timenow.strftime("%m/%d/%Y %H:%M"))+","+str(temp0)+","+str(humid0)+","+str(temp1)+","+str(humid1)+"\n")
             file.flush()
             file.close()
-        except:
-            print("Logging Failed")
+        except Exception as e:
+            pass
+            # print(f'Error: {e}')
         time.sleep(delay)
 
 
@@ -399,6 +460,10 @@ def animate(i, xs, xs2, ys, ys2):
 win.configure(background='black')
 
 #--------------------Buttons----------------------------------#
+def SendReport():
+    global sendto
+    path = zip1.zipping()
+    email_sending.sendall(sendto,path)
 
 def Report():
 
@@ -406,7 +471,260 @@ def Report():
                                     filetypes = (("Text files", "*.txt"), ("All files", "*")))
 
 def ThingSpeak():
-    webbrowser.open_new("https://thingspeak.com/channels/1318645")
+    global link
+    webbrowser.open_new(link)
+
+global tempTLG
+global tempTUY
+global tempTLY
+tempTUG = TUpper_green
+tempTLG = TLower_green
+tempTUY = TUpper_yellow
+tempTLY = TLower_yellow
+
+def settings1():
+    # Toplevel object which will  
+    # be treated as a new window 
+    sus = Toplevel() 
+    
+    # sets the title of the 
+    # Toplevel widget 
+    sus.title("Tempature Range Adjustments Window") 
+    
+    # sets the geometry of toplevel 
+    sus.geometry("800x800") 
+
+    Label(sus,text ='Tempature Range Settings').place(in_=sus,x=350,y=100)
+    
+    def TUGU():
+        global tempTUG
+        global tempTUY
+        if tempTUY > tempTUG +1 : 
+            tempTUG = tempTUG + 1
+        NUG = Label(sus,text =tempTUG).place(in_=sus,x=550,y=250)
+        return tempTUG
+
+    def TUGD():
+        global tempTUG
+        global tempTLG
+        if tempTLG < tempTUG-1 :
+            tempTUG = tempTUG - 1
+        NUG = Label(sus,text =tempTUG).place(in_=sus,x=550,y=250)
+        return tempTUG
+
+    def TLGU():
+        global tempTLG
+        global tempTUG
+        if tempTLG < tempTUG-1 :
+            tempTLG = tempTLG + 1
+        NLG = Label(sus,text =tempTLG).place(in_=sus,x=275,y=250)
+        return tempTLG
+
+    def TLGD():
+        global tempTLG
+        global tempTLY
+        if tempTLG > tempTLY +1 : 
+            tempTLG = tempTLG - 1
+        NLG = Label(sus,text =tempTLG).place(in_=sus,x=275,y=250)
+        return tempTLG
+
+    def TUYU():
+        global tempTUY
+        tempTUY = tempTUY + 1
+        NUY = Label(sus,text =tempTUY).place(in_=sus,x=750,y=250)
+        return tempTUY
+
+    def TUYD():
+        global tempTUY
+        global tempTUG
+        if tempTUG < tempTUY-1 : 
+            tempTUY = tempTUY - 1
+        NUY = Label(sus,text =tempTUY).place(in_=sus,x=750,y=250)
+        return tempTUY
+
+    def TLYU():
+        global tempTLY
+        global tempTLG
+        if tempTLG > tempTLY +1 : 
+            tempTLY = tempTLY + 1
+        NLY = Label(sus,text =tempTLY).place(in_=sus,x=50,y=250)
+        return tempTLY
+
+    def TLYD():
+        global tempTLY
+        tempTLY = tempTLY - 1
+        NLY = Label(sus,text =tempTLY).place(in_=sus,x=50,y=250)
+        return tempTLY
+
+    def SaveHum():
+        global tempTUG
+        global tempTLG
+        global tempTUY
+        global tempTLY
+        global TUpper_green
+        global TLower_green
+        global TUpper_yellow
+        global TLower_yellow
+        TUpper_green = tempTUG
+        TLower_green = tempTLG
+        TUpper_yellow = tempTUY
+        TLower_yellow = tempTLY
+        sus.destroy()
+
+    # A Label widget to show in toplevel 
+
+    Label(sus,text ="Set Upper Limit").place(in_=sus,x=500,y=200)
+    NUG = Label(sus,text =tempTUG).place(in_=sus,x=550,y=250)
+
+    Label(sus,text ="Set Lower Limit").place(in_=sus,x=225,y=200)
+    NLG = Label(sus,text =tempTLG).place(in_=sus,x=275,y=250)
+
+    Label(sus,text ="Set Upper Limit").place(in_=sus,x=690,y=200)
+    NUY = Label(sus,text =tempTUY).place(in_=sus,x=750,y=250)
+
+    Label(sus,text ="Set Lower Limit").place(in_=sus,x=0,y=200)
+    NLY = Label(sus,text =tempTLY).place(in_=sus,x=50,y=250)
+    
+    up_button1 = tk.Button(sus,bg = 'yellow', text = "↑",command=TLYU).place(in_=sus,x=42,y=300)
+    down_button1 = tk.Button(sus,bg = 'yellow', text = "↓",command=TLYD).place(in_=sus,x=42,y=350)
+
+    up_button2 = tk.Button(sus,bg = 'green', text = "↑",command=TLGU).place(in_=sus,x=268,y=300)
+    down_button2 = tk.Button(sus,bg = 'green', text = "↓",command=TLGD).place(in_=sus,x=268,y=350)
+
+    up_button1 = tk.Button(sus,bg = 'green', text = "↑",command=TUGU).place(in_=sus,x=542,y=300)
+    down_button1 = tk.Button(sus,bg = 'green', text = "↓",command=TUGD).place(in_=sus,x=542,y=350)
+
+    up_button2 = tk.Button(sus,bg = 'yellow', text = "↑",command=TUYU).place(in_=sus,x=742,y=300)
+    down_button2 = tk.Button(sus,bg = 'yellow', text = "↓",command=TUYD).place(in_=sus,x=742,y=350)
+
+    save = tk.Button(sus, text = "Exit",command=SaveHum).place(in_=sus,x=400,y=130)
+
+global tempHUG
+global tempHLG
+global tempHUY
+global tempHLY
+
+tempHUG = HUpper_green
+tempHLG = HLower_green
+tempHUY = HUpper_yellow
+tempHLY = HLower_yellow
+
+def settings2():
+    # Toplevel object which will  
+    # be treated as a new window 
+    sus = Toplevel() 
+    
+    # sets the title of the 
+    # Toplevel widget 
+    sus.title("Humidity Range Adjustments Window") 
+    
+    # sets the geometry of toplevel 
+    sus.geometry("800x800") 
+
+    Label(sus,text ='Humidity Range Settings').place(in_=sus,x=350,y=100)
+    
+    def HUGU():
+        global tempHUG
+        global tempHUY
+        if tempHUY > tempHUG +1: 
+            tempHUG = tempHUG + 1
+        NUG = Label(sus,text =tempHUG).place(in_=sus,x=550,y=250)
+        return tempHUG
+
+    def HUGD():
+        global tempHUG
+        global tempHLG
+        if tempHUG-1 > tempHLG :
+            tempHUG = tempHUG - 1
+        NUG = Label(sus,text =tempHUG).place(in_=sus,x=550,y=250)
+        return tempHUG
+
+    def HLGU():
+        global tempHLG
+        global tempHUG
+        if tempHUG > tempHLG+1:
+            tempHLG = tempHLG + 1
+        NLG = Label(sus,text =tempHLG).place(in_=sus,x=275,y=250)
+        return tempHLG
+
+    def HLGD():
+        global tempHLG
+        global tempHLY
+        if tempHLG > tempHLY+1:
+            tempHLG = tempHLG - 1
+        NLG = Label(sus,text =tempHLG).place(in_=sus,x=275,y=250)
+        return tempHLG
+
+    def HUYU():
+        global tempHUY
+        tempHUY = tempHUY + 1
+        NUY = Label(sus,text =tempHUY).place(in_=sus,x=750,y=250)
+        return tempHUY
+
+    def HUYD():
+        global tempHUY
+        global tempHUG
+        if tempHUY > tempHUG +1:
+            tempHUY = tempHUY - 1
+        NUY = Label(sus,text =tempHUY).place(in_=sus,x=750,y=250)
+        return tempHUY
+
+    def HLYU():
+        global tempHLY
+        global tempHLG
+        if tempHLY<tempHLG-1:
+            tempHLY = tempHLY + 1
+        NLY = Label(sus,text =tempHLY).place(in_=sus,x=50,y=250)
+        return tempHLY
+
+    def HLYD():
+        global tempHLY
+        tempHLY = tempHLY - 1
+        NLY = Label(sus,text =tempHLY).place(in_=sus,x=50,y=250)
+        return tempHLY
+
+    def SaveHum():
+        global tempHUG
+        global tempHLG
+        global tempHUY
+        global tempHLY
+        global HUpper_green
+        global HLower_green
+        global HUpper_yellow
+        global HLower_yellow
+        HUpper_green = tempHUG
+        HLower_green = tempHLG
+        HUpper_yellow = tempHUY
+        HLower_yellow = tempHLY
+        sus.destroy()
+
+
+    Label(sus,text ="Set Upper Limit").place(in_=sus,x=500,y=200)
+    NUG = Label(sus,text =tempHUG).place(in_=sus,x=550,y=250)
+
+    Label(sus,text ="Set Lower Limit").place(in_=sus,x=225,y=200)
+    NLG = Label(sus,text =tempHLG).place(in_=sus,x=275,y=250)
+
+    Label(sus,text ="Set Upper Limit").place(in_=sus,x=690,y=200)
+    NUY = Label(sus,text =tempHUY).place(in_=sus,x=750,y=250)
+
+    Label(sus,text ="Set Lower Limit").place(in_=sus,x=0,y=200)
+    NLY = Label(sus,text =tempHLY).place(in_=sus,x=50,y=250)
+    
+    up_button1 = tk.Button(sus,bg = 'yellow', text = "↑",command=HLYU).place(in_=sus,x=42,y=300)
+    down_button1 = tk.Button(sus,bg = 'yellow', text = "↓",command=HLYD).place(in_=sus,x=42,y=350)
+
+    up_button2 = tk.Button(sus,bg = 'green', text = "↑",command=HLGU).place(in_=sus,x=268,y=300)
+    down_button2 = tk.Button(sus,bg = 'green', text = "↓",command=HLGD).place(in_=sus,x=268,y=350)
+
+    up_button1 = tk.Button(sus,bg = 'green', text = "↑",command=HUGU).place(in_=sus,x=542,y=300)
+    down_button1 = tk.Button(sus,bg = 'green', text = "↓",command=HUGD).place(in_=sus,x=542,y=350)
+
+    up_button2 = tk.Button(sus,bg = 'yellow', text = "↑",command=HUYU).place(in_=sus,x=742,y=300)
+    down_button2 = tk.Button(sus,bg = 'yellow', text = "↓",command=HUYD).place(in_=sus,x=742,y=350)
+
+    save = tk.Button(sus, text = "Exit",command=SaveHum).place(in_=sus,x=400,y=130)
+    # Exit = tk.Button(sus, text = "Exit Withoug Saving",command=nonSaveHum).place(in_=sus,x=500,y=750)
 
 report_button = tk.Button(win, text="Report", command=Report)
 report_button.pack()
@@ -415,6 +733,19 @@ report_button.place(x=100,y=0)
 thingspeak_button = tk.Button(win, text="ThingSpeak", command=ThingSpeak)
 thingspeak_button.pack()
 thingspeak_button.place(x=0,y=0)
+
+sendall_button = tk.Button(win, text="Send all report", command=SendReport)
+sendall_button.pack()
+sendall_button.place(x=500,y=0)
+
+
+b1 = tk.Button(win, text="Tempature Range Adjustments", command=settings1)
+b1.pack()
+b1.place(x=200,y=0)
+
+b1 = tk.Button(win, text="Humidity Range Adjustments", command=settings2)
+b1.pack()
+b1.place(x=200,y=50)
 
 #----------------------------End of buttons--------------------------------------
 
@@ -461,11 +792,13 @@ win.bind('<Escape>',exit_)                      #ESC to exit
 #-------------------------------Creating Threads--------------------------------------------------------------------
 # Creates threads and starts all functions as needed
 try:
+    os.chdir('/home/pi/LabWatchGUI6')
     _thread.start_new_thread( sensor0, ("sensor_1", 2, ) )#starts recording sensor on D4
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
     _thread.start_new_thread( cloud,   ("upload"  , 300, ) )
     _thread.start_new_thread( local,   ("local"   , 300, ) )
+    _thread.start_new_thread( email,   ("Warning" , 45, ) )
     ani = animation.FuncAnimation(fig, animate, interval=2000, fargs=(xs,ys,xs2,ys2) )
     
 except:
@@ -493,3 +826,4 @@ finally:
 
 
 #end of code 
+
