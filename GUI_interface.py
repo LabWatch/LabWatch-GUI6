@@ -41,7 +41,7 @@ import os
 
 #email sending 
 import email_sending
-from datetime import date
+# from datetime import date
 from dateutil.relativedelta import relativedelta
 import zip1
 sendto="saltydick61@gmail.com"
@@ -283,19 +283,19 @@ def email(threadName,delay):
     global HUpper_yellow
     global HLower_yellow
     global sendto
-    lastrun = datetime.datetime.now()
+    lastrun = datetime.now()
     
     while True: 
         
         
-        now = datetime.datetime.now()
+        now = datetime.now()
         date_diff = now - lastrun   
         total_time = date_diff.total_seconds()
-        
+        print(total_time)
         if(TUpper_yellow < temp_avg or TLower_yellow > temp_avg or HUpper_yellow < humid_avg or HLower_yellow > humid_avg ):
-            if (total_time > 3600):
+            if (total_time > 3600): #3600 hour
                 email_sending.sendwarning(sendto, temp_avg, humid_avg)
-                lastrun = datetime.datetime.now()
+                lastrun = datetime.now()
         
         date_time = now.strftime("%d, %H:%M")
         if(date_time =="01, 04:00"):
@@ -327,12 +327,15 @@ def local(threadName, delay):
     
     while True:
         try:
+            # print(os.getcwd())
             cwd = os.getcwd()
             timenow = datetime.now()
             yrnow = timenow.strftime("%Y")
             monow = timenow.strftime("%m")
             daynow = timenow.strftime("%d")
             path = cwd+ "/Logging/{}-{}.csv".format(yrnow,monow)
+            # print(path)
+            file = open(path, "a")
             file = open(path, "a")
             if os.stat(path).st_size == 0:
                 file.write("Time,S1TempC,S1Humid,S2TempC,S2Humid,\n")
@@ -340,8 +343,8 @@ def local(threadName, delay):
             file.write(str(timenow.strftime("%m/%d/%Y %H:%M"))+","+str(temp0)+","+str(humid0)+","+str(temp1)+","+str(humid1)+"\n")
             file.flush()
             file.close()
-        except:
-            print("Logging Failed")
+        except Exception as e:
+            print(f'Error: {e}')
         time.sleep(delay)
 
 
@@ -764,7 +767,7 @@ try:
     _thread.start_new_thread( avg,     ("average" , 4, ) )
     _thread.start_new_thread( cloud,   ("upload"  , 300, ) )
     _thread.start_new_thread( local,   ("local"   , 300, ) )
-    _thread.start_new_thread( email,   ("Warning"   , 59, ) )
+    _thread.start_new_thread( email,   ("Warning" , 59, ) )
     ani = animation.FuncAnimation(fig, animate, interval=2000, fargs=(xs,ys,xs2,ys2) )
     
 except:
