@@ -225,17 +225,17 @@ def avg(threadName, delay):
         elif (sensor_fault0 == False and sensor_fault1 == True) :#D4 OK D18 Bad
             temp_avg = (temp0 + temp_last_avg) / 2
             humid_avg = (humid0 + humid_last_avg) / 2
-            messagebox.showerror("SENSOR ERROR", "SENSOR 2 FAULT ON D18")
+            # messagebox.showerror("SENSOR ERROR", "SENSOR 2 FAULT ON D18")
             
         elif (sensor_fault0 == True and sensor_fault1 == False): #D4 Bad D18 OK
             temp_avg = (temp1 + temp_last_avg) / 2
             humid_avg = (humid1 + humid_last_avg) / 2 
-            messagebox.showerror("SENSOR ERROR", "SENSOR 1 FAULT ON D4")
+            # messagebox.showerror("SENSOR ERROR", "SENSOR 1 FAULT ON D4")
             
         else: #both Bad set to 0 , 0 
             temp_avg = 0
             humid_avg = 0
-            messagebox.showerror("SENSOR ERROR", "SENSOR 1 AND 2 FAULT")
+            # messagebox.showerror("SENSOR ERROR", "SENSOR 1 AND 2 FAULT")
 
         temp_avg = round(temp_avg,1)
         humid_avg = round(humid_avg,1)
@@ -274,6 +274,24 @@ def cloud(threadName, delay):
 #________________________________________________________________________________________________________________________________
 
 #---------------------------------------------Emailing-------------------------------------------------
+def alert( delay):
+    global sensor_fault0
+    global sensor_fault1
+    time.sleep(30)
+    while True: #runs the avg loop forever 
+        
+        # mutltiple statments checking different sinarios for faulty sensor 
+        if (sensor_fault0 == True and sensor_fault1 == True) :#both good
+            messagebox.showerror("SENSOR ERROR", "SENSOR 1 AND 2 FAULT")
+    
+            
+        elif (sensor_fault0 == False and sensor_fault1 == True) :#D4 OK D18 Bad
+            messagebox.showerror("SENSOR ERROR", "SENSOR 2 FAULT ON D18")
+            
+        elif (sensor_fault0 == True and sensor_fault1 == False): #D4 Bad D18 OK
+            messagebox.showerror("SENSOR ERROR", "SENSOR 1 FAULT ON D4")
+            
+        time.sleep(delay)#sleeps for set delay time 
 
 def email(threadName,delay):
     global temp_avg
@@ -466,9 +484,9 @@ def SendReport():
     email_sending.sendall(sendto,path)
 
 def Report():
-
-    filedialog.askopenfile(parent=win,
-                                    filetypes = (("Text files", "*.txt"), ("All files", "*")))
+    global sendto
+    date_file = datetime.today()
+    sent = email_sending.sendfile(sendto,date_file)
 
 def ThingSpeak():
     global link
@@ -799,6 +817,7 @@ try:
     _thread.start_new_thread( cloud,   ("upload"  , 300, ) )
     _thread.start_new_thread( local,   ("local"   , 300, ) )
     _thread.start_new_thread( email,   ("Warning" , 45, ) )
+    _thread.start_new_thread( alert,   (            45, ) )
     ani = animation.FuncAnimation(fig, animate, interval=2000, fargs=(xs,ys,xs2,ys2) )
     
 except:
