@@ -46,14 +46,6 @@ import gaugelib
 #System Restart 
 import subprocess
 
-#read from file
-# f = open('READTEST.txt','r')
-# api =  f.readline()
-# lowgreen =  int(f.readline())
-# highgreen =  int(f.readline())
-# lowwarn =  int(f.readline())
-# highwarn =  int(f.readline())
-
 =======
 from tkinter import messagebox
 from tkinter import filedialog
@@ -141,6 +133,45 @@ HLower_yellow = 32
 
 temp_colour = "#000000"
 humid_colour = "#000000"
+
+
+#______________________________________________________________________________________________________________________________
+#-------------------------------------------Text File Read And Write Function------------------------------------------------
+
+# def storage( threadName, delay):
+#     global myAPI
+#     global TUpper_green
+#     global TLower_green
+#     global TUpper_yellow
+#     global TLower_yellow
+#     global HUpper_green
+#     global HLower_green
+#     global HUpper_yellow
+#     global HLower_yellow
+#     f = open('READTEST.txt','r')
+#     myAPI =  f.readline()
+#     TUpper_green = int(f.readline())
+#     TLower_green = int(f.readline())
+#     TUpper_yellow = int(f.readline())
+#     TLower_yellow = int(f.readline())
+#     HUpper_green = int(f.readline())
+#     HLower_green = int(f.readline())
+#     HUpper_yellow = int(f.readline())
+#     HLower_yellow = int(f.readline())
+#     f.close()
+
+#     while true:
+#         try:
+#             f = open('READTEST.txt','w')
+#             f.write(myAPI + "\n" + TUpper_green + "\n" + TLower_green + "\n" + TUpper_yellow + "\n" + TLower_yellow + "\n" + HUpper_green + "\n" + HLower_green + "\n" + HUpper_yellow + "\n" + HLower_yellow)
+#             f.close()
+#         except:
+#             print("Write to Text Failed")
+#         time.sleep(delay)
+
+#----------------------------------------------------------------------------------------------------------------------------
+#______________________________________________________________________________________________________________________________
+
 
 #______________________________________________________________________________________________________________________________
 #------------------Everything Between lines for Sensor read Data and error checking--------------------------------------------- 
@@ -832,7 +863,8 @@ win.bind('<Escape>',exit_)                      #ESC to exit
 #-------------------------------Creating Threads--------------------------------------------------------------------
 # Creates threads and starts all functions as needed
 try:
-    os.chdir('/home/pi/LabWatchGUI6')
+    os.chdir('/home/pi/LabWatchGUI6')    
+    # _thread.start_new_thread( storage, ("storage" , 10, ) )
     _thread.start_new_thread( sensor0, ("sensor_1", 2, ) )#starts recording sensor on D4
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
