@@ -252,7 +252,7 @@ try:
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
     _thread.start_new_thread( cloud,   ("upload"  , 300, ) )
-    _thread.start_new_thread( local,   ("local"  , 300, ) )
+    _thread.start_new_thread( local,   ("local"  , 10, ) )
     
 except:
     print ("Error: unable to start thread")
