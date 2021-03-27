@@ -38,10 +38,6 @@ import random
 import webbrowser
 import csv
 import os
-<<<<<<< HEAD
-from datetime import datetime 
-import gaugelib
-<<<<<<< HEAD
 
 #System Restart 
 import subprocess
@@ -128,6 +124,16 @@ HLower_green = 36
 HUpper_yellow = 46 
 HLower_yellow = 32
 
+tempHUG = HUpper_green
+tempHLG = HLower_green
+tempHUY = HUpper_yellow
+tempHLY = HLower_yellow
+
+tempTUG = TUpper_green
+tempTLG = TLower_green
+tempTUY = TUpper_yellow
+tempTLY = TLower_yellow
+
 temp_colour = "#000000"
 humid_colour = "#000000"
 
@@ -152,7 +158,7 @@ def read_file():
         cwd = os.getcwd()
         path = cwd+ "/load.txt"
         f = open(path,'r')
-        myAPI =  f.readline()
+        myAPI =  str(f.readline())
         TUpper_green = int(f.readline())
         TLower_green = int(f.readline())
         TUpper_yellow = int(f.readline())
@@ -161,15 +167,21 @@ def read_file():
         HLower_green = int(f.readline())
         HUpper_yellow = int(f.readline())
         HLower_yellow = int(f.readline())
-        link = int(f.readline())
-        sendto = int(f.readline())
+        link = str(f.readline())
+        sendto = str(f.readline())
         f.close()
-        baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI
-
-    except:
-        pass
+        myAPI=  myAPI.rstrip('\n')
+        baseURL = baseURL.rstrip('\n')
+        sendto = sendto.rstrip('\n')
+        # print(myAPI)
+        baseURL = 'https://api.thingspeak.com/update?api_key=%s'% myAPI
+        # print(baseURL)
+        # print(sendto)
+    except Exception as e:
+            print(f'Error Read: {e}')
 
 def write_file():
+    # print("write run")
     global myAPI
     global TUpper_green
     global TLower_green
@@ -181,16 +193,17 @@ def write_file():
     global HLower_yellow
     global link
     global sendto
-        try:
-            cwd = os.getcwd()
-            path = cwd+ "/load.txt"
-            f = open(path,'r')
-            f = open('READTEST.txt','w')
-            f.write(myAPI + "\n" + TUpper_green + "\n" + TLower_green + "\n" + TUpper_yellow + "\n" + TLower_yellow + "\n" + HUpper_green + "\n" + HLower_green + "\n" + HUpper_yellow + "\n" + HLower_yellow + "\n" + link + "\n" + sendto)
-            f.close()
-        except:
-            print("Write to Text Failed")
-        time.sleep(delay)
+    try:
+        cwd = os.getcwd()
+        path = cwd+ "/load.txt"
+        
+        f = open(path,'w')
+        f.write(myAPI + "\n" + str(TUpper_green) + "\n" + str(TLower_green) + "\n" + str(TUpper_yellow) + "\n" + str(TLower_yellow) + "\n" + str(HUpper_green) + "\n" + str(HLower_green) + "\n" + str(HUpper_yellow) + "\n" + str(HLower_yellow )+ "\n" + link + "" + sendto)
+        f.close()
+    except Exception as e:
+            print(f'Error Write: {e}')
+
+ 
 
 #----------------------------------------------------------------------------------------------------------------------------
 #______________________________________________________________________________________________________________________________
@@ -333,12 +346,14 @@ def cloud(threadName, delay):
     global temp_avg
     global humid_avg
     global baseURL
+    time.sleep(17)
     while True:
 
         try:
             conn = urlopen(baseURL + '&field1=%s&field2=%s' % (temp_avg, humid_avg))
             conn.close()
-        except:
+        except Exception as e:
+            print(f'Error: {e}')
             print("Connection Failed")
         time.sleep(delay)
 
@@ -421,7 +436,7 @@ def local(threadName, delay):
     global humid0
     global temp1
     global humid1
-    
+    time.sleep(20)
     while True:
         try:
             # print(os.getcwd())
@@ -568,15 +583,22 @@ def ThingSpeak():
     global link
     webbrowser.open_new(link)
 
-global tempTLG
-global tempTUY
-global tempTLY
-tempTUG = TUpper_green
-tempTLG = TLower_green
-tempTUY = TUpper_yellow
-tempTLY = TLower_yellow
+
+
 
 def settings1():
+    global tempTUG
+    global tempTLG
+    global tempTUY
+    global tempTLY
+    global TUpper_green
+    global TLower_green
+    global TUpper_yellow
+    global TLower_yellow
+    tempTUG = TUpper_green
+    tempTLG = TLower_green
+    tempTUY = TUpper_yellow
+    tempTLY = TLower_yellow
     # Toplevel object which will  
     # be treated as a new window 
     sus = Toplevel() 
@@ -665,6 +687,7 @@ def settings1():
         TUpper_yellow = tempTUY
         TLower_yellow = tempTLY
         sus.destroy()
+        write_file()
 
     # A Label widget to show in toplevel 
 
@@ -694,17 +717,24 @@ def settings1():
 
     exit = tk.Button(sus, text = "Exit",command=SaveHum).place(in_=sus,x=370,y=110)
 
-global tempHUG
-global tempHLG
-global tempHUY
-global tempHLY
 
-tempHUG = HUpper_green
-tempHLG = HLower_green
-tempHUY = HUpper_yellow
-tempHLY = HLower_yellow
+
+
 
 def settings2():
+    global tempHUG
+    global tempHLG
+    global tempHUY
+    global tempHLY
+    global HUpper_green
+    global HLower_green
+    global HUpper_yellow
+    global HLower_yellow
+    
+    tempHUG = HUpper_green
+    tempHLG = HLower_green
+    tempHUY = HUpper_yellow
+    tempHLY = HLower_yellow
     # Toplevel object which will  
     # be treated as a new window 
     sus = Toplevel() 
