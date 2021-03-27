@@ -44,7 +44,7 @@ import email_sending
 from dateutil.relativedelta import relativedelta
 import zip1
 
-#sendto="@gmail.com"
+sendto="saltydick61@gmail.com"
 #-----------End of Import Libraries------------------------#
 
 #-----------Sensor Global Variables------------------------#
