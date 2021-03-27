@@ -44,7 +44,7 @@ import email_sending
 from dateutil.relativedelta import relativedelta
 import zip1
 
-sendto="eclipseredx@gmail.com"
+sendto="@gmail.com"
 #-----------End of Import Libraries------------------------#
 
 #-----------Sensor Global Variables------------------------#
