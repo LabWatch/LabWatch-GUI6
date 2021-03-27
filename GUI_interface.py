@@ -44,7 +44,7 @@ import email_sending
 from dateutil.relativedelta import relativedelta
 import zip1
 
-#sendto="@gmail.com"
+sendto="eclipseredx@gmail.com"
 #-----------End of Import Libraries------------------------#
 
 #-----------Sensor Global Variables------------------------#
@@ -74,10 +74,10 @@ humid_avg = 0
 #-----------------------------------------------------------------
 #----------------ThingSpeak Global Variables----------------------
 #ThingSpeak credentrials 
-myAPI = 'DLSQ0NFWVP2CQU4N' 
+myAPI = 'RXXLLQDW8BV1S7WW' 
 # URL where we will send the data, Don't change it
 baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI 
-link = "https://thingspeak.com/channels/1318645"
+link = "https://thingspeak.com/channels/1311268"
 #-------------------------------------------------------------------
 #-------------------Tkinter Variables + Plot attributes-----------------------------------------
 #Tkinter window
@@ -88,7 +88,7 @@ win = tk.Tk()
 #Create figure for plotting
 fig = plt.figure()
 fig.patch.set_facecolor('black')
-fig.set_size_inches(8, 1.8)
+fig.set_size_inches(8, 2)
 
 ax = fig.add_subplot(1,2,1)
 xs = []
@@ -482,16 +482,18 @@ def SendReport():
     global sendto
     path = zip1.zipping()
     email_sending.sendall(sendto,path)
-
+    tk.messagebox.showinfo("Send all reports", "All reports sent!")
+    
 def Report():
     global sendto
     date_file = datetime.today()
     sent = email_sending.sendfile(sendto,date_file)
-
+    tk.messagebox.showinfo("Current report", "Current report sent!")
+    
 def ThingSpeak():
     global link
     webbrowser.open_new(link)
-
+    
 global tempTLG
 global tempTUY
 global tempTLY
@@ -757,27 +759,27 @@ def Reports():
     sus.overrideredirect(True)  
     sus.configure(bg='black')
     # sets the geometry of toplevel 
-    sus.geometry("270x300") 
+    sus.geometry("241x270") 
 
-    Label(sus,text ='Reports', font=("Segoe UI", 20,"bold"), bg='black', fg='white').place(in_=sus,x=78,y=10)
+    Label(sus,text ='REPORTS', font=("Segoe UI", 20,"bold"), bg='black', fg='white').place(in_=sus,x=50,y=10)
     
-    report_button = tk.Button(sus, text="Report",fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 12,"bold"), command=Report)
-    report_button.place(x=95,y=70)
+    report_button = tk.Button(sus, text="Current Report",width = 13,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14), command=Report)
+    report_button.place(x=25,y=115)
 
-    thingspeak_button = tk.Button(sus, text="ThingSpeak",  fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 12,"bold"),command=ThingSpeak)
-    thingspeak_button.place(x=75,y=120)
+    thingspeak_button = tk.Button(sus, text="ThingSpeak",   width = 13, fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),command=ThingSpeak)
+    thingspeak_button.place(x=25,y=65)
     
-    sendall_button = tk.Button(sus, text="Send all report", fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 12,"bold"),command=SendReport)
-    sendall_button.place(x=60,y=170)
+    sendall_button = tk.Button(sus, text="Send All Reports", width = 13,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),command=SendReport)
+    sendall_button.place(x=25,y=165)
     
     def ExitWin():
         sus.destroy()
         
-    tk.Button(sus, text = "Exit",font=("Segoe UI", 12,"bold"), relief="solid",activebackground='black',activeforeground='white',command=ExitWin).place(in_=sus,x=110,y=230)
-    
-report_button = tk.Button(win, text="Report",fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 12,"bold"),command=Reports)
+    tk.Button(sus, text = "Exit",font=("Segoe UI", 14), relief="solid",activebackground='grey',activeforeground='white',command=ExitWin).place(in_=sus,x=90,y=230)
+
+report_button = tk.Button(win, text="Report",fg="white",borderwidth=3, width=7,highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 13, 'bold'),command=Reports)
 report_button.pack()
-report_button.place(x=120,y=0)
+report_button.place(x=125,y=0)
 
 def Settings():
     # Toplevel object which will  
@@ -790,22 +792,22 @@ def Settings():
     
     sus.configure(bg='black')
     # sets the geometry of toplevel 
-    sus.geometry("300x300")
+    sus.geometry("241x270")
 
-    Label(sus,text ='Settings', font=("Segoe UI", 20,"bold"), bg='black', fg='white').place(in_=sus,x=85,y=10)
+    Label(sus,text ='SETTINGS', font=("Segoe UI", 20,"bold"), bg='black', fg='white').place(in_=sus,x=50,y=10)
     
-    report_button = tk.Button(sus, text="Temp Rang Adjust",fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 12,"bold"), command=settings1)
-    report_button.place(x=60,y=70)
+    report_button = tk.Button(sus, text="Temp Rang Adjust",width = 14,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14), command=settings1)
+    report_button.place(x=25,y=65)
 
-    thingspeak_button = tk.Button(sus, text="Humi Rang Adjust",  fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 12,"bold"),command=settings2)
-    thingspeak_button.place(x=60,y=120)
+    thingspeak_button = tk.Button(sus, text="Humid Rang Adjust",  width = 14,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),command=settings2)
+    thingspeak_button.place(x=25,y=115)
     
     def ExitWin():
         sus.destroy()
         
-    tk.Button(sus, text = "Exit",font=("Segoe UI", 12,"bold"), relief="solid",activebackground='black',activeforeground='white',command=ExitWin).place(in_=sus,x=125,y=190)
+    tk.Button(sus, text = "Exit",font=("Segoe UI", 14), relief="solid",activebackground='grey',activeforeground='white',command=ExitWin).place(in_=sus,x=90,y=180)
 
-b1 = tk.Button(win, text="Settings",fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 12,"bold"), command=Settings)
+b1 = tk.Button(win, text="Settings",fg="white",borderwidth=3, width=7,highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 13, 'bold'), command=Settings)
 b1.pack()
 b1.place(x=0,y=0)
 
@@ -824,7 +826,7 @@ class Clock:
         self.mFrame = Frame()
         self.mFrame.pack(expand=YES,fill=X)
         self.mFrame.place(x=560, y=0)
-        self.watch = Label(self.mFrame, text=self.time2, font=('times',14, 'bold' ),background='black', fg="white")
+        self.watch = Label(self.mFrame, text=self.time2, font=('times',16 ),background='black', fg="white")
 
         self.watch.pack()
         
