@@ -46,12 +46,9 @@ import gaugelib
 #System Restart 
 import subprocess
 
-=======
+
 from tkinter import messagebox
 from tkinter import filedialog
->>>>>>> eb3e9e8d562370c3f0266ede3f8cfb15e2172c4a
-=======
->>>>>>> ebb74bea37019e181cd3e49382837d7798a00a51
 
 #email sending 
 import email_sending
@@ -138,36 +135,62 @@ humid_colour = "#000000"
 #______________________________________________________________________________________________________________________________
 #-------------------------------------------Text File Read And Write Function------------------------------------------------
 
-# def storage( threadName, delay):
-#     global myAPI
-#     global TUpper_green
-#     global TLower_green
-#     global TUpper_yellow
-#     global TLower_yellow
-#     global HUpper_green
-#     global HLower_green
-#     global HUpper_yellow
-#     global HLower_yellow
-#     f = open('READTEST.txt','r')
-#     myAPI =  f.readline()
-#     TUpper_green = int(f.readline())
-#     TLower_green = int(f.readline())
-#     TUpper_yellow = int(f.readline())
-#     TLower_yellow = int(f.readline())
-#     HUpper_green = int(f.readline())
-#     HLower_green = int(f.readline())
-#     HUpper_yellow = int(f.readline())
-#     HLower_yellow = int(f.readline())
-#     f.close()
+def read_file():
+    global myAPI
+    global TUpper_green
+    global TLower_green
+    global TUpper_yellow
+    global TLower_yellow
+    global HUpper_green
+    global HLower_green
+    global HUpper_yellow
+    global HLower_yellow
+    global link
+    global baseURL
+    global sentdo
+    try:
+        cwd = os.getcwd()
+        path = cwd+ "/load.txt"
+        f = open(path,'r')
+        myAPI =  f.readline()
+        TUpper_green = int(f.readline())
+        TLower_green = int(f.readline())
+        TUpper_yellow = int(f.readline())
+        TLower_yellow = int(f.readline())
+        HUpper_green = int(f.readline())
+        HLower_green = int(f.readline())
+        HUpper_yellow = int(f.readline())
+        HLower_yellow = int(f.readline())
+        link = int(f.readline())
+        sendto = int(f.readline())
+        f.close()
+        baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI
 
-#     while true:
-#         try:
-#             f = open('READTEST.txt','w')
-#             f.write(myAPI + "\n" + TUpper_green + "\n" + TLower_green + "\n" + TUpper_yellow + "\n" + TLower_yellow + "\n" + HUpper_green + "\n" + HLower_green + "\n" + HUpper_yellow + "\n" + HLower_yellow)
-#             f.close()
-#         except:
-#             print("Write to Text Failed")
-#         time.sleep(delay)
+    except:
+        pass
+
+def write_file():
+    global myAPI
+    global TUpper_green
+    global TLower_green
+    global TUpper_yellow
+    global TLower_yellow
+    global HUpper_green
+    global HLower_green
+    global HUpper_yellow
+    global HLower_yellow
+    global link
+    global sendto
+        try:
+            cwd = os.getcwd()
+            path = cwd+ "/load.txt"
+            f = open(path,'r')
+            f = open('READTEST.txt','w')
+            f.write(myAPI + "\n" + TUpper_green + "\n" + TLower_green + "\n" + TUpper_yellow + "\n" + TLower_yellow + "\n" + HUpper_green + "\n" + HLower_green + "\n" + HUpper_yellow + "\n" + HLower_yellow + "\n" + link + "\n" + sendto)
+            f.close()
+        except:
+            print("Write to Text Failed")
+        time.sleep(delay)
 
 #----------------------------------------------------------------------------------------------------------------------------
 #______________________________________________________________________________________________________________________________
@@ -770,6 +793,7 @@ def settings2():
         HUpper_yellow = tempHUY
         HLower_yellow = tempHLY
         sus.destroy()
+        write_file()
 
 
     Label(sus,text ="Set Upper Limit").place(in_=sus,x=500,y=200)
@@ -912,7 +936,7 @@ win.bind('<Escape>',exit_)                      #ESC to exit
 # Creates threads and starts all functions as needed
 try:
     os.chdir('/home/pi/LabWatchGUI6')    
-    # _thread.start_new_thread( storage, ("storage" , 10, ) )
+    read_file()
     _thread.start_new_thread( sensor0, ("sensor_1", 2, ) )#starts recording sensor on D4
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
