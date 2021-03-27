@@ -44,7 +44,7 @@ import email_sending
 from dateutil.relativedelta import relativedelta
 import zip1
 
-sendto="saltydick61@gmail.com"
+#sendto="@gmail.com"
 #-----------End of Import Libraries------------------------#
 
 #-----------Sensor Global Variables------------------------#
@@ -504,7 +504,7 @@ def settings1():
     # Toplevel object which will  
     # be treated as a new window 
     sus = Toplevel() 
-    
+    sus.overrideredirect(True) 
     # sets the title of the 
     # Toplevel widget 
     sus.title("Tempature Range Adjustments Window") 
@@ -512,7 +512,8 @@ def settings1():
     # sets the geometry of toplevel 
     sus.geometry("800x800") 
 
-    Label(sus,text ='Tempature Range Settings').place(in_=sus,x=350,y=100)
+    Label(sus,text ='Tempature Range Settings',font=("Segoe UI", 14,"bold")).place(in_=sus,x=250,y=70)
+    
     
     def TUGU():
         global tempTUG
@@ -615,7 +616,7 @@ def settings1():
     up_button2 = tk.Button(sus,bg = 'yellow', text = "↑",command=TUYU).place(in_=sus,x=742,y=300)
     down_button2 = tk.Button(sus,bg = 'yellow', text = "↓",command=TUYD).place(in_=sus,x=742,y=350)
 
-    save = tk.Button(sus, text = "Exit",command=SaveHum).place(in_=sus,x=400,y=130)
+    exit = tk.Button(sus, text = "Exit",command=SaveHum).place(in_=sus,x=370,y=110)
 
 global tempHUG
 global tempHLG
@@ -631,7 +632,7 @@ def settings2():
     # Toplevel object which will  
     # be treated as a new window 
     sus = Toplevel() 
-    
+    sus.overrideredirect(True) 
     # sets the title of the 
     # Toplevel widget 
     sus.title("Humidity Range Adjustments Window") 
@@ -639,7 +640,8 @@ def settings2():
     # sets the geometry of toplevel 
     sus.geometry("800x800") 
 
-    Label(sus,text ='Humidity Range Settings').place(in_=sus,x=350,y=100)
+    Label(sus,text ='Humidity Range Settings',font=("Segoe UI", 14,"bold")).place(in_=sus,x=250,y=70)
+    
     
     def HUGU():
         global tempHUG
@@ -740,30 +742,76 @@ def settings2():
 
     up_button2 = tk.Button(sus,bg = 'yellow', text = "↑",command=HUYU).place(in_=sus,x=742,y=300)
     down_button2 = tk.Button(sus,bg = 'yellow', text = "↓",command=HUYD).place(in_=sus,x=742,y=350)
-
-    save = tk.Button(sus, text = "Exit",command=SaveHum).place(in_=sus,x=400,y=130)
+    
+    exit = tk.Button(sus, text = "Exit",command=SaveHum).place(in_=sus,x=370,y=110)
+    
     # Exit = tk.Button(sus, text = "Exit Withoug Saving",command=nonSaveHum).place(in_=sus,x=500,y=750)
 
-report_button = tk.Button(win, text="Report", command=Report)
+def Reports():
+    # Toplevel object which will  
+    # be treated as a new window 
+    sus = Toplevel() 
+    
+    # sets the title of the 
+    # Toplevel widget 
+    sus.overrideredirect(True)  
+    sus.configure(bg='black')
+    # sets the geometry of toplevel 
+    sus.geometry("270x300") 
+
+    Label(sus,text ='Reports', font=("Segoe UI", 20,"bold"), bg='black', fg='white').place(in_=sus,x=78,y=10)
+    
+    report_button = tk.Button(sus, text="Report",fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 12,"bold"), command=Report)
+    report_button.place(x=95,y=70)
+
+    thingspeak_button = tk.Button(sus, text="ThingSpeak",  fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 12,"bold"),command=ThingSpeak)
+    thingspeak_button.place(x=75,y=120)
+    
+    sendall_button = tk.Button(sus, text="Send all report", fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 12,"bold"),command=SendReport)
+    sendall_button.place(x=60,y=170)
+    
+    def ExitWin():
+        sus.destroy()
+        
+    tk.Button(sus, text = "Exit",font=("Segoe UI", 12,"bold"), relief="solid",activebackground='black',activeforeground='white',command=ExitWin).place(in_=sus,x=110,y=230)
+    
+report_button = tk.Button(win, text="Report",fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 12,"bold"),command=Reports)
 report_button.pack()
-report_button.place(x=100,y=0)
+report_button.place(x=120,y=0)
 
-thingspeak_button = tk.Button(win, text="ThingSpeak", command=ThingSpeak)
-thingspeak_button.pack()
-thingspeak_button.place(x=0,y=0)
+def Settings():
+    # Toplevel object which will  
+    # be treated as a new window 
+    sus = Toplevel() 
+    
+    # sets the title of the 
+    # Toplevel widget 
+    sus.overrideredirect(True) 
+    
+    sus.configure(bg='black')
+    # sets the geometry of toplevel 
+    sus.geometry("300x300")
 
-sendall_button = tk.Button(win, text="Send all report", command=SendReport)
-sendall_button.pack()
-sendall_button.place(x=500,y=0)
+    Label(sus,text ='Settings', font=("Segoe UI", 20,"bold"), bg='black', fg='white').place(in_=sus,x=85,y=10)
+    
+    report_button = tk.Button(sus, text="Temp Rang Adjust",fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 12,"bold"), command=settings1)
+    report_button.place(x=60,y=70)
 
+    thingspeak_button = tk.Button(sus, text="Humi Rang Adjust",  fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 12,"bold"),command=settings2)
+    thingspeak_button.place(x=60,y=120)
+    
+    def ExitWin():
+        sus.destroy()
+        
+    tk.Button(sus, text = "Exit",font=("Segoe UI", 12,"bold"), relief="solid",activebackground='black',activeforeground='white',command=ExitWin).place(in_=sus,x=125,y=190)
 
-b1 = tk.Button(win, text="Tempature Range Adjustments", command=settings1)
+b1 = tk.Button(win, text="Settings",fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 12,"bold"), command=Settings)
 b1.pack()
-b1.place(x=200,y=0)
+b1.place(x=0,y=0)
 
-b1 = tk.Button(win, text="Humidity Range Adjustments", command=settings2)
-b1.pack()
-b1.place(x=200,y=50)
+# b1 = tk.Button(win, text="Humidity Range Adjustments", bg="white",command=settings2)
+# b1.pack()
+# b1.place(x=200,y=50)
 
 #----------------------------End of buttons--------------------------------------
 
