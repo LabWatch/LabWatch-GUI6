@@ -482,13 +482,13 @@ def SendReport():
     global sendto
     path = zip1.zipping()
     email_sending.sendall(sendto,path)
-    tk.messagebox.showinfo("Send all reports", "All reports sent!")
+    tk.messagebox.showinfo("Reports", "All reports sent!")
     
 def Report():
     global sendto
     date_file = datetime.today()
     sent = email_sending.sendfile(sendto,date_file)
-    tk.messagebox.showinfo("Current report", "Current report sent!")
+    tk.messagebox.showinfo("Reports", "Current report sent!")
     
 def ThingSpeak():
     global link
