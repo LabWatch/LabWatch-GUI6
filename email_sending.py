@@ -92,13 +92,13 @@ def sendwarning(send_to,temp,humid):
 
     
     try:
-        email_body = "Lab temp is out of range current temp is {} and himid is {} ".format(temp,humid)
+        email_body = "Laboratory temperature is out of range. The current temperature is {}°C and humidity is {}% ".format(temp,humid)
         # Configurating user's info
         #Starts to build email
         msg = MIMEText(email_body, 'plain')
         msg["From"] = emailfrom
         msg["To"] = send_to
-        msg["Subject"] = "Lab Out of Range Warning"
+        msg["Subject"] = "WARNING! Laboratory temperature and humidity out of Range"
         msg.preamble = "Warning alarm out of range"
 
         # Creating a SMTP session | use 587 with TLS, 465 SSL and 25
@@ -112,7 +112,7 @@ def sendwarning(send_to,temp,humid):
         status = "warning sent"
     except Exception as e:
         print(e)
-        status = "failed to send following error: {e}"
+        status = "Failed to send following error: {e}"
     finally:
         server.quit()
     # return status
