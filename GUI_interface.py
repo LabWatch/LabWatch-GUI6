@@ -220,15 +220,17 @@ def sensor0( threadName, delay):
     global sensor_fault0
     global temp_avg
     fault = bool(0)
+    temp = 0
     while True:
         for x in range(10):
             try:
                 # Print the values to the serial port
                 temperature_c = dhtDevice0.temperature
                 humidity = dhtDevice0.humidity
-                if (abs(temp0 - temperature_c ) < 4):
+                if (abs(temp - temperature_c ) < 4):
                     fault = bool(0)
-                break            
+                break       
+                temp = temperature_c    
             except RuntimeError as error:
                 # Errors happen fairly often, DHT's are hard to read, just keep going
                 time.sleep(delay)
@@ -255,16 +257,17 @@ def sensor1( threadName, delay):
     global sensor_fault1
     global temp_avg
     fault = bool(0)
-
+    temp = 0 
     while True: #runs forever 
         for x in range(10):#tries 5 times before thorwing fault for sensor 
             try:
                 # Print the values to the serial port
                 temperature_c = dhtDevice1.temperature
                 humidity = dhtDevice1.humidity
-                if (abs(temp1 - temperature_c ) < 4): # if the sensor is within a certain range it will be used again 
+                if (abs(temp - temperature_c ) < 4): # if the sensor is within a certain range it will be used again 
                     fault = bool(0)
-                break            
+                break       
+                temp = temperature_c     
             except RuntimeError as error:
                 # Errors happen fairly often, DHT's are hard to read, just keep going
                 time.sleep(delay)
