@@ -229,8 +229,9 @@ def sensor0( threadName, delay):
                 humidity = dhtDevice0.humidity
                 if (abs(temp - temperature_c ) < 4):
                     fault = bool(0)
+                temp = temperature_c 
                 break       
-                temp = temperature_c    
+                
             except RuntimeError as error:
                 # Errors happen fairly often, DHT's are hard to read, just keep going
                 time.sleep(delay)
@@ -266,8 +267,9 @@ def sensor1( threadName, delay):
                 humidity = dhtDevice1.humidity
                 if (abs(temp - temperature_c ) < 4): # if the sensor is within a certain range it will be used again 
                     fault = bool(0)
+                temp = temperature_c 
                 break       
-                temp = temperature_c     
+                    
             except RuntimeError as error:
                 # Errors happen fairly often, DHT's are hard to read, just keep going
                 time.sleep(delay)
