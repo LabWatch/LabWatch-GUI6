@@ -482,13 +482,13 @@ def SendReport():
     global sendto
     path = zip1.zipping()
     email_sending.sendall(sendto,path)
-    tk.messagebox.showinfo("Reports", "All reports sent!")
+    tk.messagebox.showinfo("REPORTS", "All of reports sent!")
     
 def Report():
     global sendto
     date_file = datetime.today()
     sent = email_sending.sendfile(sendto,date_file)
-    tk.messagebox.showinfo("Reports", "Current report sent!")
+    tk.messagebox.showinfo("REPORTS", "Current report sent!")
     
 def ThingSpeak():
     global link
@@ -618,7 +618,7 @@ def settings1():
     up_button2 = tk.Button(sus,bg = 'yellow', text = "↑",command=TUYU).place(in_=sus,x=742,y=300)
     down_button2 = tk.Button(sus,bg = 'yellow', text = "↓",command=TUYD).place(in_=sus,x=742,y=350)
 
-    exit = tk.Button(sus, text = "Exit",command=SaveHum).place(in_=sus,x=370,y=110)
+    exit = tk.Button(sus, text = "Exit",command=SaveHum).place(in_=sus,x=360,y=120)
 
 global tempHUG
 global tempHLG
@@ -643,8 +643,7 @@ def settings2():
     sus.geometry("800x800") 
 
     Label(sus,text ='Humidity Range Settings',font=("Segoe UI", 14,"bold")).place(in_=sus,x=250,y=70)
-    
-    
+
     def HUGU():
         global tempHUG
         global tempHUY
@@ -745,7 +744,7 @@ def settings2():
     up_button2 = tk.Button(sus,bg = 'yellow', text = "↑",command=HUYU).place(in_=sus,x=742,y=300)
     down_button2 = tk.Button(sus,bg = 'yellow', text = "↓",command=HUYD).place(in_=sus,x=742,y=350)
     
-    exit = tk.Button(sus, text = "Exit",command=SaveHum).place(in_=sus,x=370,y=110)
+    exit = tk.Button(sus, text = "Exit",command=SaveHum).place(in_=sus,x=360,y=120)
     
     # Exit = tk.Button(sus, text = "Exit Withoug Saving",command=nonSaveHum).place(in_=sus,x=500,y=750)
 
@@ -763,19 +762,19 @@ def Reports():
 
     Label(sus,text ='REPORTS', font=("Segoe UI", 20,"bold"), bg='black', fg='white').place(in_=sus,x=50,y=10)
     
-    report_button = tk.Button(sus, text="Current Report",width = 13,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14), command=Report)
-    report_button.place(x=25,y=115)
+    current_report_button = tk.Button(sus, text="Current Report",width = 13,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14), command=Report)
+    current_report_button.place(x=25,y=115)
 
     thingspeak_button = tk.Button(sus, text="ThingSpeak",   width = 13, fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),command=ThingSpeak)
     thingspeak_button.place(x=25,y=65)
     
-    sendall_button = tk.Button(sus, text="Send All Reports", width = 13,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),command=SendReport)
+    sendall_button = tk.Button(sus, text="All Reports", width = 13,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),command=SendReport)
     sendall_button.place(x=25,y=165)
     
     def ExitWin():
         sus.destroy()
         
-    tk.Button(sus, text = "Exit",font=("Segoe UI", 14), relief="solid",activebackground='grey',activeforeground='white',command=ExitWin).place(in_=sus,x=90,y=230)
+    tk.Button(sus, text = "Exit",width = 13,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),command=ExitWin).place(in_=sus,x=25,y=210)
 
 report_button = tk.Button(win, text="Report",fg="white",borderwidth=3, width=7,highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 13, 'bold'),command=Reports)
 report_button.pack()
@@ -796,16 +795,19 @@ def Settings():
 
     Label(sus,text ='SETTINGS', font=("Segoe UI", 20,"bold"), bg='black', fg='white').place(in_=sus,x=50,y=10)
     
-    report_button = tk.Button(sus, text="Temp Rang Adjust",width = 14,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14), command=settings1)
-    report_button.place(x=25,y=65)
+    temp_button = tk.Button(sus,text="Temp Rang Adjust",width = 14,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14), command=settings1)
+    temp_button.place(x=25,y=115)
 
-    thingspeak_button = tk.Button(sus, text="Humid Rang Adjust",  width = 14,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),command=settings2)
-    thingspeak_button.place(x=25,y=115)
+    humid_button = tk.Button(sus, text="Humid Rang Adjust",  width = 14,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),command=settings2)
+    humid_button.place(x=25,y=165)
+    
+    offset_button = tk.Button(sus, text="Offset",  width = 14,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),command=settings2)
+    offset_button.place(x=25,y=65)
     
     def ExitWin():
         sus.destroy()
         
-    tk.Button(sus, text = "Exit",font=("Segoe UI", 14), relief="solid",activebackground='grey',activeforeground='white',command=ExitWin).place(in_=sus,x=90,y=180)
+    tk.Button(sus, text = "Exit",width = 14,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),command=ExitWin).place(in_=sus,x=25,y=210)
 
 b1 = tk.Button(win, text="Settings",fg="white",borderwidth=3, width=7,highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 13, 'bold'), command=Settings)
 b1.pack()
@@ -825,8 +827,8 @@ class Clock:
 
         self.mFrame = Frame()
         self.mFrame.pack(expand=YES,fill=X)
-        self.mFrame.place(x=560, y=0)
-        self.watch = Label(self.mFrame, text=self.time2, font=('times',16 ),background='black', fg="white")
+        self.mFrame.place(x=520, y=0)
+        self.watch = Label(self.mFrame, text=self.time2, font=('Segoe UI',14 ),background='black', fg="white")
 
         self.watch.pack()
         
