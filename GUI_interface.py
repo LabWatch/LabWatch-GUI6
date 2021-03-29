@@ -615,25 +615,33 @@ def settings1():
 
     def TUGU():
         global tempTUG
-        tempTUG = tempTUG + 1
+        global tempTUY
+        if tempTUY > tempTUG +1 : 
+            tempTUG = tempTUG + 1
         NUG = Label(sus,text =tempTUG).place(in_=sus,x=550,y=250)
         return tempTUG
 
     def TUGD():
         global tempTUG
-        tempTUG = tempTUG - 1
+        global tempTLG
+        if tempTLG < tempTUG-1 :
+            tempTUG = tempTUG - 1
         NUG = Label(sus,text =tempTUG).place(in_=sus,x=550,y=250)
         return tempTUG
 
     def TLGU():
         global tempTLG
-        tempTLG = tempTLG + 1
+        global tempTUG
+        if tempTLG < tempTUG-1 :
+            tempTLG = tempTLG + 1
         NLG = Label(sus,text =tempTLG).place(in_=sus,x=275,y=250)
         return tempTLG
 
     def TLGD():
         global tempTLG
-        tempTLG = tempTLG - 1
+        global tempTLY
+        if tempTLG > tempTLY +1 : 
+            tempTLG = tempTLG - 1
         NLG = Label(sus,text =tempTLG).place(in_=sus,x=275,y=250)
         return tempTLG
 
@@ -645,13 +653,17 @@ def settings1():
 
     def TUYD():
         global tempTUY
-        tempTUY = tempTUY - 1
+        global tempTUG
+        if tempTUG < tempTUY-1 : 
+            tempTUY = tempTUY - 1
         NUY = Label(sus,text =tempTUY).place(in_=sus,x=750,y=250)
         return tempTUY
 
     def TLYU():
         global tempTLY
-        tempTLY = tempTLY + 1
+        global tempTLG
+        if tempTLG > tempTLY +1 : 
+            tempTLY = tempTLY + 1
         NLY = Label(sus,text =tempTLY).place(in_=sus,x=50,y=250)
         return tempTLY
 
@@ -660,6 +672,7 @@ def settings1():
         tempTLY = tempTLY - 1
         NLY = Label(sus,text =tempTLY).place(in_=sus,x=50,y=250)
         return tempTLY
+
 
     def SaveHum():
         global tempTUG
@@ -738,25 +751,33 @@ def settings2():
 
     def HUGU():
         global tempHUG
-        tempHUG = tempHUG + 1
+        global tempHUY
+        if tempHUY > tempHUG +1: 
+            tempHUG = tempHUG + 1
         NUG = Label(sus,text =tempHUG).place(in_=sus,x=550,y=250)
         return tempHUG
 
     def HUGD():
         global tempHUG
-        tempHUG = tempHUG - 1
+        global tempHLG
+        if tempHUG-1 > tempHLG :
+            tempHUG = tempHUG - 1
         NUG = Label(sus,text =tempHUG).place(in_=sus,x=550,y=250)
         return tempHUG
 
     def HLGU():
         global tempHLG
-        tempHLG = tempHLG + 1
+        global tempHUG
+        if tempHUG > tempHLG+1:
+            tempHLG = tempHLG + 1
         NLG = Label(sus,text =tempHLG).place(in_=sus,x=275,y=250)
         return tempHLG
 
     def HLGD():
         global tempHLG
-        tempHLG = tempHLG - 1
+        global tempHLY
+        if tempHLG > tempHLY+1:
+            tempHLG = tempHLG - 1
         NLG = Label(sus,text =tempHLG).place(in_=sus,x=275,y=250)
         return tempHLG
 
@@ -768,13 +789,17 @@ def settings2():
 
     def HUYD():
         global tempHUY
-        tempHUY = tempHUY - 1
+        global tempHUG
+        if tempHUY > tempHUG +1:
+            tempHUY = tempHUY - 1
         NUY = Label(sus,text =tempHUY).place(in_=sus,x=750,y=250)
         return tempHUY
 
     def HLYU():
         global tempHLY
-        tempHLY = tempHLY + 1
+        global tempHLG
+        if tempHLY<tempHLG-1:
+            tempHLY = tempHLY + 1
         NLY = Label(sus,text =tempHLY).place(in_=sus,x=50,y=250)
         return tempHLY
 
