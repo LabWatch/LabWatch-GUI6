@@ -52,7 +52,7 @@ import email_sending
 from dateutil.relativedelta import relativedelta
 import zip1
 
-sendto="saltydick61@gmail.com"
+sendto=""
 #-----------End of Import Libraries------------------------#
 
 #-----------Sensor Global Variables------------------------#
@@ -156,7 +156,7 @@ def read_file():
     global HLower_yellow
     global link
     global baseURL
-    global sentdo
+    global sendto
     try:
         cwd = os.getcwd()
         path = cwd+ "/load.txt"
@@ -182,7 +182,23 @@ def read_file():
         # print(baseURL)
         # print(sendto)
     except Exception as e:
-            print(f'Error Read: {e}')
+        TUpper_green = 22 #for temp ranges 
+        TLower_green = 19
+
+        TUpper_yellow = 25 
+        TLower_yellow = 17
+
+        HUpper_green = 42 #for humid ranges 
+        HLower_green = 36
+
+        HUpper_yellow = 46 
+        HLower_yellow = 32
+        sendto="labwatchmonitoring@gmail.com"
+        myAPI = 'RXXLLQDW8BV1S7WW' 
+        # URL where we will send the data, Don't change it
+        baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI 
+        link = "https://thingspeak.com/channels/1311268"
+        print(f'Error Read: {e}')
 
 def write_file():
     # print("write run")
@@ -197,6 +213,7 @@ def write_file():
     global HLower_yellow
     global link
     global sendto
+    # print(sendto)
     try:
         cwd = os.getcwd()
         path = cwd+ "/load.txt"
