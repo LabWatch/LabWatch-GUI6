@@ -481,6 +481,7 @@ def ThingSpeak():
     global link
     webbrowser.open_new(link)
     
+
 #-----------------------------------Temperature Rang Adjustment -------------------------------------#
 global tempTLG
 global tempTUY
@@ -748,6 +749,9 @@ report_button = tk.Button(win, text="Report",fg="white",borderwidth=3, width=7,h
 report_button.pack()
 report_button.place(x=125,y=0)
 
+is_on = True
+
+
 #--------------------------------------------Settings Button--------------------------------------------#
 def Settings():
     # Toplevel object which will  
@@ -759,33 +763,63 @@ def Settings():
     sus.overrideredirect(True) 
     
     sus.configure(bg='black')
+    
     # sets the geometry of toplevel 
-    sus.geometry("241x270")
-
+    sus.geometry("241x285")
+    
+    def switch():
+        global is_on
+        
+        # Determin is on or off
+        if is_on:
+            
+            notification_button.config(text = "Email Notifications off", 
+                            fg = "white", bg='#DC143C')
+            is_on = False
+            tk.messagebox.showinfo("Email Notification", "Email Notificaion is now Off")
+        else:
+            
+            notification_button.config(text = "Email Notifications On", fg = "white", bg='#397D02')
+            is_on = True
+            tk.messagebox.showinfo("Email Notification", "Email notificaion is now on")
+            
     Label(sus,text ='SETTINGS', font=("Segoe UI", 20,"bold"), bg='black', fg='white').place(in_=sus,x=50,y=10)
     
-    temp_button = tk.Button(sus,text="Temp Rang Adjust",width = 14,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
+    offset_button = tk.Button(sus, text="Offset",  width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
+                            command=settings2)
+    offset_button.place(x=10,y=60)
+    
+    temp_button = tk.Button(sus,text="Temp Range Adjust",width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
                             command=settings1)
-    temp_button.place(x=25,y=115)
+    temp_button.place(x=10,y=105)
 
-    humid_button = tk.Button(sus, text="Humid Rang Adjust",  width = 14,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
+    humid_button = tk.Button(sus, text="Humid Range Adjust",  width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
                             command=settings2)
-    humid_button.place(x=25,y=165)
+    humid_button.place(x=10,y=150)
     
-    offset_button = tk.Button(sus, text="Offset",  width = 14,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
-                            command=settings2)
-    offset_button.place(x=25,y=65)
-    
+    if is_on:
+        notification_button = tk.Button(sus, text="Email notification On",  width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="#397D02", font=("Segoe UI", 14),
+                                command=switch)
+        notification_button.place(x=10,y=195)
+    else:
+        notification_button = tk.Button(sus, text="Email notification Off",  width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="#DC143C", font=("Segoe UI", 14),
+                            command=switch)
+        notification_button.place(x=10,y=195)
     def ExitWin():
         sus.destroy()
         
-    tk.Button(sus, text = "Exit",width = 14,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
-                            command=ExitWin).place(in_=sus,x=25,y=210)
+    tk.Button(sus, text = "Exit",width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
+                            command=ExitWin).place(in_=sus,x=10,y=240)
 
 settings_button = tk.Button(win, text="Settings",fg="white",borderwidth=3, width=7,highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 13, 'bold'), 
                             command=Settings)
 settings_button.pack()
 settings_button.place(x=0,y=0)
+
+
+
+
+
 
 #---------------------------------------End of buttons-------------------------------------------------#
 
@@ -867,3 +901,8 @@ finally:
 
 #----------------------------------------End of code ----------------------------------------------------#
 #_________________________________________________________________________________________________________
+
+
+
+
+
