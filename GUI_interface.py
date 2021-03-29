@@ -224,8 +224,6 @@ def write_file():
     except Exception as e:
             print(f'Error Write: {e}')
 
- 
-
 #----------------------------------------------------------------------------------------------------------------------------
 #______________________________________________________________________________________________________________________________
 
@@ -735,10 +733,6 @@ def settings1():
 
     exit = tk.Button(sus, text = "Exit",command=SaveHum).place(in_=sus,x=360,y=120)
 
-
-
-
-
 def settings2():
     global tempHUG
     global tempHLG
@@ -880,27 +874,27 @@ def Reports():
     sus.overrideredirect(True)  
     sus.configure(bg='black')
     # sets the geometry of toplevel 
-    sus.geometry("241x270") 
+    sus.geometry("241x285") 
 
     Label(sus,text ='REPORTS', font=("Segoe UI", 20,"bold"), bg='black', fg='white').place(in_=sus,x=50,y=10)
     
-    current_report_button = tk.Button(sus, text="Current Report",width = 13,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
+    current_report_button = tk.Button(sus, text="Current Report",width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
                         command=Report)
-    current_report_button.place(x=25,y=115)
+    current_report_button.place(x=10,y=115)
 
-    thingspeak_button = tk.Button(sus, text="ThingSpeak",   width = 13, fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
+    thingspeak_button = tk.Button(sus, text="ThingSpeak",   width = 16, fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
                         command=ThingSpeak)
-    thingspeak_button.place(x=25,y=65)
+    thingspeak_button.place(x=10,y=65)
     
-    sendall_button = tk.Button(sus, text="All Reports", width = 13,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
+    sendall_button = tk.Button(sus, text="All Reports", width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
                         command=SendReport)
-    sendall_button.place(x=25,y=165)
+    sendall_button.place(x=10,y=165)
     
     def ExitWin():
         sus.destroy()
         
-    tk.Button(sus, text = "Exit",width = 13,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
-                        command=ExitWin).place(in_=sus,x=25,y=210)
+    tk.Button(sus, text = "Exit",width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
+                        command=ExitWin).place(in_=sus,x=10,y=210)
 
 report_button = tk.Button(win, text="Report",fg="white",borderwidth=3, width=7,highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 13, 'bold'),
                         command=Reports)
@@ -908,7 +902,6 @@ report_button.pack()
 report_button.place(x=125,y=0)
 
 is_on = True
-
 
 #--------------------------------------------Settings Button--------------------------------------------#
 def Settings():
@@ -956,11 +949,11 @@ def Settings():
     humid_button.place(x=10,y=150)
     
     if is_on:
-        notification_button = tk.Button(sus, text="Email notification On",  width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="#397D02", font=("Segoe UI", 14),
+        notification_button = tk.Button(sus, text="Email Notification On",  width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="#397D02", font=("Segoe UI", 14),
                                 command=switch)
         notification_button.place(x=10,y=195)
     else:
-        notification_button = tk.Button(sus, text="Email notification Off",  width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="#DC143C", font=("Segoe UI", 14),
+        notification_button = tk.Button(sus, text="Email Notification Off",  width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="#DC143C", font=("Segoe UI", 14),
                             command=switch)
         notification_button.place(x=10,y=195)
     def ExitWin():
@@ -973,10 +966,6 @@ settings_button = tk.Button(win, text="Settings",fg="white",borderwidth=3, width
                             command=Settings)
 settings_button.pack()
 settings_button.place(x=0,y=0)
-
-
-
-
 
 
 #---------------------------------------End of buttons-------------------------------------------------#
@@ -1060,8 +1049,3 @@ finally:
 
 #----------------------------------------End of code ----------------------------------------------------#
 #_________________________________________________________________________________________________________
-
-
-
-
-
