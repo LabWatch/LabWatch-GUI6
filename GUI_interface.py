@@ -140,6 +140,11 @@ tempTLY = TLower_yellow
 temp_colour = "#000000"
 humid_colour = "#000000"
 
+global Toffset 
+Toffset = 0
+global Hoffset
+Hoffset = 0
+
 
 #______________________________________________________________________________________________________________________________
 #-------------------------------------------Text File Read And Write Function------------------------------------------------
@@ -599,9 +604,67 @@ def Report():
 def ThingSpeak():
     global link
     webbrowser.open_new(link)
-    
 
 
+def settings0():
+    global Toffset
+    global Hoffset
+    global tempHoff
+    global tempToff
+    tempToff = Toffset
+    tempHoff = Hoffset
+    sus = Toplevel() 
+    sus.overrideredirect(True)  
+    sus.title("Offset Adjustment Window")  
+    sus.geometry("800x800")
+
+    def TU():
+        global tempToff
+        tempToff = tempToff + 0.5
+        text2 = str(tempToff)+"  "
+        NUGS = Label(sus,text =text2,font=("Segoe UI", 14)).place(in_=sus,x=200,y=250)
+        return tempToff
+
+    def TD():
+        global tempToff
+        tempToff = tempToff - 0.5
+        text2 = str(tempToff)+"  "
+        NUGS = Label(sus,text =text2,font=("Segoe UI", 14)).place(in_=sus,x=200,y=250)
+        return tempToff
+
+    def HU():
+        global tempHoff 
+        tempHoff = tempHoff + 0.5
+        text2 = str(tempHoff)+"  "
+        NUG = Label(sus,text =text2,font=("Segoe UI", 14)).place(in_=sus,x=600,y=250)
+        return tempHoff
+
+    def HD():
+        global tempHoff
+        tempHoff = tempHoff - 0.5
+        text2 = str(tempHoff)+"  "
+        NUG = Label(sus,text =text2,font=("Segoe UI", 14)).place(in_=sus,x=600,y=250)
+        return tempHoff
+
+    def Exit():
+        global tempHoff
+        global tempToff
+        global Toffset
+        global Hoffset
+        Toffset = tempToff
+        Hoffset = tempHoff
+        sus.destroy()
+
+    Label(sus,text ='Offset Adjustment',font=("Segoe UI", 14,"bold")).place(in_=sus,x=400,y=70)
+    Label(sus,text ='Tempature Offset Adjustment',font=("Segoe UI", 14,"bold")).place(in_=sus,x=200,y=100)
+    Label(sus,text ='Humidity Offset Adjustment',font=("Segoe UI", 14,"bold")).place(in_=sus,x=600,y=100)
+    up_button1 = tk.Button(sus, text = "↑",command=TU).place(in_=sus,x=200,y=150)
+    down_button1 = tk.Button(sus, text = "↓",command=TD).place(in_=sus,x=200,y=350)
+    NUG = Label(sus,text =tempHoff,font=("Segoe UI", 14)).place(in_=sus,x=600,y=250)
+    NUGS = Label(sus,text =tempToff,font=("Segoe UI", 14)).place(in_=sus,x=200,y=250)
+    up_button1 = tk.Button(sus, text = "↑",command=HU).place(in_=sus,x=600,y=150)
+    down_button1 = tk.Button(sus, text = "↓",command=HD).place(in_=sus,x=600,y=350)
+    tk.Button(sus,text ='Exit',command=Exit,font=("Segoe UI", 14,"bold")).place(in_=sus,x=360,y=400)
 
 
 def settings1():
@@ -635,7 +698,8 @@ def settings1():
         global tempTUY
         if tempTUY > tempTUG +1 : 
             tempTUG = tempTUG + 1
-        NUG = Label(sus,text =tempTUG).place(in_=sus,x=550,y=250)
+        text2 = str(tempTUG)+"  "
+        NUG = Label(sus,text =text2).place(in_=sus,x=550,y=250)
         return tempTUG
 
     def TUGD():
@@ -643,7 +707,8 @@ def settings1():
         global tempTLG
         if tempTLG < tempTUG-1 :
             tempTUG = tempTUG - 1
-        NUG = Label(sus,text =tempTUG).place(in_=sus,x=550,y=250)
+        text2 = str(tempTUG)+"  "
+        NUG = Label(sus,text =text2).place(in_=sus,x=550,y=250)
         return tempTUG
 
     def TLGU():
@@ -651,7 +716,8 @@ def settings1():
         global tempTUG
         if tempTLG < tempTUG-1 :
             tempTLG = tempTLG + 1
-        NLG = Label(sus,text =tempTLG).place(in_=sus,x=275,y=250)
+        text2 = str(tempTLG)+"  "
+        NLG = Label(sus,text =text2).place(in_=sus,x=275,y=250)
         return tempTLG
 
     def TLGD():
@@ -659,13 +725,15 @@ def settings1():
         global tempTLY
         if tempTLG > tempTLY +1 : 
             tempTLG = tempTLG - 1
-        NLG = Label(sus,text =tempTLG).place(in_=sus,x=275,y=250)
+        text2 = str(tempTLG)+"  "
+        NLG = Label(sus,text =text2).place(in_=sus,x=275,y=250)
         return tempTLG
 
     def TUYU():
         global tempTUY
         tempTUY = tempTUY + 1
-        NUY = Label(sus,text =tempTUY).place(in_=sus,x=750,y=250)
+        text2 =str(tempTUY)+"  "
+        NUY = Label(sus,text =text2).place(in_=sus,x=750,y=250)
         return tempTUY
 
     def TUYD():
@@ -673,7 +741,8 @@ def settings1():
         global tempTUG
         if tempTUG < tempTUY-1 : 
             tempTUY = tempTUY - 1
-        NUY = Label(sus,text =tempTUY).place(in_=sus,x=750,y=250)
+        text2 =str(tempTUY)+"  "
+        NUY = Label(sus,text =text2).place(in_=sus,x=750,y=250)
         return tempTUY
 
     def TLYU():
@@ -681,13 +750,15 @@ def settings1():
         global tempTLG
         if tempTLG > tempTLY +1 : 
             tempTLY = tempTLY + 1
-        NLY = Label(sus,text =tempTLY).place(in_=sus,x=50,y=250)
+        text2 =str(tempTLY)+"  "
+        NLY = Label(sus,text =text2).place(in_=sus,x=50,y=250)
         return tempTLY
 
     def TLYD():
         global tempTLY
         tempTLY = tempTLY - 1
-        NLY = Label(sus,text =tempTLY).place(in_=sus,x=50,y=250)
+        text2 =str(tempTLY)+"  "
+        NLY = Label(sus,text =text2).place(in_=sus,x=50,y=250)
         return tempTLY
 
 
@@ -736,9 +807,6 @@ def settings1():
     exit = tk.Button(sus, text = "Exit",command=SaveHum).place(in_=sus,x=360,y=120)
 
 
-
-
-
 def settings2():
     global tempHUG
     global tempHLG
@@ -771,7 +839,8 @@ def settings2():
         global tempHUY
         if tempHUY > tempHUG +1: 
             tempHUG = tempHUG + 1
-        NUG = Label(sus,text =tempHUG).place(in_=sus,x=550,y=250)
+        text2=str(tempHUG)+"  "
+        NUG = Label(sus,text =text2).place(in_=sus,x=550,y=250)
         return tempHUG
 
     def HUGD():
@@ -779,7 +848,8 @@ def settings2():
         global tempHLG
         if tempHUG-1 > tempHLG :
             tempHUG = tempHUG - 1
-        NUG = Label(sus,text =tempHUG).place(in_=sus,x=550,y=250)
+        text2=str(tempHUG)+"  "
+        NUG = Label(sus,text =text2).place(in_=sus,x=550,y=250)
         return tempHUG
 
     def HLGU():
@@ -787,7 +857,8 @@ def settings2():
         global tempHUG
         if tempHUG > tempHLG+1:
             tempHLG = tempHLG + 1
-        NLG = Label(sus,text =tempHLG).place(in_=sus,x=275,y=250)
+        text2=str(tempHLG)+"  "
+        NLG = Label(sus,text =text2).place(in_=sus,x=275,y=250)
         return tempHLG
 
     def HLGD():
@@ -795,13 +866,15 @@ def settings2():
         global tempHLY
         if tempHLG > tempHLY+1:
             tempHLG = tempHLG - 1
-        NLG = Label(sus,text =tempHLG).place(in_=sus,x=275,y=250)
+        text2=str(tempHLG)+"  "
+        NLG = Label(sus,text =text2).place(in_=sus,x=275,y=250)
         return tempHLG
 
     def HUYU():
         global tempHUY
         tempHUY = tempHUY + 1
-        NUY = Label(sus,text =tempHUY).place(in_=sus,x=750,y=250)
+        text2 =str(tempHUY)+"  "
+        NUY = Label(sus,text =text2).place(in_=sus,x=750,y=250)
         return tempHUY
 
     def HUYD():
@@ -809,7 +882,8 @@ def settings2():
         global tempHUG
         if tempHUY > tempHUG +1:
             tempHUY = tempHUY - 1
-        NUY = Label(sus,text =tempHUY).place(in_=sus,x=750,y=250)
+        text2 =str(tempHUY)+"  "
+        NUY = Label(sus,text =text2).place(in_=sus,x=750,y=250)
         return tempHUY
 
     def HLYU():
@@ -817,13 +891,15 @@ def settings2():
         global tempHLG
         if tempHLY<tempHLG-1:
             tempHLY = tempHLY + 1
-        NLY = Label(sus,text =tempHLY).place(in_=sus,x=50,y=250)
+        text2=str(tempHLY)+"  "
+        NLY = Label(sus,text =text2).place(in_=sus,x=50,y=250)
         return tempHLY
 
     def HLYD():
         global tempHLY
         tempHLY = tempHLY - 1
-        NLY = Label(sus,text =tempHLY).place(in_=sus,x=50,y=250)
+        text2=str(tempHLY)+"  "
+        NLY = Label(sus,text =text2).place(in_=sus,x=50,y=250)
         return tempHLY
 
     def SaveHum():
@@ -944,7 +1020,7 @@ def Settings():
     Label(sus,text ='SETTINGS', font=("Segoe UI", 20,"bold"), bg='black', fg='white').place(in_=sus,x=50,y=10)
     
     offset_button = tk.Button(sus, text="Offset",  width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
-                            command=settings2)
+                            command=settings0)
     offset_button.place(x=10,y=60)
     
     temp_button = tk.Button(sus,text="Temp Range Adjust",width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
