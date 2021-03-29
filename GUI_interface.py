@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-#-----------Import Libraries------------------------#
+#--------------------------------------Import Libraries---------------------------------------------#
 
 #thingspeak imports 
 from urllib.request import urlopen 
@@ -27,6 +27,7 @@ NavigationToolbar2Tk)
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
+#Tkinter Library
 from tkinter import *           #Tkinter Library/ install Tkinter - Python 3. sudo apt-get install python3-tk
 import tkinter as tk            #Tkinter Library
 from tkinter import messagebox
@@ -56,6 +57,7 @@ sendto="saltydick61@gmail.com"
 
 #-----------Sensor Global Variables------------------------#
 
+#----------------------------------Sensor Global Variables-------------------------------------------#
 #setting up the pin for the DHT22
 dhtDevice0 = adafruit_dht.DHT22(board.D4)
 dhtDevice1 = adafruit_dht.DHT22(board.D18)
@@ -77,16 +79,16 @@ temp_avg = 0
 humid_last_avg = 0
 humid_avg = 0
 
-
-#-----------------------------------------------------------------
-#----------------ThingSpeak Global Variables----------------------
+#------------------------------------------------------------------------------------------------------#
+#---------------------------------------ThingSpeak Global Variables------------------------------------#
 #ThingSpeak credentrials 
-myAPI = 'DLSQ0NFWVP2CQU4N' 
+myAPI = 'RXXLLQDW8BV1S7WW' 
 # URL where we will send the data, Don't change it
 baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI 
-link = "https://thingspeak.com/channels/1318645"
-#-------------------------------------------------------------------
-#-------------------Tkinter Variables + Plot attributes-----------------------------------------
+link = "https://thingspeak.com/channels/1311268"
+#------------------------------------------------------------------------------------------------------#
+
+#-----------------------------------Tkinter Variables + Plot attributes--------------------------------#
 #Tkinter window
 win = tk.Tk()
 
@@ -95,7 +97,7 @@ win = tk.Tk()
 #Create figure for plotting
 fig = plt.figure()
 fig.patch.set_facecolor('black')
-fig.set_size_inches(8, 1.8)
+fig.set_size_inches(8, 2)
 
 ax = fig.add_subplot(1,2,1)
 xs = []
@@ -111,6 +113,7 @@ ys2 = []
 ax2.tick_params(axis='x', colors='white')
 ax2.tick_params(axis='y', colors='white')
 
+#---------------------------------Digital readings color display------------------------------------------#
 #upper lower bounds for ranges 
 TUpper_green = 22 #for temp ranges 
 TLower_green = 19
@@ -341,12 +344,11 @@ def avg(threadName, delay):
         #     ) 
         time.sleep(delay)#sleeps for set delay time 
 
-#-----------------------------------End of sensor Data read and error Check------------------------------------------------------------------------
-#________________________________________________________________________________________________________________________________________________
+#-----------------------------------End of sensor Data read and error Check---------------------------#
+#______________________________________________________________________________________________________
+#______________________________________________________________________________________________________
 
-#________________________________________________________________________________________________________________________________
-
-#---------------------------------------------Thingspeak Function Validation-------------------------------------------------
+#--------------------------------------Thingspeak Function Validation---------------------------------#
 def cloud(threadName, delay):
     global temp_avg
     global humid_avg
@@ -362,14 +364,11 @@ def cloud(threadName, delay):
             print("Connection Failed")
         time.sleep(delay)
 
+#-------------------------------------End of Thingspeak Uploading ------------------------------------#
+#______________________________________________________________________________________________________
+#______________________________________________________________________________________________________
 
-
-
-#-------------------------------------End of Thingspeak Uploading ---------------------------------------------------------------------------
-#____________________________________________________________________________________________________________________
-#________________________________________________________________________________________________________________________________
-
-#---------------------------------------------Emailing-------------------------------------------------
+#-------------------------------------Sensor read aler error message----------------------------------#
 def alert( delay):
     global sensor_fault0
     global sensor_fault1
@@ -388,7 +387,12 @@ def alert( delay):
             messagebox.showerror("SENSOR ERROR", "SENSOR 1 FAULT ON D4")
             
         time.sleep(delay)#sleeps for set delay time 
-
+#-----------------------------------------------End---------------------------------------------------#
+#______________________________________________________________________________________________________
+#______________________________________________________________________________________________________
+#---------------------------------------------Emailing------------------------------------------------#
+#Enter email for sending reports to
+sendto="@gmail.com"
 def email(threadName,delay):
     global temp_avg
     global humid_avg
@@ -398,16 +402,14 @@ def email(threadName,delay):
     global HLower_yellow
     global sendto
     lastrun = datetime.now()
-    
+    global is_on
     while True: 
-        
-        
         now = datetime.now()
         date_diff = now - lastrun   
         total_time = date_diff.total_seconds()
         # print(total_time)
         if(TUpper_yellow < temp_avg or TLower_yellow > temp_avg or HUpper_yellow < humid_avg or HLower_yellow > humid_avg ):
-            if (total_time > 3600): #3600 hour
+            if (total_time > 3600 and is_on): #3600 hour
                 email_sending.sendwarning(sendto, temp_avg, humid_avg)
                 lastrun = datetime.now()
         
@@ -425,16 +427,11 @@ def email(threadName,delay):
                 x= x+1   
             time.sleep(120)
         time.sleep(delay)
+#-------------------------------------End of Emailing ---------------------------------------------#
+#___________________________________________________________________________________________________
+#___________________________________________________________________________________________________
 
-
-
-
-#-------------------------------------End of Emailing ---------------------------------------------------------------------------
-#____________________________________________________________________________________________________________________
-
-#________________________________________________________________________________________________________________________________
-
-#-------------------------------------Local Logging-------------------------------------------------
+#-------------------------------------Local Logging------------------------------------------------#
 
 def local(threadName, delay):
     global temp0
@@ -466,13 +463,10 @@ def local(threadName, delay):
             # print(f'Error: {e}')
         time.sleep(delay)
 
-
-
-#-------------------------------------End of Local Logging ---------------------------------------------------------------------------
-#____________________________________________________________________________________________________________________
-#_______________________________________________________________________________________________________________________________
-#-----------------------------------GUI to local User Code-----------------------------------------------------------------------
-
+#-------------------------------------End of Local Logging -----------------------------------------#
+#____________________________________________________________________________________________________
+#____________________________________________________________________________________________________
+#-----------------------------------GUI to local User Code------------------------------------------#
 
 #Digital readings for GUI
 temperature = StringVar()                       #is a class that provides helper functions for directly creating and accessing such variables in that interpreter.
@@ -509,7 +503,7 @@ def animate(i, xs, xs2, ys, ys2):
     humidity.set(str(humid_avg)+"%" )        
 
     #Live Plotting
-    #---------------------Temperature Plot ------------------#
+    #------------------------------Temperature Plot ---------------------------------------------#
     #Append sensor reading data
     xs.append(dt.datetime.now().strftime('%H:%M:%S'))
     ys.append(temp_avg)
@@ -528,9 +522,9 @@ def animate(i, xs, xs2, ys, ys2):
     
     ax.plot(xs,ys)
     ax.grid(True)
-    #--------------------- End ------------------------------#
-
-    #---------------------Humidity Plot ---------------------#
+    #--------------------------------------End----------------------------------------------------#
+    
+    #---------------------------------Humidity Plot ----------------------------------------------#
     #Append sensor reading data
     xs2.append(dt.datetime.now().strftime('%H:%M:%S'))
     ys2.append(humid_avg)
@@ -548,11 +542,10 @@ def animate(i, xs, xs2, ys, ys2):
     
     ax2.plot(xs2,ys2)
     ax2.grid(True)
-    #--------------------- End ------------------------------#
-    
     fig.tight_layout()
+    #-----------------------------------------End---------------------------------------------------#
     
-    
+    #---------------------------------Digital readings color range display--------------------------#
     if TLower_green <= temp_avg <= TUpper_green : 
         temp_colour = "#12c702"
     elif  TLower_yellow <= temp_avg <= TUpper_yellow :
@@ -570,23 +563,25 @@ def animate(i, xs, xs2, ys, ys2):
     temperatureLabel.config(fg = temp_colour)
     humidityLabel.config(fg = humid_colour)
     win.update()
-
-win.configure(background='black')
-
-#--------------------Buttons----------------------------------#
+#_____________________________________________________________________________________________________
+#_____________________________________________________________________________________________________
+#-------------------------------------------Main Buttons code ---------------------------------------#
 def SendReport():
     global sendto
     path = zip1.zipping()
     email_sending.sendall(sendto,path)
-
+    tk.messagebox.showinfo("REPORTS", "All of reports sent!")
+    
 def Report():
     global sendto
     date_file = datetime.today()
     sent = email_sending.sendfile(sendto,date_file)
-
+    tk.messagebox.showinfo("REPORTS", "Current report sent!")
+    
 def ThingSpeak():
     global link
     webbrowser.open_new(link)
+    
 
 
 
@@ -616,37 +611,28 @@ def settings1():
     sus.geometry("800x800") 
 
     Label(sus,text ='Tempature Range Settings',font=("Segoe UI", 14,"bold")).place(in_=sus,x=250,y=70)
-    
-    
+
     def TUGU():
         global tempTUG
-        global tempTUY
-        if tempTUY > tempTUG +1 : 
-            tempTUG = tempTUG + 1
+        tempTUG = tempTUG + 1
         NUG = Label(sus,text =tempTUG).place(in_=sus,x=550,y=250)
         return tempTUG
 
     def TUGD():
         global tempTUG
-        global tempTLG
-        if tempTLG < tempTUG-1 :
-            tempTUG = tempTUG - 1
+        tempTUG = tempTUG - 1
         NUG = Label(sus,text =tempTUG).place(in_=sus,x=550,y=250)
         return tempTUG
 
     def TLGU():
         global tempTLG
-        global tempTUG
-        if tempTLG < tempTUG-1 :
-            tempTLG = tempTLG + 1
+        tempTLG = tempTLG + 1
         NLG = Label(sus,text =tempTLG).place(in_=sus,x=275,y=250)
         return tempTLG
 
     def TLGD():
         global tempTLG
-        global tempTLY
-        if tempTLG > tempTLY +1 : 
-            tempTLG = tempTLG - 1
+        tempTLG = tempTLG - 1
         NLG = Label(sus,text =tempTLG).place(in_=sus,x=275,y=250)
         return tempTLG
 
@@ -658,17 +644,13 @@ def settings1():
 
     def TUYD():
         global tempTUY
-        global tempTUG
-        if tempTUG < tempTUY-1 : 
-            tempTUY = tempTUY - 1
+        tempTUY = tempTUY - 1
         NUY = Label(sus,text =tempTUY).place(in_=sus,x=750,y=250)
         return tempTUY
 
     def TLYU():
         global tempTLY
-        global tempTLG
-        if tempTLG > tempTLY +1 : 
-            tempTLY = tempTLY + 1
+        tempTLY = tempTLY + 1
         NLY = Label(sus,text =tempTLY).place(in_=sus,x=50,y=250)
         return tempTLY
 
@@ -720,7 +702,7 @@ def settings1():
     up_button2 = tk.Button(sus,bg = 'yellow', text = "↑",command=TUYU).place(in_=sus,x=742,y=300)
     down_button2 = tk.Button(sus,bg = 'yellow', text = "↓",command=TUYD).place(in_=sus,x=742,y=350)
 
-    exit = tk.Button(sus, text = "Exit",command=SaveHum).place(in_=sus,x=370,y=110)
+    exit = tk.Button(sus, text = "Exit",command=SaveHum).place(in_=sus,x=360,y=120)
 
 
 
@@ -749,40 +731,31 @@ def settings2():
     sus.title("Humidity Range Adjustments Window") 
     
     # sets the geometry of toplevel 
-    sus.geometry("800x800") 
+    sus.geometry("800x600") 
 
     Label(sus,text ='Humidity Range Settings',font=("Segoe UI", 14,"bold")).place(in_=sus,x=250,y=70)
-    
-    
+
     def HUGU():
         global tempHUG
-        global tempHUY
-        if tempHUY > tempHUG +1: 
-            tempHUG = tempHUG + 1
+        tempHUG = tempHUG + 1
         NUG = Label(sus,text =tempHUG).place(in_=sus,x=550,y=250)
         return tempHUG
 
     def HUGD():
         global tempHUG
-        global tempHLG
-        if tempHUG-1 > tempHLG :
-            tempHUG = tempHUG - 1
+        tempHUG = tempHUG - 1
         NUG = Label(sus,text =tempHUG).place(in_=sus,x=550,y=250)
         return tempHUG
 
     def HLGU():
         global tempHLG
-        global tempHUG
-        if tempHUG > tempHLG+1:
-            tempHLG = tempHLG + 1
+        tempHLG = tempHLG + 1
         NLG = Label(sus,text =tempHLG).place(in_=sus,x=275,y=250)
         return tempHLG
 
     def HLGD():
         global tempHLG
-        global tempHLY
-        if tempHLG > tempHLY+1:
-            tempHLG = tempHLG - 1
+        tempHLG = tempHLG - 1
         NLG = Label(sus,text =tempHLG).place(in_=sus,x=275,y=250)
         return tempHLG
 
@@ -794,17 +767,13 @@ def settings2():
 
     def HUYD():
         global tempHUY
-        global tempHUG
-        if tempHUY > tempHUG +1:
-            tempHUY = tempHUY - 1
+        tempHUY = tempHUY - 1
         NUY = Label(sus,text =tempHUY).place(in_=sus,x=750,y=250)
         return tempHUY
 
     def HLYU():
         global tempHLY
-        global tempHLG
-        if tempHLY<tempHLG-1:
-            tempHLY = tempHLY + 1
+        tempHLY = tempHLY + 1
         NLY = Label(sus,text =tempHLY).place(in_=sus,x=50,y=250)
         return tempHLY
 
@@ -855,42 +824,50 @@ def settings2():
     up_button2 = tk.Button(sus,bg = 'yellow', text = "↑",command=HUYU).place(in_=sus,x=742,y=300)
     down_button2 = tk.Button(sus,bg = 'yellow', text = "↓",command=HUYD).place(in_=sus,x=742,y=350)
     
-    exit = tk.Button(sus, text = "Exit",command=SaveHum).place(in_=sus,x=370,y=110)
-    
+    exit = tk.Button(sus, text = "Exit",command=SaveHum).place(in_=sus,x=360,y=120)
     # Exit = tk.Button(sus, text = "Exit Withoug Saving",command=nonSaveHum).place(in_=sus,x=500,y=750)
 
+#--------------------------------------------Report Button-----------------------------------------#
 def Reports():
     # Toplevel object which will  
     # be treated as a new window 
     sus = Toplevel() 
-    
     # sets the title of the 
     # Toplevel widget 
     sus.overrideredirect(True)  
     sus.configure(bg='black')
     # sets the geometry of toplevel 
-    sus.geometry("270x300") 
+    sus.geometry("241x270") 
 
-    Label(sus,text ='Reports', font=("Segoe UI", 20,"bold"), bg='black', fg='white').place(in_=sus,x=78,y=10)
+    Label(sus,text ='REPORTS', font=("Segoe UI", 20,"bold"), bg='black', fg='white').place(in_=sus,x=50,y=10)
     
-    report_button = tk.Button(sus, text="Report",fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 12,"bold"), command=Report)
-    report_button.place(x=95,y=70)
+    current_report_button = tk.Button(sus, text="Current Report",width = 13,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
+                        command=Report)
+    current_report_button.place(x=25,y=115)
 
-    thingspeak_button = tk.Button(sus, text="ThingSpeak",  fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 12,"bold"),command=ThingSpeak)
-    thingspeak_button.place(x=75,y=120)
+    thingspeak_button = tk.Button(sus, text="ThingSpeak",   width = 13, fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
+                        command=ThingSpeak)
+    thingspeak_button.place(x=25,y=65)
     
-    sendall_button = tk.Button(sus, text="Send all report", fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 12,"bold"),command=SendReport)
-    sendall_button.place(x=60,y=170)
+    sendall_button = tk.Button(sus, text="All Reports", width = 13,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
+                        command=SendReport)
+    sendall_button.place(x=25,y=165)
     
     def ExitWin():
         sus.destroy()
         
-    tk.Button(sus, text = "Exit",font=("Segoe UI", 12,"bold"), relief="solid",activebackground='black',activeforeground='white',command=ExitWin).place(in_=sus,x=110,y=230)
-    
-report_button = tk.Button(win, text="Report",fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 12,"bold"),command=Reports)
-report_button.pack()
-report_button.place(x=120,y=0)
+    tk.Button(sus, text = "Exit",width = 13,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
+                        command=ExitWin).place(in_=sus,x=25,y=210)
 
+report_button = tk.Button(win, text="Report",fg="white",borderwidth=3, width=7,highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 13, 'bold'),
+                        command=Reports)
+report_button.pack()
+report_button.place(x=125,y=0)
+
+is_on = True
+
+
+#--------------------------------------------Settings Button--------------------------------------------#
 def Settings():
     # Toplevel object which will  
     # be treated as a new window 
@@ -901,33 +878,67 @@ def Settings():
     sus.overrideredirect(True) 
     
     sus.configure(bg='black')
+    
     # sets the geometry of toplevel 
-    sus.geometry("300x300")
-
-    Label(sus,text ='Settings', font=("Segoe UI", 20,"bold"), bg='black', fg='white').place(in_=sus,x=85,y=10)
+    sus.geometry("241x285")
     
-    report_button = tk.Button(sus, text="Temp Rang Adjust",fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 12,"bold"), command=settings1)
-    report_button.place(x=60,y=70)
-
-    thingspeak_button = tk.Button(sus, text="Humi Rang Adjust",  fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 12,"bold"),command=settings2)
-    thingspeak_button.place(x=60,y=120)
+    def switch():
+        global is_on
+        
+        # Determin is on or off
+        if is_on:
+            
+            notification_button.config(text = "Email Notifications off", 
+                            fg = "white", bg='#DC143C')
+            is_on = False
+            tk.messagebox.showinfo("Email Notification", "Email Notificaion is now Off")
+        else:
+            
+            notification_button.config(text = "Email Notifications On", fg = "white", bg='#397D02')
+            is_on = True
+            tk.messagebox.showinfo("Email Notification", "Email notificaion is now on")
+            
+    Label(sus,text ='SETTINGS', font=("Segoe UI", 20,"bold"), bg='black', fg='white').place(in_=sus,x=50,y=10)
     
+    offset_button = tk.Button(sus, text="Offset",  width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
+                            command=settings2)
+    offset_button.place(x=10,y=60)
+    
+    temp_button = tk.Button(sus,text="Temp Range Adjust",width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
+                            command=settings1)
+    temp_button.place(x=10,y=105)
+
+    humid_button = tk.Button(sus, text="Humid Range Adjust",  width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
+                            command=settings2)
+    humid_button.place(x=10,y=150)
+    
+    if is_on:
+        notification_button = tk.Button(sus, text="Email notification On",  width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="#397D02", font=("Segoe UI", 14),
+                                command=switch)
+        notification_button.place(x=10,y=195)
+    else:
+        notification_button = tk.Button(sus, text="Email notification Off",  width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="#DC143C", font=("Segoe UI", 14),
+                            command=switch)
+        notification_button.place(x=10,y=195)
     def ExitWin():
         sus.destroy()
         
-    tk.Button(sus, text = "Exit",font=("Segoe UI", 12,"bold"), relief="solid",activebackground='black',activeforeground='white',command=ExitWin).place(in_=sus,x=125,y=190)
+    tk.Button(sus, text = "Exit",width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
+                            command=ExitWin).place(in_=sus,x=10,y=240)
 
-b1 = tk.Button(win, text="Settings",fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 12,"bold"), command=Settings)
-b1.pack()
-b1.place(x=0,y=0)
+settings_button = tk.Button(win, text="Settings",fg="white",borderwidth=3, width=7,highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 13, 'bold'), 
+                            command=Settings)
+settings_button.pack()
+settings_button.place(x=0,y=0)
 
-# b1 = tk.Button(win, text="Humidity Range Adjustments", bg="white",command=settings2)
-# b1.pack()
-# b1.place(x=200,y=50)
 
-#----------------------------End of buttons--------------------------------------
 
-#---------------------------Clock ----------------------------------------------------------------
+
+
+
+#---------------------------------------End of buttons-------------------------------------------------#
+
+#------------------------------------------Clock-------------------------------------------------------#
 class Clock:
     def __init__(self):
         self.time1 = ''
@@ -935,8 +946,8 @@ class Clock:
 
         self.mFrame = Frame()
         self.mFrame.pack(expand=YES,fill=X)
-        self.mFrame.place(x=560, y=0)
-        self.watch = Label(self.mFrame, text=self.time2, font=('times',14, 'bold' ),background='black', fg="white")
+        self.mFrame.place(x=520, y=0)
+        self.watch = Label(self.mFrame, text=self.time2, font=('Segoe UI',14 ),background='black', fg="white")
 
         self.watch.pack()
         
@@ -947,8 +958,9 @@ class Clock:
         self.watch.configure(text=self.time2)
         self.mFrame.after(200, self.changeLabel) #it will call itself continuously
 Clock()
-
-#-------------------------------End clock--------------------------------- 
+#-----------------------------------------End clock-----------------------------------------------------#
+#________________________________________________________________________________________________________
+#-------------------------------------Tkinter window options--------------------------------------------# 
 
 canv = FigureCanvasTkAgg(fig, master = win)
 canv._tkcanvas.pack(side=tk.BOTTOM)
@@ -962,12 +974,11 @@ def exit_(event):                                    #Exit fullscreen
 
 win.attributes("-fullscreen",True)             #Fullscreen when executed 
 win.bind('<Escape>',exit_)                      #ESC to exit
-#---------------------------------End Of GUI -------------------------------------------------------------------------------
-#____________________________________________________________________________________________________________________
+#----------------------------------------End Of GUI-----------------------------------------------------#
+#________________________________________________________________________________________________________
 
-
-#__________________________________________________________________________________________________________________
-#-------------------------------Creating Threads--------------------------------------------------------------------
+#________________________________________________________________________________________________________
+#-----------------------------------------Creating Threads---------=------------------------------------#
 # Creates threads and starts all functions as needed
 try:
     os.chdir('/home/pi/LabWatchGUI6')    
@@ -979,20 +990,20 @@ try:
     _thread.start_new_thread( local,   ("local"   , 300, ) )
     _thread.start_new_thread( email,   ("Warning" , 45, ) )
     _thread.start_new_thread( alert,   (            45, ) )
+
     ani = animation.FuncAnimation(fig, animate, interval=2000, fargs=(xs,ys,xs2,ys2) )
-    
+
 except:
     print ("Error: unable to start thread")
 
-
-
-#-----------------------------End of Starting Threads----------------------------------------------------
+#-------------------------------------End of Starting Threads--------------------------------------------#
 #_________________________________________________________________________________________________________
 
-#______________________________________________________________________________________________
-#-------------------main loop for the programe------------------------------------------------- 
+#_________________________________________________________________________________________________________
+#------------------------------------Main loop for the program-------------------------------------------# 
 
-
+#Tkinter Window Backgorund color
+win.configure(background='black')
 
 try:
     win.mainloop()
@@ -1001,9 +1012,13 @@ except:
     quit()
 finally:
     pass
-#-------------------------End of Main Loop-----------------------------------------------------
-#_______________________________________________________________________________________________
+#----------------------------------------End of Main Loop------------------------------------------------#
 
 
-#end of code 
+#----------------------------------------End of code ----------------------------------------------------#
+#_________________________________________________________________________________________________________
+
+
+
+
 
