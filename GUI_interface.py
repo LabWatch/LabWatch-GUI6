@@ -176,8 +176,9 @@ def read_file():
         myAPI=  myAPI.rstrip('\n')
         baseURL = baseURL.rstrip('\n')
         sendto = sendto.rstrip('\n')
-        # print(myAPI)
+        
         baseURL = 'https://api.thingspeak.com/update?api_key=%s'% myAPI
+        # print(myAPI)
         # print(baseURL)
         # print(sendto)
     except Exception as e:
@@ -392,7 +393,7 @@ def alert( delay):
 #______________________________________________________________________________________________________
 #---------------------------------------------Emailing------------------------------------------------#
 #Enter email for sending reports to
-sendto="@gmail.com"
+
 def email(threadName,delay):
     global temp_avg
     global humid_avg
