@@ -619,6 +619,7 @@ def settings0():
     sus.title("Offset Adjustment Window")  
     sus.geometry("800x600")
     sus.configure(bg='black')
+    #win.config(cursor="none")
     
     def TU():
         global tempToff
@@ -705,7 +706,7 @@ def settings1():
     # sets the geometry of toplevel 
     sus.geometry("800x600") 
     sus.configure(bg='black')
-    
+    #win.config(cursor="none")
 
     def TUGU():
         global tempTUG
@@ -860,7 +861,7 @@ def settings2():
     sus.configure(bg='black')
     # sets the geometry of toplevel 
     sus.geometry("800x600") 
-
+    #win.config(cursor="none")
     def HUGU():
         global tempHUG
         global tempHUY
@@ -998,7 +999,9 @@ def Reports():
     sus.configure(bg='black')
     # sets the geometry of toplevel 
     sus.geometry("241x285") 
-
+    
+    #win.config(cursor="none")
+    
     Label(sus,text ='REPORTS', font=("Segoe UI", 20,"bold"), bg='black', fg='white').place(in_=sus,x=50,y=10)
     
     current_report_button = tk.Button(sus, text="Current Report",width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black", font=("Segoe UI", 14),
@@ -1035,7 +1038,7 @@ def Settings():
     # sets the title of the 
     # Toplevel widget 
     sus.overrideredirect(True) 
-    
+    #win.config(cursor="none")
     sus.configure(bg='black')
     
     # sets the geometry of toplevel 
@@ -1159,7 +1162,7 @@ except:
 
 #Tkinter Window Backgorund color
 win.configure(background='black')
-
+#win.config(cursor="none")
 try:
     win.mainloop()
 except:
