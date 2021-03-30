@@ -611,37 +611,41 @@ def settings0():
     global tempToff
     tempToff = Toffset
     tempHoff = Hoffset
+    
+    #Window
     sus = Toplevel() 
+
     sus.overrideredirect(True)  
     sus.title("Offset Adjustment Window")  
-    sus.geometry("800x800")
-
+    sus.geometry("800x600")
+    sus.configure(bg='black')
+    
     def TU():
         global tempToff
         tempToff = tempToff + 0.5
-        text2 = str(tempToff)+"  "
-        NUGS = Label(sus,text =text2,font=("Segoe UI", 14)).place(in_=sus,x=200,y=250)
+        text2 = str(tempToff)+" °C "
+        NUGS = Label(sus,text =text2,font=("Segoe UI", 22), bg='black', fg='white').place(in_=sus,x=160,y=295)
         return tempToff
 
     def TD():
         global tempToff
         tempToff = tempToff - 0.5
-        text2 = str(tempToff)+"  "
-        NUGS = Label(sus,text =text2,font=("Segoe UI", 14)).place(in_=sus,x=200,y=250)
+        text2 = str(tempToff)+" °C "
+        NUGS = Label(sus,text =text2,font=("Segoe UI", 22), bg='black', fg='white').place(in_=sus,x=160,y=295)
         return tempToff
 
     def HU():
         global tempHoff 
         tempHoff = tempHoff + 0.5
-        text2 = str(tempHoff)+"  "
-        NUG = Label(sus,text =text2,font=("Segoe UI", 14)).place(in_=sus,x=600,y=250)
+        text2 = str(tempHoff)+" % "
+        NUG = Label(sus,text =text2,font=("Segoe UI", 22), bg='black', fg='white').place(in_=sus,x=560,y=295)
         return tempHoff
 
     def HD():
         global tempHoff
         tempHoff = tempHoff - 0.5
-        text2 = str(tempHoff)+"  "
-        NUG = Label(sus,text =text2,font=("Segoe UI", 14)).place(in_=sus,x=600,y=250)
+        text2 = str(tempHoff)+" % "
+        NUG = Label(sus,text =text2,font=("Segoe UI", 22), bg='black', fg='white').place(in_=sus,x=560,y=295)
         return tempHoff
 
     def Exit():
@@ -653,16 +657,28 @@ def settings0():
         Hoffset = tempHoff
         sus.destroy()
 
-    Label(sus,text ='Offset Adjustment',font=("Segoe UI", 14,"bold")).place(in_=sus,x=400,y=70)
-    Label(sus,text ='Tempature Offset Adjustment',font=("Segoe UI", 14,"bold")).place(in_=sus,x=200,y=100)
-    Label(sus,text ='Humidity Offset Adjustment',font=("Segoe UI", 14,"bold")).place(in_=sus,x=600,y=100)
-    up_button1 = tk.Button(sus, text = "↑",command=TU).place(in_=sus,x=200,y=150)
-    down_button1 = tk.Button(sus, text = "↓",command=TD).place(in_=sus,x=200,y=350)
-    NUG = Label(sus,text =tempHoff,font=("Segoe UI", 14)).place(in_=sus,x=600,y=250)
-    NUGS = Label(sus,text =tempToff,font=("Segoe UI", 14)).place(in_=sus,x=200,y=250)
-    up_button1 = tk.Button(sus, text = "↑",command=HU).place(in_=sus,x=600,y=150)
-    down_button1 = tk.Button(sus, text = "↓",command=HD).place(in_=sus,x=600,y=350)
-    tk.Button(sus,text ='Exit',command=Exit,font=("Segoe UI", 14,"bold")).place(in_=sus,x=360,y=400)
+    #Labels
+    Label(sus,text ='OFFSET ADJUSTMENT',font=("Segoe UI", 24,"bold"),bg='black', fg='white').place(in_=sus,x=200,y=20)
+    Label(sus,text ='Tempature',font=("Segoe UI", 22),bg='black', fg='white').place(in_=sus,x=130,y=160)
+    Label(sus,text ='Humidity',font=("Segoe UI", 22),bg='black', fg='white').place(in_=sus,x=520,y=160)
+    
+    NUG = Label(sus,text =str(tempHoff)+" % ",font=("Segoe UI", 22),bg='black', fg='white').place(in_=sus,x=560,y=295)
+    NUGS = Label(sus,text =str(tempToff)+" °C ",font=("Segoe UI", 22),bg='black', fg='white').place(in_=sus,x=160,y=295)
+    
+    #Up/Down Buttons
+    up_button1 = tk.Button(sus, text = "↑",fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black",font=("Segoe UI", 22),
+                        command=TU).place(in_=sus,x=170,y=220)
+    down_button1 = tk.Button(sus, text = "↓",fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black",font=("Segoe UI", 22),
+                        command=TD).place(in_=sus,x=170,y=360)
+
+    up_button1 = tk.Button(sus, text = "↑",fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black",font=("Segoe UI", 22),
+                        command=HU).place(in_=sus,x=560,y=220)
+    down_button1 = tk.Button(sus, text = "↓",fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black",font=("Segoe UI", 22),
+                        command=HD).place(in_=sus,x=560,y=360)
+    
+    #Exit Button
+    tk.Button(sus,text ='Exit',width = 10,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black",
+                        command=Exit,font=("Segoe UI", 18)).place(in_=sus,x=300,y=80)
 
 
 def settings1():
@@ -678,6 +694,7 @@ def settings1():
     tempTLG = TLower_green
     tempTUY = TUpper_yellow
     tempTLY = TLower_yellow
+    
     # Toplevel object which will  
     # be treated as a new window 
     sus = Toplevel() 
@@ -685,19 +702,18 @@ def settings1():
     # sets the title of the 
     # Toplevel widget 
     sus.title("Tempature Range Adjustments Window") 
-    
     # sets the geometry of toplevel 
-    sus.geometry("800x800") 
-
-    Label(sus,text ='Tempature Range Settings',font=("Segoe UI", 14,"bold")).place(in_=sus,x=250,y=70)
+    sus.geometry("800x600") 
+    sus.configure(bg='black')
+    
 
     def TUGU():
         global tempTUG
         global tempTUY
         if tempTUY > tempTUG +1 : 
             tempTUG = tempTUG + 1
-        text2 = str(tempTUG)+"  "
-        NUG = Label(sus,text =text2).place(in_=sus,x=550,y=250)
+        text2 = str(tempTUG)+"°C"
+        NUG = Label(sus,text = text2,font=("Segoe UI", 22), bg='black', fg='white').place(in_=sus,x=475,y=215)
         return tempTUG
 
     def TUGD():
@@ -705,8 +721,8 @@ def settings1():
         global tempTLG
         if tempTLG < tempTUG-1 :
             tempTUG = tempTUG - 1
-        text2 = str(tempTUG)+"  "
-        NUG = Label(sus,text =text2).place(in_=sus,x=550,y=250)
+        text2 = str(tempTUG)+"°C"
+        NUG = Label(sus,text =text2,font=("Segoe UI", 22), bg='black', fg='white').place(in_=sus,x=475,y=215)
         return tempTUG
 
     def TLGU():
@@ -714,8 +730,8 @@ def settings1():
         global tempTUG
         if tempTLG < tempTUG-1 :
             tempTLG = tempTLG + 1
-        text2 = str(tempTLG)+"  "
-        NLG = Label(sus,text =text2).place(in_=sus,x=275,y=250)
+        text2 = str(tempTLG)+"°C"
+        NLG = Label(sus,text =text2,font=("Segoe UI", 22), bg='black', fg='white').place(in_=sus,x=265,y=215)
         return tempTLG
 
     def TLGD():
@@ -723,15 +739,15 @@ def settings1():
         global tempTLY
         if tempTLG > tempTLY +1 : 
             tempTLG = tempTLG - 1
-        text2 = str(tempTLG)+"  "
-        NLG = Label(sus,text =text2).place(in_=sus,x=275,y=250)
+        text2 = str(tempTLG)+"°C"
+        NLG = Label(sus,text =text2,font=("Segoe UI", 22), bg='black', fg='white').place(in_=sus,x=265,y=215)
         return tempTLG
 
     def TUYU():
         global tempTUY
         tempTUY = tempTUY + 1
-        text2 =str(tempTUY)+"  "
-        NUY = Label(sus,text =text2).place(in_=sus,x=750,y=250)
+        text2 =str(tempTUY)+"°C"
+        NUY = Label(sus,text =text2,font=("Segoe UI", 22), bg='black', fg='white').place(in_=sus,x=670,y=215)
         return tempTUY
 
     def TUYD():
@@ -739,8 +755,8 @@ def settings1():
         global tempTUG
         if tempTUG < tempTUY-1 : 
             tempTUY = tempTUY - 1
-        text2 =str(tempTUY)+"  "
-        NUY = Label(sus,text =text2).place(in_=sus,x=750,y=250)
+        text2 =str(tempTUY)+"°C"
+        NUY = Label(sus,text =text2,font=("Segoe UI", 22), bg='black', fg='white').place(in_=sus,x=670,y=215)
         return tempTUY
 
     def TLYU():
@@ -748,15 +764,15 @@ def settings1():
         global tempTLG
         if tempTLG > tempTLY +1 : 
             tempTLY = tempTLY + 1
-        text2 =str(tempTLY)+"  "
-        NLY = Label(sus,text =text2).place(in_=sus,x=50,y=250)
+        text2 =str(tempTLY)+"°C"
+        NLY = Label(sus,text =text2,font=("Segoe UI", 22), bg='black', fg='white').place(in_=sus,x=60,y=215)
         return tempTLY
 
     def TLYD():
         global tempTLY
         tempTLY = tempTLY - 1
-        text2 =str(tempTLY)+"  "
-        NLY = Label(sus,text =text2).place(in_=sus,x=50,y=250)
+        text2 =str(tempTLY)+"°C"
+        NLY = Label(sus,text =text2,font=("Segoe UI", 22), bg='black', fg='white').place(in_=sus,x=60,y=215)
         return tempTLY
 
 
@@ -776,33 +792,49 @@ def settings1():
         sus.destroy()
         write_file()
 
-    # A Label widget to show in toplevel 
-
-    Label(sus,text ="Set Upper Limit").place(in_=sus,x=500,y=200)
-    NUG = Label(sus,text =tempTUG).place(in_=sus,x=550,y=250)
-
-    Label(sus,text ="Set Lower Limit").place(in_=sus,x=225,y=200)
-    NLG = Label(sus,text =tempTLG).place(in_=sus,x=275,y=250)
-
-    Label(sus,text ="Set Upper Limit").place(in_=sus,x=690,y=200)
-    NUY = Label(sus,text =tempTUY).place(in_=sus,x=750,y=250)
-
-    Label(sus,text ="Set Lower Limit").place(in_=sus,x=0,y=200)
-    NLY = Label(sus,text =tempTLY).place(in_=sus,x=50,y=250)
+    #Window Title
+    Label(sus,text ='TEMPERATURE RANGE SETTINGS',font=("Segoe UI", 24,"bold"),bg='black',fg='white').place(in_=sus,x=100,y=25)
     
-    up_button1 = tk.Button(sus,bg = 'yellow', text = "↑",command=TLYU).place(in_=sus,x=42,y=300)
-    down_button1 = tk.Button(sus,bg = 'yellow', text = "↓",command=TLYD).place(in_=sus,x=42,y=350)
+    #Upper/lower limits
+    Label(sus,text ="Upper",bg='black',fg='white',font=("Segoe UI", 22)).place(in_=sus,x=470,y=160)
+    
+    NUG = Label(sus,text =str(tempTUG)+"°C",bg="black",fg='white',font=("Segoe UI", 22)).place(in_=sus,x=475,y=215)
 
-    up_button2 = tk.Button(sus,bg = 'green', text = "↑",command=TLGU).place(in_=sus,x=268,y=300)
-    down_button2 = tk.Button(sus,bg = 'green', text = "↓",command=TLGD).place(in_=sus,x=268,y=350)
+    Label(sus,text ="Lower",fg='white',bg='black',font=("Segoe UI", 22)).place(in_=sus,x=255,y=160)
+    
+    NLG = Label(sus,text =str(tempTLG)+"°C",bg="black",fg='white',font=("Segoe UI", 22)).place(in_=sus,x=265,y=215)
 
-    up_button1 = tk.Button(sus,bg = 'green', text = "↑",command=TUGU).place(in_=sus,x=542,y=300)
-    down_button1 = tk.Button(sus,bg = 'green', text = "↓",command=TUGD).place(in_=sus,x=542,y=350)
+    Label(sus,text ="Upper",bg='black',fg='white',font=("Segoe UI", 22)).place(in_=sus,x=660,y=160)
+    
+    NUY = Label(sus,text =str(tempTUY)+"°C",bg="black",fg='white',font=("Segoe UI", 22)).place(in_=sus,x=670,y=215)
 
-    up_button2 = tk.Button(sus,bg = 'yellow', text = "↑",command=TUYU).place(in_=sus,x=742,y=300)
-    down_button2 = tk.Button(sus,bg = 'yellow', text = "↓",command=TUYD).place(in_=sus,x=742,y=350)
+    Label(sus,text ="Lower",bg='black',fg='white',font=("Segoe UI", 22)).place(in_=sus,x=55,y=160)
+    
+    NLY = Label(sus,text =str(tempTLY)+"°C",bg="black",fg='white',font=("Segoe UI", 22)).place(in_=sus,x=60,y=215)
+    
+    #Up/Down buttons
+    up_button1 = tk.Button(sus, text = "↑",bg = '#ffcc00',fg="black",borderwidth=3, highlightcolor="white",relief="solid",font=("Segoe UI", 22),
+                        command=TLYU).place(in_=sus,x=72,y=275)
+    down_button1 = tk.Button(sus,bg = '#ffcc00', text = "↓", fg="black",borderwidth=3, highlightcolor="white",relief="solid",font=("Segoe UI", 22),
+                            command=TLYD).place(in_=sus,x=72,y=350)
 
-    exit = tk.Button(sus, text = "Exit",command=SaveHum).place(in_=sus,x=360,y=120)
+    up_button2 = tk.Button(sus,bg = '#12c702', text = "↑",fg="black",borderwidth=3, highlightcolor="white",relief="solid",font=("Segoe UI", 22),
+                            command=TLGU).place(in_=sus,x=268,y=275)
+    down_button2 = tk.Button(sus,bg = '#12c702', text = "↓",fg="black",borderwidth=3, highlightcolor="white",relief="solid",font=("Segoe UI", 22),
+                            command=TLGD).place(in_=sus,x=268,y=350)
+
+    up_button1 = tk.Button(sus,bg = '#12c702', text = "↑",fg="black",borderwidth=3, highlightcolor="white",relief="solid",font=("Segoe UI", 22),
+                            command=TUGU).place(in_=sus,x=485,y=275)
+    down_button1 = tk.Button(sus,bg = '#12c702', text = "↓",fg="black",borderwidth=3, highlightcolor="white",relief="solid",font=("Segoe UI", 22),
+                            command=TUGD).place(in_=sus,x=485,y=350)
+
+    up_button2 = tk.Button(sus,bg = '#ffcc00', text = "↑",fg="black",borderwidth=3, highlightcolor="white",relief="solid",font=("Segoe UI", 22),
+                            command=TUYU).place(in_=sus,x=675,y=275)
+    down_button2 = tk.Button(sus,bg = '#ffcc00', text = "↓",fg="black",borderwidth=3, highlightcolor="white",relief="solid",font=("Segoe UI", 22),
+                            command=TUYD).place(in_=sus,x=675,y=350)
+
+    exit = tk.Button(sus, text = "Exit",font=("Segoe UI", 18),width = 10,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black",
+                    command=SaveHum).place(in_=sus,x=300,y=85)
 
 def settings2():
     global tempHUG
@@ -825,19 +857,17 @@ def settings2():
     # sets the title of the 
     # Toplevel widget 
     sus.title("Humidity Range Adjustments Window") 
-    
+    sus.configure(bg='black')
     # sets the geometry of toplevel 
     sus.geometry("800x600") 
-
-    Label(sus,text ='Humidity Range Settings',font=("Segoe UI", 14,"bold")).place(in_=sus,x=250,y=70)
 
     def HUGU():
         global tempHUG
         global tempHUY
         if tempHUY > tempHUG +1: 
             tempHUG = tempHUG + 1
-        text2=str(tempHUG)+"  "
-        NUG = Label(sus,text =text2).place(in_=sus,x=550,y=250)
+        text2=str(tempHUG)+"%"
+        NUG = Label(sus,text =text2,font=("Segoe UI", 22), bg='black', fg='white').place(in_=sus,x=480,y=215)
         return tempHUG
 
     def HUGD():
@@ -845,8 +875,8 @@ def settings2():
         global tempHLG
         if tempHUG-1 > tempHLG :
             tempHUG = tempHUG - 1
-        text2=str(tempHUG)+"  "
-        NUG = Label(sus,text =text2).place(in_=sus,x=550,y=250)
+        text2=str(tempHUG)+"%"
+        NUG = Label(sus,text =text2,font=("Segoe UI", 22), bg='black', fg='white').place(in_=sus,x=480,y=215)
         return tempHUG
 
     def HLGU():
@@ -854,8 +884,8 @@ def settings2():
         global tempHUG
         if tempHUG > tempHLG+1:
             tempHLG = tempHLG + 1
-        text2=str(tempHLG)+"  "
-        NLG = Label(sus,text =text2).place(in_=sus,x=275,y=250)
+        text2=str(tempHLG)+"%"
+        NLG = Label(sus,text =text2,font=("Segoe UI", 22), bg='black', fg='white').place(in_=sus,x=265,y=215)
         return tempHLG
 
     def HLGD():
@@ -863,15 +893,15 @@ def settings2():
         global tempHLY
         if tempHLG > tempHLY+1:
             tempHLG = tempHLG - 1
-        text2=str(tempHLG)+"  "
-        NLG = Label(sus,text =text2).place(in_=sus,x=275,y=250)
+        text2=str(tempHLG)+"%"
+        NLG = Label(sus,text =text2,font=("Segoe UI", 22), bg='black', fg='white').place(in_=sus,x=265,y=215)
         return tempHLG
 
     def HUYU():
         global tempHUY
         tempHUY = tempHUY + 1
-        text2 =str(tempHUY)+"  "
-        NUY = Label(sus,text =text2).place(in_=sus,x=750,y=250)
+        text2 =str(tempHUY)+"%"
+        NUY = Label(sus,text =text2,font=("Segoe UI", 22), bg='black', fg='white').place(in_=sus,x=670,y=215)
         return tempHUY
 
     def HUYD():
@@ -879,8 +909,8 @@ def settings2():
         global tempHUG
         if tempHUY > tempHUG +1:
             tempHUY = tempHUY - 1
-        text2 =str(tempHUY)+"  "
-        NUY = Label(sus,text =text2).place(in_=sus,x=750,y=250)
+        text2 =str(tempHUY)+"%"
+        NUY = Label(sus,text =text2,font=("Segoe UI", 22), bg='black', fg='white').place(in_=sus,x=670,y=215)
         return tempHUY
 
     def HLYU():
@@ -888,15 +918,15 @@ def settings2():
         global tempHLG
         if tempHLY<tempHLG-1:
             tempHLY = tempHLY + 1
-        text2=str(tempHLY)+"  "
-        NLY = Label(sus,text =text2).place(in_=sus,x=50,y=250)
+        text2=str(tempHLY)+"%"
+        NLY = Label(sus,text =text2,font=("Segoe UI", 22), bg='black', fg='white').place(in_=sus,x=65,y=215)
         return tempHLY
 
     def HLYD():
         global tempHLY
         tempHLY = tempHLY - 1
-        text2=str(tempHLY)+"  "
-        NLY = Label(sus,text =text2).place(in_=sus,x=50,y=250)
+        text2=str(tempHLY)+"%"
+        NLY = Label(sus,text =text2,font=("Segoe UI", 22), bg='black', fg='white').place(in_=sus,x=65,y=215)
         return tempHLY
 
     def SaveHum():
@@ -915,32 +945,46 @@ def settings2():
         sus.destroy()
         write_file()
 
+    #Window Title
+    Label(sus,text ='HUMIDITY RANGE SETTINGS',font=("Segoe UI", 24,"bold"),bg='black',fg='white').place(in_=sus,x=150,y=25)
 
-    Label(sus,text ="Set Upper Limit").place(in_=sus,x=500,y=200)
-    NUG = Label(sus,text =tempHUG).place(in_=sus,x=550,y=250)
+    #Limit Titles
+    Label(sus,text ="Upper",bg='black',fg='white',font=("Segoe UI", 22)).place(in_=sus,x=470,y=160)
+    NUG = Label(sus,text =str(tempHUG)+"%",bg='black',fg='white',font=("Segoe UI", 22)).place(in_=sus,x=480,y=215)
 
-    Label(sus,text ="Set Lower Limit").place(in_=sus,x=225,y=200)
-    NLG = Label(sus,text =tempHLG).place(in_=sus,x=275,y=250)
+    Label(sus,text ="Lower",bg='black',fg='white',font=("Segoe UI", 22)).place(in_=sus,x=255,y=160)
+    NLG = Label(sus,text =str(tempHLG)+"%",bg='black',fg='white',font=("Segoe UI", 22)).place(in_=sus,x=265,y=215)
 
-    Label(sus,text ="Set Upper Limit").place(in_=sus,x=690,y=200)
-    NUY = Label(sus,text =tempHUY).place(in_=sus,x=750,y=250)
+    Label(sus,text ="Upper",bg='black',fg='white',font=("Segoe UI", 22)).place(in_=sus,x=660,y=160)
+    NUY = Label(sus,text =str(tempHUY)+"%",bg='black',fg='white',font=("Segoe UI", 22)).place(in_=sus,x=670,y=215)
 
-    Label(sus,text ="Set Lower Limit").place(in_=sus,x=0,y=200)
-    NLY = Label(sus,text =tempHLY).place(in_=sus,x=50,y=250)
+    Label(sus,text ="Lower",bg='black',fg='white',font=("Segoe UI", 22)).place(in_=sus,x=55,y=160)
+    NLY = Label(sus,text =str(tempHLY)+"%",bg='black',fg='white',font=("Segoe UI", 22)).place(in_=sus,x=65,y=215)
     
-    up_button1 = tk.Button(sus,bg = 'yellow', text = "↑",command=HLYU).place(in_=sus,x=42,y=300)
-    down_button1 = tk.Button(sus,bg = 'yellow', text = "↓",command=HLYD).place(in_=sus,x=42,y=350)
+    #Up/Down buttons
+    up_button1 = tk.Button(sus,bg = '#ffcc00', text = "↑",fg="black",borderwidth=3, highlightcolor="white",relief="solid",font=("Segoe UI", 22),
+                            command=HLYU).place(in_=sus,x=70,y=275)
+    down_button1 = tk.Button(sus,bg = '#ffcc00', text = "↓",fg="black",borderwidth=3, highlightcolor="white",relief="solid",font=("Segoe UI", 22),
+                            command=HLYD).place(in_=sus,x=70,y=350)
 
-    up_button2 = tk.Button(sus,bg = 'green', text = "↑",command=HLGU).place(in_=sus,x=268,y=300)
-    down_button2 = tk.Button(sus,bg = 'green', text = "↓",command=HLGD).place(in_=sus,x=268,y=350)
+    up_button2 = tk.Button(sus,bg = '#12c702', text = "↑",fg="black",borderwidth=3, highlightcolor="white",relief="solid",font=("Segoe UI", 22),
+                            command=HLGU).place(in_=sus,x=268,y=275)
+    down_button2 = tk.Button(sus,bg = '#12c702', text = "↓",fg="black",borderwidth=3, highlightcolor="white",relief="solid",font=("Segoe UI", 22),
+                            command=HLGD).place(in_=sus,x=268,y=350)
 
-    up_button1 = tk.Button(sus,bg = 'green', text = "↑",command=HUGU).place(in_=sus,x=542,y=300)
-    down_button1 = tk.Button(sus,bg = 'green', text = "↓",command=HUGD).place(in_=sus,x=542,y=350)
+    up_button1 = tk.Button(sus,bg = '#12c702', text = "↑",fg="black",borderwidth=3, highlightcolor="white",relief="solid",font=("Segoe UI", 22),
+                            command=HUGU).place(in_=sus,x=485,y=275)
+    down_button1 = tk.Button(sus,bg = '#12c702', text = "↓",fg="black",borderwidth=3, highlightcolor="white",relief="solid",font=("Segoe UI", 22),
+                            command=HUGD).place(in_=sus,x=485,y=350)
 
-    up_button2 = tk.Button(sus,bg = 'yellow', text = "↑",command=HUYU).place(in_=sus,x=742,y=300)
-    down_button2 = tk.Button(sus,bg = 'yellow', text = "↓",command=HUYD).place(in_=sus,x=742,y=350)
+    up_button2 = tk.Button(sus,bg = '#ffcc00', text = "↑",fg="black",borderwidth=3, highlightcolor="white",relief="solid",font=("Segoe UI", 22),
+                            command=HUYU).place(in_=sus,x=675,y=275)
+    down_button2 = tk.Button(sus,bg = '#ffcc00', text = "↓",fg="black",borderwidth=3, highlightcolor="white",relief="solid",font=("Segoe UI", 22),
+                            command=HUYD).place(in_=sus,x=675,y=350)
     
-    exit = tk.Button(sus, text = "Exit",command=SaveHum).place(in_=sus,x=360,y=120)
+    exit = tk.Button(sus, text = "Exit",font=("Segoe UI", 18),width = 10,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black",
+                        command=SaveHum).place(in_=sus,x=300,y=85)
+    
     # Exit = tk.Button(sus, text = "Exit Withoug Saving",command=nonSaveHum).place(in_=sus,x=500,y=750)
 
 #--------------------------------------------Report Button-----------------------------------------#
