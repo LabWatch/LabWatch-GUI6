@@ -660,7 +660,7 @@ def settings0():
 
     #Labels
     Label(sus,text ='OFFSET ADJUSTMENT',font=("Segoe UI", 24,"bold"),bg='black', fg='white').place(in_=sus,x=200,y=20)
-    Label(sus,text ='Tempature',font=("Segoe UI", 22),bg='black', fg='white').place(in_=sus,x=130,y=160)
+    Label(sus,text ='Tempature',font=("Segoe UI", 22),bg='black', fg='white').place(in_=sus,x=110,y=160)
     Label(sus,text ='Humidity',font=("Segoe UI", 22),bg='black', fg='white').place(in_=sus,x=520,y=160)
     
     NUG = Label(sus,text =str(tempHoff)+" % ",font=("Segoe UI", 22),bg='black', fg='white').place(in_=sus,x=560,y=295)
