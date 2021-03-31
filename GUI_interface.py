@@ -140,11 +140,13 @@ tempTLY = TLower_yellow
 temp_colour = "#000000"
 humid_colour = "#000000"
 
-global Toffset 
+
+
+
 Toffset = 0
-global Hoffset
 Hoffset = 0
 
+email = True
 
 #______________________________________________________________________________________________________________________________
 #-------------------------------------------Text File Read And Write Function------------------------------------------------
@@ -162,11 +164,14 @@ def read_file():
     global link
     global baseURL
     global sendto
+    global Toffset
+    global Hoffset
+    global email
     try:
         cwd = os.getcwd()
         path = cwd+ "/load.txt"
         f = open(path,'r')
-        myAPI =  str(f.readline())
+        
         TUpper_green = int(f.readline())
         TLower_green = int(f.readline())
         TUpper_yellow = int(f.readline())
@@ -175,6 +180,9 @@ def read_file():
         HLower_green = int(f.readline())
         HUpper_yellow = int(f.readline())
         HLower_yellow = int(f.readline())
+        Toffset = int(f.readline())
+        Hoffset = int(f.readline())
+        myAPI =  str(f.readline())
         link = str(f.readline())
         sendto = str(f.readline())
         f.close()
@@ -203,6 +211,7 @@ def read_file():
         # URL where we will send the data, Don't change it
         baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI 
         link = "https://thingspeak.com/channels/1311268"
+        email = False
         print(f'Error Read: {e}')
 
 def write_file():
@@ -216,18 +225,36 @@ def write_file():
     global HLower_green
     global HUpper_yellow
     global HLower_yellow
+    global Toffset
+    global Hoffset
     global link
     global sendto
+    global email
     # print(sendto)
-    try:
-        cwd = os.getcwd()
-        path = cwd+ "/load.txt"
-        
-        f = open(path,'w')
-        f.write(myAPI + "\n" + str(TUpper_green) + "\n" + str(TLower_green) + "\n" + str(TUpper_yellow) + "\n" + str(TLower_yellow) + "\n" + str(HUpper_green) + "\n" + str(HLower_green) + "\n" + str(HUpper_yellow) + "\n" + str(HLower_yellow )+ "\n" + link + "" + sendto)
-        f.close()
-    except Exception as e:
-            print(f'Error Write: {e}')
+    if(email):
+        try:
+            cwd = os.getcwd()
+            path = cwd+ "/load.txt"
+            
+            f = open(path,'w')
+            f.write( str(TUpper_green) + "\n" + str(TLower_green) + "\n" + str(TUpper_yellow) 
+                    + "\n" + str(TLower_yellow) + "\n" + str(HUpper_green) + "\n" + str(HLower_green) + "\n" 
+                        + str(HUpper_yellow) + "\n" + str(HLower_yellow )+ "\n" + str(Toffset ) + "\n" + str(Hoffset)+ "\n"+ myAPI + "\n" + link + "" + sendto)
+            f.close()
+        except Exception as e:
+                print(f'Error Write: {e}')
+    else:
+        try:
+            cwd = os.getcwd()
+            path = cwd+ "/load.txt"
+            
+            f = open(path,'w')
+            f.write(str(TUpper_green) + "\n" + str(TLower_green) + "\n" + str(TUpper_yellow) 
+                    + "\n" + str(TLower_yellow) + "\n" + str(HUpper_green) + "\n" + str(HLower_green) + "\n" 
+                        + str(HUpper_yellow) + "\n" + str(HLower_yellow )+ "\n" + str(Toffset ) + "\n" + str(Hoffset))
+            f.close()
+        except Exception as e:
+                print(f'Error Write: {e}')
 
 #----------------------------------------------------------------------------------------------------------------------------
 #______________________________________________________________________________________________________________________________
@@ -317,19 +344,20 @@ def sensor1( threadName, delay):
 def avg(threadName, delay):
     global temp_avg #uses all global variables which are also used for uploading and display
     global humid_avg
-    global temp_last_avg
-    global humid_last_avg
     global temp0
     global humid0
     global temp1
     global humid1
     global sensor_fault0
     global sensor_fault1
-    
+    global Toffset
+    global Hoffset
+    temp = 0
+    humid = 0
     while True: #runs the avg loop forever 
         
-        temp_last_avg = temp_avg #stores current avgerage as last avg 
-        humid_last_avg = humid_avg
+        temp_last_avg = temp #stores current avgerage as last avg 
+        humid_last_avg = humid
 
         # mutltiple statments checking different sinarios for faulty sensor 
         if (sensor_fault0 == False and sensor_fault1 == False) :#both good
@@ -337,26 +365,26 @@ def avg(threadName, delay):
             humiddiff = abs(humid0-humid1)
 
             if (tempdiff < 4 and humiddiff < 10) :# they are roughly the same value 
-                temp_avg = (temp0 + temp1 + temp_last_avg) / 3
-                humid_avg = (humid0 + humid1 + humid_last_avg) / 3
+                temp = (temp0 + temp1 + temp_last_avg) / 3
+                humid = (humid0 + humid1 + humid_last_avg) / 3
 
         elif (sensor_fault0 == False and sensor_fault1 == True) :#D4 OK D18 Bad
-            temp_avg = (temp0 + temp_last_avg) / 2
-            humid_avg = (humid0 + humid_last_avg) / 2
+            temp = (temp0 + temp_last_avg) / 2
+            humid = (humid0 + humid_last_avg) / 2
             # messagebox.showerror("SENSOR ERROR", "SENSOR 2 FAULT ON D18")
             
         elif (sensor_fault0 == True and sensor_fault1 == False): #D4 Bad D18 OK
-            temp_avg = (temp1 + temp_last_avg) / 2
-            humid_avg = (humid1 + humid_last_avg) / 2 
+            temp = (temp1 + temp_last_avg) / 2
+            humid = (humid1 + humid_last_avg) / 2 
             # messagebox.showerror("SENSOR ERROR", "SENSOR 1 FAULT ON D4")
-            
         else: #both Bad set to 0 , 0 
-            temp_avg = 0
-            humid_avg = 0
+            temp = -Toffset
+            humid = -Hoffset
             # messagebox.showerror("SENSOR ERROR", "SENSOR 1 AND 2 FAULT")
 
-        temp_avg = round(temp_avg,1)
-        humid_avg = round(humid_avg,1)
+        temp_avg = round((temp + Toffset),1)
+        humid_avg = round((humid + Hoffset),1)
+        
         # # prints to terminal for error checking 
         # print(
         #         "Temp_avg:  {:.1f} C    Humidity_avg: {:.1f}%   sensor0: {}   Sensor1: {} ".format(
