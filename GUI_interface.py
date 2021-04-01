@@ -537,9 +537,9 @@ def animate(i, xs, xs2, ys, ys2):
     ax.clear()
 
     #Plot Labels
-    ax.set_title('Temperature over Time', color='w')
-    ax.set_xlabel('Time',color ='w')
-    ax.set_ylabel('Temp °C', color='w')
+    ax.set_title('Temperature over Time', color='w', fontsize=14)
+    ax.set_xlabel('Time',color ='w', fontsize=14)
+    ax.set_ylabel('Temp °C', color='w', fontsize=14)
     
     ax.plot(xs,ys)
     ax.grid(True)
@@ -557,9 +557,9 @@ def animate(i, xs, xs2, ys, ys2):
     #Plot graph clear and label (update new reading)
     ax2.clear()
     #Plot Labels
-    ax2.set_title('Humidity over time', color='w')
-    ax2.set_xlabel('Time',color ='w')
-    ax2.set_ylabel('Hum %', color='w')
+    ax2.set_title('Humidity over time', color='w', fontsize=14)
+    ax2.set_xlabel('Time',color ='w', fontsize=14)
+    ax2.set_ylabel('Hum %', color='w', fontsize=14)
     
     ax2.plot(xs2,ys2)
     ax2.grid(True)
@@ -1132,6 +1132,8 @@ def exit_(event):                                    #Exit fullscreen
 
 win.attributes("-fullscreen",True)             #Fullscreen when executed 
 win.bind('<Escape>',exit_)                      #ESC to exit
+
+
 #----------------------------------------End Of GUI-----------------------------------------------------#
 #________________________________________________________________________________________________________
 
