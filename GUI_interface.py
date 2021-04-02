@@ -501,8 +501,10 @@ temperatureLabel.place(x=70, y=130)             #Character "----C" placement and
 
 humidityLabel = Label(win, fg=humid_colour, background="black", textvariable=humidity, font=("Segoe UI", 60,"bold"))       #bg color,font and font size
 humidityLabel.place(x=485, y=130)              #Character "----%" placement and attributes
-#End of Digital readings for GUI
-
+#-------------------------------End of Digital readings for GUI--------------------------------------#
+#_____________________________________________________________________________________________________
+#_____________________________________________________________________________________________________
+#------------------------------------Animate function------------------------------------------------#
 def animate(i, xs, xs2, ys, ys2):
     global temp_avg
     global humid_avg
@@ -584,6 +586,8 @@ def animate(i, xs, xs2, ys, ys2):
     temperatureLabel.config(fg = temp_colour)
     humidityLabel.config(fg = humid_colour)
     win.update()
+    
+#------------------------------------------End of Animate function-----------------------------------#
 #_____________________________________________________________________________________________________
 #_____________________________________________________________________________________________________
 #-------------------------------------------Main Buttons code ---------------------------------------#
@@ -669,11 +673,13 @@ def settings0():
     #Up/Down Buttons
     up_button1 = tk.Button(sus, text = "↑",fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black",font=("Segoe UI", 22),
                         command=TU).place(in_=sus,x=170,y=220)
+    
     down_button1 = tk.Button(sus, text = "↓",fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black",font=("Segoe UI", 22),
                         command=TD).place(in_=sus,x=170,y=360)
 
     up_button1 = tk.Button(sus, text = "↑",fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black",font=("Segoe UI", 22),
                         command=HU).place(in_=sus,x=560,y=220)
+    
     down_button1 = tk.Button(sus, text = "↓",fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="black",font=("Segoe UI", 22),
                         command=HD).place(in_=sus,x=560,y=360)
     
@@ -988,7 +994,7 @@ def settings2():
     
     # Exit = tk.Button(sus, text = "Exit Withoug Saving",command=nonSaveHum).place(in_=sus,x=500,y=750)
 
-#--------------------------------------------Report Button-----------------------------------------#
+#--------------------------------------------Report Button------------------------------------------#
 def Reports():
     # Toplevel object which will  
     # be treated as a new window 
@@ -1116,7 +1122,7 @@ class Clock:
         self.watch.configure(text=self.time2)
         self.mFrame.after(200, self.changeLabel) #it will call itself continuously
 Clock()
-#-----------------------------------------End clock-----------------------------------------------------#
+#-----------------------------------------End Clock-----------------------------------------------------#
 #________________________________________________________________________________________________________
 #-------------------------------------Tkinter window options--------------------------------------------# 
 
@@ -1132,6 +1138,22 @@ def exit_(event):                                    #Exit fullscreen
 
 win.attributes("-fullscreen",True)             #Fullscreen when executed 
 win.bind('<Escape>',exit_)                      #ESC to exit
+
+#--------------------------------------------Splash Screen----------------------------------------------#
+#Window
+splash_screen= Toplevel()
+splash_screen.overrideredirect(True) 
+splash_screen.geometry("800x600")
+splash_screen.configure(bg='black')
+
+#background image
+bg = PhotoImage(file = "LabWatchLogo.PNG")
+background=Label(splash_screen, image=bg)
+background.place(x=220,y=70)  
+
+#Splash screen timer and close
+splash_screen.after(6000,lambda: splash_screen.destroy())
+#--------------------------------------------End of Splash Screen---------------------------------------#
 
 
 #----------------------------------------End Of GUI-----------------------------------------------------#
