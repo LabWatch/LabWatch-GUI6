@@ -363,16 +363,16 @@ def avg(threadName, delay):
         
         temp_last_avg = temp #stores current avgerage as last avg 
         humid_last_avg = humid
-
         # mutltiple statments checking different sinarios for faulty sensor 
         if (sensor_fault0 == False and sensor_fault1 == False) :#both good
             tempdiff = abs(temp0-temp1)
             humiddiff = abs(humid0-humid1)
-
+            print(tempdiff)
             if (tempdiff < 4 and humiddiff < 10) :# they are roughly the same value 
                 temp = (temp0 + temp1 + temp_last_avg) / 3
                 humid = (humid0 + humid1 + humid_last_avg) / 3
-
+                print(temp)
+                print(humid)
         elif (sensor_fault0 == False and sensor_fault1 == True) :#D4 OK D18 Bad
             temp = (temp0 + temp_last_avg) / 2
             humid = (humid0 + humid_last_avg) / 2
@@ -387,12 +387,14 @@ def avg(threadName, delay):
             humid = -Hoffset
             # messagebox.showerror("SENSOR ERROR", "SENSOR 1 AND 2 FAULT")
 
-        # # prints to terminal for error checking 
-        # print(
-        #         "Temp_avg:  {:.1f} C    Humidity_avg: {:.1f}%   sensor0: {}   Sensor1: {} ".format(
-        #             temp_avg, humid_avg,sensor_fault0,sensor_fault1
-        #         )
-        #     ) 
+        temp_avg = round(temp +Toffset,1)
+        humid_avg = round(humid + Hoffset)
+        # prints to terminal for error checking 
+        print(
+                "Temp_avg:  {:.1f} C    Humidity_avg: {:.1f}%   sensor0: {}   Sensor1: {} ".format(
+                    temp_avg, humid_avg,sensor_fault0,sensor_fault1
+                )
+            ) 
         time.sleep(delay)#sleeps for set delay time 
 
 #-----------------------------------End of sensor Data read and error Check---------------------------#
