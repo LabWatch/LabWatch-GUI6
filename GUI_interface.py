@@ -89,6 +89,10 @@ link = "https://thingspeak.com/channels/1311268"
 #------------------------------------------------------------------------------------------------------#
 
 #-----------------------------------Tkinter Variables + Plot attributes--------------------------------#
+
+
+
+
 #Tkinter window
 win = tk.Tk()
 
@@ -1139,23 +1143,6 @@ def exit_(event):                                    #Exit fullscreen
 win.attributes("-fullscreen",True)             #Fullscreen when executed 
 win.bind('<Escape>',exit_)                      #ESC to exit
 
-#--------------------------------------------Splash Screen----------------------------------------------#
-#Window
-splash_screen= Toplevel()
-splash_screen.overrideredirect(True) 
-splash_screen.geometry("800x600")
-splash_screen.configure(bg='black')
-
-#background image
-bg = PhotoImage(file = "LabWatchLogo.PNG")
-background=Label(splash_screen, image=bg)
-background.place(x=220,y=70)  
-
-#Splash screen timer and close
-splash_screen.after(6000,lambda: splash_screen.destroy())
-#--------------------------------------------End of Splash Screen---------------------------------------#
-
-
 #----------------------------------------End Of GUI-----------------------------------------------------#
 #________________________________________________________________________________________________________
 
@@ -1188,6 +1175,20 @@ except:
 win.configure(background='black')
 #win.config(cursor="none")
 try:
+    #Window
+    splash_screen= Toplevel()
+    splash_screen.overrideredirect(True) 
+    splash_screen.geometry("800x600")
+    splash_screen.configure(bg='black')
+
+    #background image
+    bg = PhotoImage(file = "LabWatchLogo.PNG")
+    background=Label(splash_screen, image=bg)
+    background.place(x=220,y=70)  
+
+    #Splash screen timer and close
+    splash_screen.after(6000,lambda: splash_screen.destroy())
+
     win.mainloop()
 except:
     subprocess.run('~/LabWatchGUI6/runme.sh', shell=True)
@@ -1195,7 +1196,6 @@ except:
 finally:
     pass
 #----------------------------------------End of Main Loop------------------------------------------------#
-
 
 #----------------------------------------End of code ----------------------------------------------------#
 #_________________________________________________________________________________________________________
