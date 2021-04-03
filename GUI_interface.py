@@ -149,8 +149,9 @@ humid_colour = "#000000"
 
 Toffset = 0
 Hoffset = 0
+tempToff = Toffset
+tempHoff = Hoffset
 
-email = True
 
 #______________________________________________________________________________________________________________________________
 #-------------------------------------------Text File Read And Write Function------------------------------------------------
@@ -184,8 +185,8 @@ def read_file():
         HLower_green = int(f.readline())
         HUpper_yellow = int(f.readline())
         HLower_yellow = int(f.readline())
-        Toffset = int(f.readline())
-        Hoffset = int(f.readline())
+        Toffset = float(f.readline())
+        Hoffset = float(f.readline())
         myAPI =  str(f.readline())
         link = str(f.readline())
         sendto = str(f.readline())
@@ -356,8 +357,8 @@ def avg(threadName, delay):
     global sensor_fault1
     global Toffset
     global Hoffset
-    temp = 0
-    humid = 0
+    temp = -Toffset
+    humid = -Hoffset
     while True: #runs the avg loop forever 
         
         temp_last_avg = temp #stores current avgerage as last avg 
@@ -386,9 +387,6 @@ def avg(threadName, delay):
             humid = -Hoffset
             # messagebox.showerror("SENSOR ERROR", "SENSOR 1 AND 2 FAULT")
 
-        temp_avg = round((temp + Toffset),1)
-        humid_avg = round((humid + Hoffset),1)
-        
         # # prints to terminal for error checking 
         # print(
         #         "Temp_avg:  {:.1f} C    Humidity_avg: {:.1f}%   sensor0: {}   Sensor1: {} ".format(
@@ -1204,19 +1202,19 @@ except:
 win.configure(background='black')
 #win.config(cursor="none")
 try:
-    #Window
-    splash_screen= Toplevel()
-    splash_screen.overrideredirect(True) 
-    splash_screen.geometry("800x600")
-    splash_screen.configure(bg='black')
+    # #Window
+    # splash_screen= Toplevel()
+    # splash_screen.overrideredirect(True) 
+    # splash_screen.geometry("800x600")
+    # splash_screen.configure(bg='black')
 
-    #background image
-    bg = PhotoImage(file = "LabWatchLogo.PNG")
-    background=Label(splash_screen, image=bg)
-    background.place(x=220,y=70)  
+    # #background image
+    # bg = PhotoImage(file = "LabWatchLogo.PNG")
+    # background=Label(splash_screen, image=bg)
+    # background.place(x=220,y=70)  
 
-    #Splash screen timer and close
-    splash_screen.after(6000,lambda: splash_screen.destroy())
+    # #Splash screen timer and close
+    # splash_screen.after(6000,lambda: splash_screen.destroy())
 
     win.mainloop()
 except:

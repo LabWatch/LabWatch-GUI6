@@ -4,10 +4,10 @@
 17
 42
 36
-47
+49
 32
-0
-0
+2.0
+-1.0
 DLSQ0NFWVP2CQU4N
 https://thingspeak.com/channels/1318645
 saltydick61@gmail.com
