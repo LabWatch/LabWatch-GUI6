@@ -387,7 +387,7 @@ def avg(threadName, delay):
             humid = -Hoffset
             # messagebox.showerror("SENSOR ERROR", "SENSOR 1 AND 2 FAULT")
         
-        temp_avg = round(temp +Toffset,1)
+        temp_avg = round(temp + Toffset,1)
         humid_avg = round(humid + Hoffset,1)
         # prints to terminal for error checking 
         # print(
@@ -415,6 +415,7 @@ def cloud(threadName, delay):
         except Exception as e:
             print(f'Error: {e}')
             print("Connection Failed")
+        local0()
         time.sleep(delay)
 
 #-------------------------------------End of Thingspeak Uploading ------------------------------------#
@@ -485,6 +486,36 @@ def email(threadName,delay):
 #___________________________________________________________________________________________________
 
 #-------------------------------------Local Logging------------------------------------------------#
+
+def local0():
+    global temp0
+    global humid0
+    global temp1
+    global humid1
+    
+    try:
+        # print(os.getcwd())
+        cwd = os.getcwd()
+        timenow = datetime.now()
+        yrnow = timenow.strftime("%Y")
+        monow = timenow.strftime("%m")
+        daynow = timenow.strftime("%d")
+        path = cwd+ "/Logging/{}-{}.csv".format(yrnow,monow)
+        # path = "/home/pi/LabWatchGUI6/Logging/{}-{}.csv".format(yrnow,monow)
+        # print(path)
+        file = open(path, "a")
+        file = open(path, "a")
+        if os.stat(path).st_size == 0:
+            file.write("Time,S1TempC,S1Humid,S2TempC,S2Humid,\n")
+
+        file.write(str(timenow.strftime("%m/%d/%Y %H:%M"))+","+str(temp0)+","+str(humid0)+","+str(temp1)+","+str(humid1)+"\n")
+        file.flush()
+        file.close()
+    except Exception as e:
+        pass
+        # print(f'Error: {e}')
+    
+
 
 def local(threadName, delay):
     global temp0
@@ -1185,7 +1216,7 @@ try:
     _thread.start_new_thread( sensor1, ("sensor_2", 2, ) )#starts recording sensor on D18
     _thread.start_new_thread( avg,     ("average" , 4, ) )
     _thread.start_new_thread( cloud,   ("upload"  , 300, ) )
-    _thread.start_new_thread( local,   ("local"   , 300, ) )
+    # _thread.start_new_thread( local,   ("local"   , 300, ) )
     _thread.start_new_thread( email,   ("Warning" , 45, ) )
     _thread.start_new_thread( alert,   (            45, ) )
 
