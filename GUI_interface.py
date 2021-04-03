@@ -1202,19 +1202,19 @@ except:
 win.configure(background='black')
 #win.config(cursor="none")
 try:
-    # #Window
-    # splash_screen= Toplevel()
-    # splash_screen.overrideredirect(True) 
-    # splash_screen.geometry("800x600")
-    # splash_screen.configure(bg='black')
+    #Window
+    splash_screen= Toplevel()
+    splash_screen.overrideredirect(True) 
+    splash_screen.geometry("800x600")
+    splash_screen.configure(bg='black')
 
-    # #background image
-    # bg = PhotoImage(file = "LabWatchLogo.PNG")
-    # background=Label(splash_screen, image=bg)
-    # background.place(x=220,y=70)  
+    #background image
+    bg = PhotoImage(file = "LabWatchLogo.PNG")
+    background=Label(splash_screen, image=bg)
+    background.place(x=220,y=70)  
 
-    # #Splash screen timer and close
-    # splash_screen.after(6000,lambda: splash_screen.destroy())
+    #Splash screen timer and close
+    splash_screen.after(3000,lambda: splash_screen.destroy())
 
     win.mainloop()
 except:
