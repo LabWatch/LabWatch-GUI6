@@ -685,6 +685,7 @@ def settings0():
         Toffset = tempToff
         Hoffset = tempHoff
         sus.destroy()
+        write_file()
 
     #Labels
     Label(sus,text ='OFFSET ADJUSTMENT',font=("Segoe UI", 24,"bold"),bg='black', fg='white').place(in_=sus,x=200,y=20)
