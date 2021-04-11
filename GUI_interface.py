@@ -413,8 +413,9 @@ def cloud(threadName, delay):
             conn = urlopen(baseURL + '&field1=%s&field2=%s' % (temp_avg, humid_avg))
             conn.close()
         except Exception as e:
-            print(f'Error: {e}')
-            print("Connection Failed")
+            # print(f'Error: {e}')
+            # print("Connection Failed")
+            pass
         local0()
         time.sleep(delay)
 
@@ -1177,6 +1178,8 @@ win.bind('<Escape>',exit_)                      #ESC to exit
 #----------------------------------------End Of GUI-----------------------------------------------------#
 #________________________________________________________________________________________________________
 
+
+
 #________________________________________________________________________________________________________
 #-----------------------------------------Creating Threads---------=------------------------------------#
 # Creates threads and starts all functions as needed
@@ -1204,6 +1207,8 @@ except:
 #Tkinter Window Backgorund color
 win.configure(background='black')
 #win.config(cursor="none")
+
+    
 try:
     # Window
     splash_screen= Toplevel()
