@@ -217,7 +217,7 @@ def read_file():
         baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI 
         link = "https://thingspeak.com/channels/1311268"
         email = False
-        print(f'Error Read: {e}')
+        # print(f'Error Read: {e}')
 
 def write_file():
     # print("write run")
@@ -247,7 +247,8 @@ def write_file():
                         + str(HUpper_yellow) + "\n" + str(HLower_yellow )+ "\n" + str(Toffset ) + "\n" + str(Hoffset)+ "\n"+ myAPI + "\n" + link + "" + sendto)
             f.close()
         except Exception as e:
-                print(f'Error Write: {e}')
+                # print(f'Error Write: {e}')
+                pass
     else:
         try:
             cwd = os.getcwd()
@@ -259,8 +260,8 @@ def write_file():
                         + str(HUpper_yellow) + "\n" + str(HLower_yellow )+ "\n" + str(Toffset ) + "\n" + str(Hoffset))
             f.close()
         except Exception as e:
-                print(f'Error Write: {e}')
-
+                # print(f'Error Write: {e}')
+                pass
 #----------------------------------------------------------------------------------------------------------------------------
 #______________________________________________________________________________________________________________________________
 
