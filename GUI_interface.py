@@ -33,6 +33,7 @@ import tkinter as tk            #Tkinter Library
 from tkinter import messagebox
 from tkinter import filedialog
 import tkinter.font             #Tkinter font library
+from tkinter.ttk import Progressbar
 
 import threading                #For running mulitple threads(task,fucntion calls) 
 import random
@@ -91,7 +92,6 @@ link = "https://thingspeak.com/channels/1311268"
 #------------------------------------------------------------------------------------------------------#
 
 #-----------------------------------Tkinter Variables + Plot attributes--------------------------------#
-
 
 
 
@@ -665,7 +665,7 @@ def settings0():
     sus.title("Offset Adjustment Window")  
     sus.geometry("800x600")
     sus.configure(bg='black')
-    #win.config(cursor="none")
+    sus.config(cursor="none")
     
     def TU():
         global tempToff
@@ -755,7 +755,8 @@ def settings1():
     # sets the geometry of toplevel 
     sus.geometry("800x600") 
     sus.configure(bg='black')
-    #win.config(cursor="none")
+    
+    sus.config(cursor="none")
 
     def TUGU():
         global tempTUG
@@ -910,7 +911,7 @@ def settings2():
     sus.configure(bg='black')
     # sets the geometry of toplevel 
     sus.geometry("800x600") 
-    #win.config(cursor="none")
+    sus.config(cursor="none")
     def HUGU():
         global tempHUG
         global tempHUY
@@ -1049,7 +1050,7 @@ def Reports():
     # sets the geometry of toplevel 
     sus.geometry("241x285") 
     
-    #win.config(cursor="none")
+    sus.config(cursor="none")
     
     Label(sus,text ='REPORTS', font=("Segoe UI", 20,"bold"), bg='black', fg='white').place(in_=sus,x=50,y=10)
     
@@ -1087,7 +1088,7 @@ def Settings():
     # sets the title of the 
     # Toplevel widget 
     sus.overrideredirect(True) 
-    #win.config(cursor="none")
+    sus.config(cursor="none")
     sus.configure(bg='black')
     
     # sets the geometry of toplevel 
@@ -1099,10 +1100,10 @@ def Settings():
         # Determin is on or off
         if is_on:
             
-            notification_button.config(text = "Email Notifications off", 
+            notification_button.config(text = "Email Notifications Off", 
                             fg = "white", bg='#DC143C')
             is_on = False
-            tk.messagebox.showinfo("Email Notification", "Email Notificaion is now Off")
+            tk.messagebox.showinfo("Email Notification", "Email Notificaion is now off")
         else:
             
             notification_button.config(text = "Email Notifications On", fg = "white", bg='#397D02')
@@ -1130,6 +1131,7 @@ def Settings():
     else:
         notification_button = tk.Button(sus, text="Email Notification Off",  width = 16,fg="white",borderwidth=3, highlightcolor="white",relief="solid",bg="#DC143C", font=("Segoe UI", 14),
                             command=switch)
+        
         notification_button.place(x=10,y=195)
     def ExitWin():
         sus.destroy()
@@ -1164,7 +1166,8 @@ class Clock:
         self.time2 = time.strftime('%Y-%m-%d %H:%M:%S:%p:%Z')
         self.watch.configure(text=self.time2)
         self.mFrame.after(200, self.changeLabel) #it will call itself continuously
-Clock()
+        
+threading.Thread(target=Clock).start()
 #-----------------------------------------End Clock-----------------------------------------------------#
 #________________________________________________________________________________________________________
 #-------------------------------------Tkinter window options--------------------------------------------# 
@@ -1181,6 +1184,7 @@ def exit_(event):                                    #Exit fullscreen
 
 win.attributes("-fullscreen",True)             #Fullscreen when executed 
 win.bind('<Escape>',exit_)                      #ESC to exit
+
 
 #----------------------------------------End Of GUI-----------------------------------------------------#
 #________________________________________________________________________________________________________
@@ -1215,9 +1219,7 @@ except:
 
 #Tkinter Window Backgorund color
 win.configure(background='black')
-#win.config(cursor="none")
-
-    
+win.config(cursor="none")
 try:
     # Window
     splash_screen= Toplevel()
@@ -1228,11 +1230,25 @@ try:
     #background image
     bg = PhotoImage(file = "LabWatchLogo.PNG")
     background=Label(splash_screen, image=bg)
-    background.place(x=220,y=70)  
+    background.place(x=220,y=70) 
+
+    #Progress bar
+    progress = Progressbar(splash_screen, orient = HORIZONTAL,
+                length = 200, mode = 'determinate')
+    progress.pack()
+    progress.place(x=290,y=445 )
+    
+    # Function to update of the progress bar value
+    def progress_bar():
+        progress['value'] +=5
+
+        progress.start(75)
+
+    progress.after(220, threading.Thread(target=progress_bar).start())
 
     #Splash screen timer and close
-    splash_screen.after(6000,lambda: splash_screen.destroy())
-
+    splash_screen.after(8000,lambda: splash_screen.destroy())
+    
     win.mainloop()
 except:
     subprocess.run('~/LabWatchGUI6/runme.sh', shell=True)
