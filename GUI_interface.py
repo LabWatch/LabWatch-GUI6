@@ -52,6 +52,8 @@ import email_sending
 from dateutil.relativedelta import relativedelta
 import zip1
 
+time.sleep(5)
+
 sendto=""
 #-----------End of Import Libraries------------------------#
 
@@ -278,6 +280,7 @@ def sensor0( threadName, delay):
     global temp_avg
     fault = bool(0)
     temp = 0
+    time.sleep(1)
     while True:
         for x in range(10):
             try:
@@ -291,6 +294,7 @@ def sensor0( threadName, delay):
                 
             except RuntimeError as error:
                 # Errors happen fairly often, DHT's are hard to read, just keep going
+                # print(error)
                 time.sleep(delay)
                 
             except Exception as error:
@@ -316,6 +320,7 @@ def sensor1( threadName, delay):
     global temp_avg
     fault = bool(0)
     temp = 0 
+    
     while True: #runs forever 
         for x in range(10):#tries 5 times before thorwing fault for sensor 
             try:
@@ -329,6 +334,7 @@ def sensor1( threadName, delay):
                     
             except RuntimeError as error:
                 # Errors happen fairly often, DHT's are hard to read, just keep going
+                # print(error)
                 time.sleep(delay)
                 
             except Exception as error:
@@ -413,8 +419,8 @@ def cloud(threadName, delay):
         try:
             conn = urlopen(baseURL + '&field1=%s&field2=%s' % (temp_avg, humid_avg))
             conn.close()
-        except Exception as e:
-            # print(f'Error: {e}')
+        except Exception as e: #Prints type of error to user
+            print(f'Error: {e}')
             # print("Connection Failed")
             pass
         local0()
@@ -428,7 +434,7 @@ def cloud(threadName, delay):
 def alert( delay):
     global sensor_fault0
     global sensor_fault1
-    time.sleep(30)
+    time.sleep(5)
     while True: #runs the avg loop forever 
         
         # mutltiple statments checking different sinarios for faulty sensor 
@@ -1192,12 +1198,14 @@ try:
     _thread.start_new_thread( avg,     ("average" , 4, ) )
     _thread.start_new_thread( cloud,   ("upload"  , 300, ) )
     _thread.start_new_thread( email,   ("Warning" , 45, ) )
-    _thread.start_new_thread( alert,   (            45, ) )
+    _thread.start_new_thread( alert,   (            5, ) )
 
     ani = animation.FuncAnimation(fig, animate, interval=2000, fargs=(xs,ys,xs2,ys2) )
 
 except:
     print ("Error: unable to start thread")
+    subprocess.run('~/LabWatchGUI6/runme.sh', shell=True)
+    quit()
 
 #-------------------------------------End of Starting Threads--------------------------------------------#
 #_________________________________________________________________________________________________________
