@@ -50,7 +50,7 @@ humid_avg = 0
 #-----------------------------------------------------------------
 #----------------ThingSpeak Global Variables----------------------
 #ThingSpeak credentrials 
-myAPI = '4M4MSZ8ZYP18AU3E' 
+myAPI = 'DLSQ0NFWVP2CQU4N' 
 # URL where we will send the data, Don't change it
 baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI 
 
@@ -63,21 +63,25 @@ baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI
 
 
 # DHT22 Sensor on Pin D4 
+# DHT22 Sensor on Pin D4 
 def sensor0( threadName, delay):
     global temp0
     global humid0
     global sensor_fault0
     global temp_avg
     fault = bool(0)
+    temp = 0
     while True:
-        for x in range(5):
+        for x in range(10):
             try:
                 # Print the values to the serial port
                 temperature_c = dhtDevice0.temperature
                 humidity = dhtDevice0.humidity
-                if (abs(temp0 - temperature_c ) < 4):
+                if (abs(temp - temperature_c ) < 4):
                     fault = bool(0)
-                break            
+                temp = temperature_c 
+                break       
+                
             except RuntimeError as error:
                 # Errors happen fairly often, DHT's are hard to read, just keep going
                 time.sleep(delay)
@@ -85,7 +89,7 @@ def sensor0( threadName, delay):
             except Exception as error:
                 dhtDevice0.exit()
                 raise error
-            if (x > 3):
+            if (x > 8):
                 fault = bool(1)
                 temperature_c = 0
                 humidity = 0 
@@ -104,15 +108,18 @@ def sensor1( threadName, delay):
     global sensor_fault1
     global temp_avg
     fault = bool(0)
+    temp = 0 
     while True: #runs forever 
-        for x in range(5):#tries 5 times before thorwing fault for sensor 
+        for x in range(10):#tries 5 times before thorwing fault for sensor 
             try:
                 # Print the values to the serial port
                 temperature_c = dhtDevice1.temperature
                 humidity = dhtDevice1.humidity
-                if (abs(temp1 - temperature_c ) < 4): # if the sensor is within a certain range it will be used again 
+                if (abs(temp - temperature_c ) < 4): # if the sensor is within a certain range it will be used again 
                     fault = bool(0)
-                break            
+                temp = temperature_c 
+                break       
+                    
             except RuntimeError as error:
                 # Errors happen fairly often, DHT's are hard to read, just keep going
                 time.sleep(delay)
@@ -120,7 +127,7 @@ def sensor1( threadName, delay):
             except Exception as error:
                 dhtDevice1.exit()
                 raise error
-            if (x > 3):
+            if (x > 8):
                 fault = bool(1)
                 temperature_c = 0
                 humidity = 0 
@@ -162,26 +169,26 @@ def avg(threadName, delay):
         elif (sensor_fault0 == False and sensor_fault1 == True) :#D4 OK D18 Bad
             temp_avg = (temp0 + temp_last_avg) / 2
             humid_avg = (humid0 + humid_last_avg) / 2
-            messagebox.showerror("SENSOR ERROR", "SENSOR 2 FAULT ON D18")
+            print("SENSOR ERROR", "SENSOR 2 FAULT ON D18")
             
         elif (sensor_fault0 == True and sensor_fault1 == False): #D4 Bad D18 OK
             temp_avg = (temp1 + temp_last_avg) / 2
             humid_avg = (humid1 + humid_last_avg) / 2 
-            messagebox.showerror("SENSOR ERROR", "SENSOR 1 FAULT ON D4")
+            print("SENSOR ERROR", "SENSOR 1 FAULT ON D4")
             
         else: #both Bad set to 0 , 0 
             temp_avg = 0
             humid_avg = 0
-            messagebox.showerror("SENSOR ERROR", "SENSOR 1 AND 2 FAULT")
+            print("SENSOR ERROR", "SENSOR 1 AND 2 FAULT")
         
         temp_avg = round(temp_avg,1)
         humid_avg = round(humid_avg,1)
-        # # prints to terminal for error checking 
-        # print(
-        #         "Temp_avg:  {:.1f} C    Humidity_avg: {:.1f}%   sensor0: {}   Sensor1: {} ".format(
-        #             temp_avg, humid_avg,sensor_fault0,sensor_fault1
-        #         )
-        #     ) 
+        # prints to terminal for error checking 
+        print(
+                "Temp_avg:  {:.1f} C    Humidity_avg: {:.1f}%   sensor0: {}   Sensor1: {} ".format(
+                    temp_avg, humid_avg,sensor_fault0,sensor_fault1
+                )
+            ) 
         time.sleep(delay)#sleeps for set delay time 
 
 #-----------------------------------End of sensor Data read and error Check------------------------------------------------------------------------
@@ -194,13 +201,14 @@ def cloud(threadName, delay):
     global temp_avg
     global humid_avg
     global baseURL
+    time.sleep(30)
     while True:
 
         try:
             conn = urlopen(baseURL + '&field1=%s&field2=%s' % (temp_avg, humid_avg))
             conn.close()
-        except:
-            print("Connection Failed")
+        except Exception as e:
+            print(e)
         time.sleep(delay)
 
 
