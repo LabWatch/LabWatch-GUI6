@@ -212,10 +212,10 @@ def read_file():
         HUpper_yellow = 46 
         HLower_yellow = 32
         sendto="labwatchmonitoring@gmail.com"
-        myAPI = 'RXXLLQDW8BV1S7WW' 
+        myAPI = 'r' # <----- add user's API 
         # URL where we will send the data, Don't change it
         baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI 
-        link = "https://thingspeak.com/channels/1311268"
+        link = "https://thingspeak.com/channels/" # <----- add user's API 
         email = False
         print(f'Error Read: {e}')
 
